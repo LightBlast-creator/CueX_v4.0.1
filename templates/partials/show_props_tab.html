@@ -72,9 +72,13 @@
             history.replaceState(null, '', url);
           }
         }
-        // Beim Laden: Immer filtern, damit die Galerie sofort sichtbar ist
+        // Beim Laden: Nur filtern wenn der Props-Tab aktiv ist
         document.addEventListener('DOMContentLoaded', function () {
-          filterPropImagesBySong();
+          var propsTab = document.getElementById('tab-props');
+          // Nur ausführen wenn der Props-Tab sichtbar/aktiv ist
+          if (propsTab && propsTab.classList.contains('active')) {
+            filterPropImagesBySong();
+          }
         });
       </script>
     </div>

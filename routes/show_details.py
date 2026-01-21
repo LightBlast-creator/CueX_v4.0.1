@@ -445,7 +445,7 @@ def delete_all_cues(show_id):
     show["songs"] = []
     save_data()
     sync_entire_show_to_db(show)
-    return redirect(url_for("show_details.show_detail", show_id=show_id))
+    return redirect(url_for("show_details.show_detail", show_id=show_id, tab="songs"))
 
 
 @show_details_bp.route("/show/<int:show_id>/delete_song", methods=["POST"])

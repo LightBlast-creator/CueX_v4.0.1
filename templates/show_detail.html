@@ -202,8 +202,7 @@
 
     <div class="divider"></div>
 
-    <form method="post" action="{{ url_for('show_details.delete_show', show_id=show.id) }}"
-      onsubmit="return confirm('Show wirklich löschen?');" style="margin: 0;">
+    <form method="post" action="{{ url_for('show_details.delete_show', show_id=show.id) }}" style="margin: 0;">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <button type="submit" class="btn btn-delete">
         Löschen
