@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary mb-3">← Zurück zur Übersicht</a>
+  <h2 class="mb-4">Einstellungen</h2>
+  <form method="post" action="{{ url_for('main.settings') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3">
+      <label for="gdtf_token" class="form-label">GDTF API-Token</label>
+      <input type="text" class="form-control" id="gdtf_token" name="gdtf_token" value="{{ gdtf_token or '' }}"
+        placeholder="Token hier einfügen">
+      <div class="form-text">
+        Deinen persönlichen GDTF-API-Token erhältst du auf <a href="https://gdtf-share.com/"
+          target="_blank">gdtf-share.com</a> nach dem Login.
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="autosave-interval" class="form-label">Autosave-Intervall</label>
+      <select id="autosave-interval" name="autosave_interval" class="form-select">
+        <option value="0" {% if autosave_interval=='0' %}selected{% endif %}>Aus</option>
+        <option value="300000" {% if autosave_interval=='300000' %}selected{% endif %}>Alle 5 Minuten</option>
+        <option value="600000" {% if autosave_interval=='600000' %}selected{% endif %}>Alle 10 Minuten</option>
+        <option value="1800000" {% if autosave_interval=='1800000' %}selected{% endif %}>Alle 30 Minuten</option>
+      </select>
+      <div class="form-text">Wähle, wie oft automatisch gespeichert werden soll.</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Speichern</button>
+  </form>
+  {% if saved %}
+  <div class="alert alert-success mt-3">Token gespeichert!</div>
+  {% endif %}
+</div>
+{% endblock %}

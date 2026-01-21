@@ -1,0 +1,9 @@
+flask
+Flask-WTF
+Flask-SQLAlchemy
+SQLAlchemy
+reportlab
+spacy
+pdfplumber
+PyPDF2
+werkzeug
