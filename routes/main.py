@@ -27,6 +27,63 @@ def settings():
     autosave_interval = session.get('autosave_interval', '0')
     return render_template('settings.html', gdtf_token=gdtf_token, autosave_interval=autosave_interval, saved=saved)
 
+# Helper: Lampen zählen
+def calculate_total_lamps(rig):
+    if not rig:
+        return 0
+    total = 0
+    
+    # Helper to safe-int
+    def safe_int(val):
+        try:
+            return int(val)
+        except (ValueError, TypeError):
+            return 0
+
+    # 1. Spots
+    if rig.get('spots_items'):
+        for it in rig['spots_items']:
+            total += safe_int(it.get('count'))
+    else:
+        total += safe_int(rig.get('spots'))
+
+    # 2. Washes
+    if rig.get('washes_items'):
+        for it in rig['washes_items']:
+            total += safe_int(it.get('count'))
+    else:
+        total += safe_int(rig.get('washes'))
+
+    # 3. Beams
+    if rig.get('beams_items'):
+        for it in rig['beams_items']:
+            total += safe_int(it.get('count'))
+    else:
+        total += safe_int(rig.get('beams'))
+
+    # 4. Blinders
+    if rig.get('blinders_items'):
+        for it in rig['blinders_items']:
+            total += safe_int(it.get('count'))
+    else:
+        # Blinder legacy input was named rig_blinders__count[] originally too? 
+        # Check show_logic: "blinders": "" defaults to string.
+        total += safe_int(rig.get('blinders'))
+
+    # 5. Strobes
+    if rig.get('strobes_items'):
+        for it in rig['strobes_items']:
+            total += safe_int(it.get('count'))
+    else:
+        total += safe_int(rig.get('strobes'))
+
+    # 6. Custom Devices
+    if rig.get('custom_devices'):
+        for it in rig['custom_devices']:
+            total += safe_int(it.get('count'))
+
+    return total
+
 # Dashboard: Show creation form + show list
 @main_bp.route('/', methods=['GET', 'POST'])
 def dashboard():
@@ -54,7 +111,17 @@ def dashboard():
             show_logic.save_data()
             show_logic.sync_entire_show_to_db(new_show)
         return redirect(url_for('main.dashboard'))
-    return render_template('index.html', shows=show_logic.shows)
+    
+    # Statistiken berechnen
+    total_lamps = 0
+    total_songs = 0
+    for show in show_logic.shows:
+        rig = show.get('rig_setup', {})
+        total_lamps += calculate_total_lamps(rig)
+        songs = show.get('songs') or []
+        total_songs += len(songs)
+
+    return render_template('index.html', shows=show_logic.shows, total_lamps=total_lamps, total_songs=total_songs)
 
 # Optional: /show_overview leitet auf / weiter (altes Routing)
 @main_bp.route('/show_overview')

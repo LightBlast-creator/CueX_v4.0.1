@@ -3,95 +3,243 @@
 {% if autosave_interval is defined %}
 <script>var AUTOSAVE_INTERVAL_FROM_SERVER = {{ autosave_interval| tojson }};</script>
 {% endif %}
-<!-- Autosave-Countdown -->
-<div class="mb-2" style="text-align:right;">
-  <span id="autosave-countdown" style="color: #aaa; font-size: 0.95em;"></span>
-</div>
-
-
 
 {% block content %}
+<style>
+  /* Show Detail Styles */
+  .show-header {
+    margin-bottom: 2rem;
+  }
+
+  .show-header .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    transition: color 0.2s;
+  }
+
+  .show-header .back-link:hover {
+    color: #f8f9fa;
+  }
+
+  .show-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: #f8f9fa;
+  }
+
+  .show-header .show-meta {
+    color: #9ca3af;
+    font-size: 0.95rem;
+  }
+
+  .show-header .show-meta span {
+    margin-right: 1rem;
+  }
+
+  /* Actions Bar */
+  .actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, #1a1d23 0%, #14171d 100%);
+    border: 1px solid #262b33;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .actions-bar .action-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .actions-bar .action-group-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 0.5rem;
+  }
+
+  .actions-bar .divider {
+    width: 1px;
+    height: 24px;
+    background: #30363d;
+    margin: 0 0.5rem;
+  }
+
+  .actions-bar .btn {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 0.5rem;
+  }
+
+  .actions-bar .btn-export {
+    background: #1e3a5f;
+    border: 1px solid #2563eb;
+    color: #60a5fa;
+  }
+
+  .actions-bar .btn-export:hover {
+    background: #1e40af;
+    color: #fff;
+  }
+
+  .actions-bar .btn-delete {
+    background: transparent;
+    border: 1px solid #dc2626;
+    color: #f87171;
+  }
+
+  .actions-bar .btn-delete:hover {
+    background: #dc2626;
+    color: #fff;
+  }
+
+  .actions-bar .btn-regie {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .actions-bar .btn-regie:hover {
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+  }
+
+  /* Modern Tabs */
+  .modern-tabs {
+    display: flex;
+    gap: 0.25rem;
+    background: #14171d;
+    padding: 0.35rem;
+    border-radius: 0.75rem;
+    border: 1px solid #262b33;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .modern-tabs .tab-link {
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.5rem;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .modern-tabs .tab-link:hover {
+    color: #f8f9fa;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .modern-tabs .tab-link.active {
+    background: #3b82f6;
+    color: #fff;
+  }
+
+  /* Autosave Indicator */
+  .autosave-indicator {
+    font-size: 0.85rem;
+    color: #6b7280;
+    text-align: right;
+    margin-bottom: 0.5rem;
+  }
+</style>
+
 <div class="container mt-4">
+  <!-- Autosave-Countdown -->
+  <div class="autosave-indicator">
+    <span id="autosave-countdown"></span>
+  </div>
 
-  <!-- Kopfbereich mit Navigation und Aktionen -->
-  <div class="d-flex justify-content-between align-items-start mb-4">
-    <div>
-      <a href="{{ url_for('main.show_overview') }}" class="btn btn-outline-light btn-sm mb-2">
-        ← Zur Übersicht
-      </a>
-      <h1 class="h3 mb-0">{{ show.name or "Unbenannte Show" }}</h1>
-      <div class="small" style="color:#ced4da;">
-        Artist: {{ show.artist or "–" }} | Datum: {{ show.date or "–" }}
-      </div>
-    </div>
-
-    <div class="d-flex gap-2">
-      <a href="{{ url_for('show_io.export_show_pdf', show_id=show.id) }}" class="btn btn-primary btn-sm btn-highlight">
-        Show-Report PDF
-      </a>
-      <a href="{{ url_for('show_io.export_techrider_pdf', show_id=show.id) }}"
-        class="btn btn-warning btn-sm btn-highlight">
-        Tech-Rider PDF
-      </a>
-      <a href="{{ url_for('show_io.export_ma3', show_id=show.id) }}" class="btn btn-secondary btn-sm btn-highlight">
-        Export MA3 Plugin
-      </a>
-      <a href="{{ url_for('show_io.export_nomad_csv', show_id=show.id) }}" class="btn btn-sm btn-highlight"
-        style="background: #43ea5e; color: #222; font-weight: bold; border: 2px solid #43ea5e;">
-        Export ETC Nomad CSV
-      </a>
-      <form method="post" action="{{ url_for('show_details.delete_show', show_id=show.id) }}"
-        onsubmit="return confirm('Show wirklich löschen?');">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit" class="btn btn-danger btn-sm btn-highlight">
-          Show löschen
-        </button>
-      </form>
+  <!-- Header -->
+  <div class="show-header">
+    <a href="{{ url_for('main.show_overview') }}" class="back-link">
+      ← Zurück zum Dashboard
+    </a>
+    <h1>{{ show.name or "Unbenannte Show" }}</h1>
+    <div class="show-meta">
+      {% if show.artist %}<span>{{ show.artist }}</span>{% endif %}
+      {% if show.date %}<span>{{ show.date }}</span>{% endif %}
+      {% if show.venue_type %}<span>{{ show.venue_type }}</span>{% endif %}
     </div>
   </div>
 
-  <!-- Tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_tab == 'meta' %}active{% endif %}"
-        href="{{ url_for('show_details.show_detail', show_id=show.id, tab='meta') }}">
-        Stammdaten
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_tab == 'rig' %}active{% endif %}"
-        href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig') }}">
-        Rig &amp; Strom
+  <!-- Actions Bar -->
+  <div class="actions-bar">
+    <a href="{{ url_for('show_details.show_regie_view', show_id=show.id) }}" class="btn btn-regie">
+      Regie-Ansicht öffnen
+    </a>
 
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_tab == 'songs' %}active{% endif %}"
-        href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}">
-        Songs / Szenen / Cue-Liste
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_tab == 'contacts' %}active{% endif %}"
-        href="{{ url_for('show_details.show_detail', show_id=show.id, tab='contacts') }}">
-        Rider / Kontakte
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_tab == 'props' %}active{% endif %}"
-        href="{{ url_for('show_details.show_detail', show_id=show.id, tab='props') }}">
-        Requisiten
-      </a>
-    </li>
-    <li class="nav-item" role="presentation">
-      <a class="nav-link {% if active_tab == 'videos' %}active{% endif %}"
-        href="{{ url_for('show_details.show_detail', show_id=show.id, tab='videos') }}">
-        Video
-      </a>
-    </li>
-  </ul>
+    <div class="divider"></div>
 
+    <div class="action-group">
+      <span class="action-group-label">Export</span>
+      <a href="{{ url_for('show_io.export_show_pdf', show_id=show.id) }}" class="btn btn-export">
+        Show-Report
+      </a>
+      <a href="{{ url_for('show_io.export_techrider_pdf', show_id=show.id) }}" class="btn btn-export">
+        Tech-Rider
+      </a>
+      <a href="{{ url_for('show_io.export_ma3', show_id=show.id) }}" class="btn btn-export">
+        MA3 Plugin
+      </a>
+      <a href="{{ url_for('show_io.export_nomad_csv', show_id=show.id) }}" class="btn btn-export">
+        ETC Nomad
+      </a>
+    </div>
 
+    <div class="divider"></div>
+
+    <form method="post" action="{{ url_for('show_details.delete_show', show_id=show.id) }}"
+      onsubmit="return confirm('Show wirklich löschen?');" style="margin: 0;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-delete">
+        Löschen
+      </button>
+    </form>
+  </div>
+
+  <!-- Modern Tabs -->
+  <nav class="modern-tabs">
+    <a class="tab-link {% if active_tab == 'meta' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='meta') }}">
+      Stammdaten
+    </a>
+    <a class="tab-link {% if active_tab == 'rig' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig') }}">
+      Rig &amp; Strom
+    </a>
+    <a class="tab-link {% if active_tab == 'songs' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}">
+      Songs / Cue-Liste
+    </a>
+    <a class="tab-link {% if active_tab == 'contacts' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='contacts') }}">
+      Kontakte
+    </a>
+    <a class="tab-link {% if active_tab == 'props' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='props') }}">
+      Requisiten
+    </a>
+    <a class="tab-link {% if active_tab == 'videos' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='videos') }}">
+      Video
+    </a>
+  </nav>
+
+  <!-- Tab Content -->
   <div class="tab-content pt-3">
     {% include "partials/show_meta_tab.html" %}
     {% include "partials/show_rig_tab.html" %}
@@ -103,96 +251,61 @@
     {% include "partials/show_videos_tab.html" %}
     {% endif %}
   </div>
-  <li class="nav-item" role="presentation">
-    <!-- Auto-Fill: Main Brand -> Hersteller-Felder (Spots/Washes/Beams/Blinders/Strobes) -->
-    <script>
-      // ---------------------------------------------------------
-      // 2) Auto-Fill: Main Brand -> Hersteller-Felder
-      // ---------------------------------------------------------
-      const mainBrandSelect = document.querySelector('select[name="rig_main_brand"]');
-      if (mainBrandSelect) {
-        // collect all selects that look like manufacturer fields (single or repeatable)
-        const manufacturerSelects = Array.from(document.querySelectorAll('select')).filter(function (sel) {
-          return sel.name && sel.name.indexOf('manufacturer') !== -1;
-        });
 
-        mainBrandSelect.addEventListener('change', function () {
-          const brand = this.value;
-          if (!brand) return;
-          manufacturerSelects.forEach(function (sel) {
-            if (!sel) return;
-            // Nur übernehmen, wenn das Feld bisher leer/auf "–" steht
-            if (sel.value === '') sel.value = brand;
-          });
-        });
-      }
-    </script>
-    <script>
-      // Preserve scroll position and active tab across full-page form submits
-      (function () {
-        // prevent browser from doing automatic scroll restoration
-        try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) { }
-        const keyScroll = 'show_scroll_{{ show.id }}';
-        const keyTab = 'show_active_tab_{{ show.id }}';
+  <script>
+    // Auto-Fill: Main Brand -> Hersteller-Felder
+    const mainBrandSelect = document.querySelector('select[name="rig_main_brand"]');
+    if (mainBrandSelect) {
+      const manufacturerSelects = Array.from(document.querySelectorAll('select')).filter(function (sel) {
+        return sel.name && sel.name.indexOf('manufacturer') !== -1;
+      });
 
-        // before submitting any form, save scroll position and active tab
-        document.querySelectorAll('form').forEach(function (frm) {
-          frm.addEventListener('submit', function () {
-            try {
-              sessionStorage.setItem(keyScroll, String(window.scrollY || window.pageYOffset || 0));
-              // store active tab id (if present) as a safe selector like "#tab-rig"
-              const active = document.querySelector('.nav-tabs .nav-link.active');
-              if (active) {
-                const href = active.getAttribute('href') || '';
-                let tabId = '';
-                if (href.startsWith('#')) {
-                  tabId = href;
-                } else {
-                  const m = href.match(/[?&]tab=([^&#]+)/);
-                  if (m) tabId = '#tab-' + m[1];
-                }
-                if (tabId) sessionStorage.setItem(keyTab, tabId);
-              }
-            } catch (e) {/* ignore */ }
-          }, { capture: true });
+      mainBrandSelect.addEventListener('change', function () {
+        const brand = this.value;
+        if (!brand) return;
+        manufacturerSelects.forEach(function (sel) {
+          if (!sel) return;
+          if (sel.value === '') sel.value = brand;
         });
+      });
+    }
+  </script>
 
-        // on load, restore scroll position smoothly and (optionally) activate saved tab
-        window.addEventListener('DOMContentLoaded', function () {
+  <script>
+    // Preserve scroll position across form submits
+    (function () {
+      try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) { }
+      const keyScroll = 'show_scroll_{{ show.id }}';
+      const keyTab = 'show_active_tab_{{ show.id }}';
+
+      document.querySelectorAll('form').forEach(function (frm) {
+        frm.addEventListener('submit', function () {
           try {
-            const s = sessionStorage.getItem(keyScroll);
-            const tab = sessionStorage.getItem(keyTab);
-            if (tab) {
-              // Activate the saved tab by toggling classes (avoid link.click())
-              setTimeout(function () {
-                try {
-                  const allLinks = Array.from(document.querySelectorAll('.nav-tabs .nav-link'));
-                  allLinks.forEach(n => n.classList.remove('active'));
-                  // try to find a link by matching its href tab parameter or hash
-                  let link = document.querySelector('.nav-tabs .nav-link[href="' + tab + '"]');
-                  if (!link) {
-                    link = allLinks.find(l => {
-                      const h = l.getAttribute('href') || '';
-                      return h.indexOf('tab=') !== -1 && h.indexOf(tab.replace('#tab-', '')) !== -1;
-                    });
-                  }
-                  if (link) link.classList.add('active');
+            sessionStorage.setItem(keyScroll, String(window.scrollY || window.pageYOffset || 0));
+            const active = document.querySelector('.modern-tabs .tab-link.active');
+            if (active) {
+              const href = active.getAttribute('href') || '';
+              const m = href.match(/[?&]tab=([^&#]+)/);
+              if (m) sessionStorage.setItem(keyTab, m[1]);
+            }
+          } catch (e) { }
+        }, { capture: true });
+      });
 
-                  // show tab-pane without triggering browser focus jump
-                  const panes = Array.from(document.querySelectorAll('.tab-pane'));
-                  panes.forEach(p => p.classList.remove('show', 'active'));
-                  const pane = document.querySelector(tab);
-                  if (pane) pane.classList.add('show', 'active');
-                } catch (e) {/* ignore */ }
-              }, 30);
-            }
-            if (s) {
-              const y = parseInt(s) || 0;
-              // restore position instantly (no smooth) after a short delay so layout is stable
-              setTimeout(function () { window.scrollTo(0, y); sessionStorage.removeItem(keyScroll); sessionStorage.removeItem(keyTab); }, 80);
-            }
-          } catch (e) {/* ignore */ }
-        });
-      })();
-    </script>
-    {% endblock %}
+      window.addEventListener('DOMContentLoaded', function () {
+        try {
+          const s = sessionStorage.getItem(keyScroll);
+          if (s) {
+            const y = parseInt(s) || 0;
+            setTimeout(function () {
+              window.scrollTo(0, y);
+              sessionStorage.removeItem(keyScroll);
+              sessionStorage.removeItem(keyTab);
+            }, 80);
+          }
+        } catch (e) { }
+      });
+    })();
+  </script>
+</div>
+{% endblock %}

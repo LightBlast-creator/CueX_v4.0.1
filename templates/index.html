@@ -3,110 +3,295 @@
 {% block title %}Dashboard – CueX{% endblock %}
 
 {% block content %}
-<div class="row g-4">
+<style>
+    /* Dashboard-spezifische Styles */
+    .dashboard-header {
+        margin-bottom: 2rem;
+    }
 
-    <!-- Linke Spalte: Neue Show anlegen -->
-    <div class="col-lg-5 col-xl-4">
-        <div class="card">
-            <div class="card-header">
-                Neue Show anlegen
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <div class="mb-3">
-                        <label class="form-label">Show- / Projektname</label>
-                        <input type="text" name="name" class="form-control" placeholder="z.B. Tour XYZ">
-                    </div>
+    .dashboard-header h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin: 0;
+        color: #f8f9fa;
+    }
 
-                    <div class="mb-3">
-                        <label class="form-label">Artist / Produktion</label>
-                        <input type="text" name="artist" class="form-control" placeholder="Artist / Band / Produktion">
-                    </div>
+    .dashboard-header .subtitle {
+        color: #9ca3af;
+        font-size: 0.95rem;
+        margin-top: 0.25rem;
+    }
 
-                    <div class="row">
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Datum</label>
-                            <input type="date" name="date" class="form-control">
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Venue-Typ</label>
-                            <input type="text" name="venue_type" class="form-control"
-                                placeholder="Club, Festival, Halle …">
-                        </div>
-                    </div>
+    /* Statistik-Bereich */
+    .stats-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
 
-                    <div class="row">
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Genre</label>
-                            <input type="text" name="genre" class="form-control" placeholder="z.B. Rock, EDM …">
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Rig-Typ</label>
-                            <input type="text" name="rig_type" class="form-control" placeholder="z.B. Festival-Rig">
-                        </div>
-                    </div>
+    .stat-card {
+        background: linear-gradient(135deg, #1a1d23 0%, #14171d 100%);
+        border: 1px solid #262b33;
+        border-radius: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        flex: 1;
+        min-width: 140px;
+    }
 
-                    <button type="submit" class="btn btn-primary">
-                        Show erstellen
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+    .stat-card .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #f8f9fa;
+        line-height: 1;
+    }
 
-    <!-- Rechte Spalte: Show-Übersicht -->
-    <div class="col-lg-7 col-xl-8">
-        <div class="card show-list-card">
-            <div class="card-header">
-                Show-Übersicht
-            </div>
-            <div class="card-body">
-                {% if shows and shows|length > 0 %}
-                <div class="list-group list-group-flush">
-                    {% for show in shows %}
-                    <div class="list-group-item show-list-item d-flex justify-content-between align-items-center"
-                        data-show-id="{{ show.id }}">
-                        <div>
-                            <div class="show-title">
-                                {{ show.name or "Unbenannte Show" }}
-                            </div>
-                            <div class="show-subtitle">
-                                Artist:
-                                {% if show.artist %}
-                                {{ show.artist }}
-                                {% else %}
-                                –
-                                {% endif %}
-                                {% if show.date %}
-                                &nbsp;• {{ show.date }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center gap-2">
-                            <a href="{{ url_for('show_details.show_regie_view', show_id=show.id) }}"
-                                class="btn btn-outline-info btn-sm" title="Regie-Ansicht">
-                                <span class="d-none d-md-inline">Regie</span>
-                                <span class="d-md-none">🎬</span>
-                            </a>
-                            <a href="{{ url_for('show_details.show_detail', show_id=show.id) }}"
-                                class="btn btn-outline-light btn-sm">
-                                Details
-                            </a>
-                            <!-- Show löschen Button entfernt (ursprünglich AJAX) -->
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div class="alert alert-info mb-0">
-                    Es sind keine Shows vorhanden. Lege eine neue Show an!
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    .stat-card .stat-label {
+        font-size: 0.85rem;
+        color: #9ca3af;
+        margin-top: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
 
+    /* Show-Karten Grid */
+    .shows-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .show-card {
+        background: linear-gradient(180deg, #1a1d23 0%, #14171d 100%);
+        border: 1px solid #262b33;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .show-card:hover {
+        border-color: #3b82f6;
+        box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+        transform: translateY(-2px);
+    }
+
+    .show-card .show-name {
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #f8f9fa;
+        margin-bottom: 0.5rem;
+    }
+
+    .show-card .show-artist {
+        color: #3b82f6;
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .show-card .show-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.85rem;
+        color: #9ca3af;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .show-card .show-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .show-card .show-actions {
+        margin-top: auto;
+        display: flex;
+        gap: 0.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #262b33;
+    }
+
+    .show-card .btn {
+        flex: 1;
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+    }
+
+    /* Neue Show Formular */
+    .create-show-card {
+        background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+        border: 2px dashed #30363d;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        transition: border-color 0.2s ease;
+    }
+
+    .create-show-card:hover,
+    .create-show-card:focus-within {
+        border-color: #3b82f6;
+    }
+
+    .create-show-card .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 1.25rem;
+        color: #f8f9fa;
+    }
+
+    .create-show-card .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .create-show-card .form-control {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.85rem;
+        border-radius: 0.5rem;
+    }
+
+    .create-show-card .btn-primary {
+        width: 100%;
+        padding: 0.75rem;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: #14171d;
+        border-radius: 0.75rem;
+        border: 1px dashed #30363d;
+    }
+
+    .empty-state h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #f8f9fa;
+    }
+
+    .empty-state p {
+        color: #9ca3af;
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        .stats-row {
+            flex-direction: column;
+        }
+
+        .stat-card {
+            min-width: 100%;
+        }
+    }
+</style>
+
+<div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Willkommen zurück. Hier sind deine Shows.</p>
 </div>
-<!-- AJAX-Löschfunktion entfernt, da Button entfernt wurde -->
+
+<!-- Statistiken -->
+<div class="stats-row">
+    <div class="stat-card">
+        <div class="stat-value">{{ shows|length if shows else 0 }}</div>
+        <div class="stat-label">Shows</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ total_songs }}</div>
+        <div class="stat-label">Songs</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-value">{{ total_lamps }}</div>
+        <div class="stat-label">Lampen</div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Linke Spalte: Neue Show anlegen -->
+    <div class="col-lg-4 col-xl-3">
+        <div class="create-show-card">
+            <div class="card-title">Neue Show anlegen</div>
+            <form method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="mb-3">
+                    <label class="form-label">Show- / Projektname</label>
+                    <input type="text" name="name" class="form-control" placeholder="z.B. Tour XYZ" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Artist / Produktion</label>
+                    <input type="text" name="artist" class="form-control" placeholder="Artist / Band">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Datum</label>
+                    <input type="date" name="date" class="form-control">
+                </div>
+
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Venue-Typ</label>
+                        <input type="text" name="venue_type" class="form-control" placeholder="Club, Halle">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="form-label">Genre</label>
+                        <input type="text" name="genre" class="form-control" placeholder="Rock, EDM">
+                    </div>
+                </div>
+
+                <input type="hidden" name="rig_type" value="">
+
+                <button type="submit" class="btn btn-primary">
+                    Show erstellen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rechte Spalte: Show-Grid -->
+    <div class="col-lg-8 col-xl-9">
+        {% if shows and shows|length > 0 %}
+        <div class="shows-grid">
+            {% for show in shows %}
+            <div class="show-card">
+                <div class="show-name">{{ show.name or "Unbenannte Show" }}</div>
+                <div class="show-artist">{{ show.artist or "Kein Artist" }}</div>
+                <div class="show-meta">
+                    {% if show.date %}
+                    <span>{{ show.date }}</span>
+                    {% endif %}
+                    {% if show.venue_type %}
+                    <span>{{ show.venue_type }}</span>
+                    {% endif %}
+                    {% if show.genre %}
+                    <span>{{ show.genre }}</span>
+                    {% endif %}
+                    <span>{{ show.songs|length if show.songs else 0 }} Songs</span>
+                </div>
+                <div class="show-actions">
+                    <a href="{{ url_for('show_details.show_regie_view', show_id=show.id) }}"
+                        class="btn btn-outline-info">
+                        Regie
+                    </a>
+                    <a href="{{ url_for('show_details.show_detail', show_id=show.id) }}" class="btn btn-primary">
+                        Details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>Noch keine Shows vorhanden</h3>
+            <p>Erstelle deine erste Show über das Formular links.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

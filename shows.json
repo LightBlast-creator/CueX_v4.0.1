@@ -13,9 +13,22 @@
       "vt_firma": "",
       "technischer_leiter": "",
       "notes": "",
-      "songs": [],
+      "songs": [
+        {
+          "id": 53,
+          "name": "b",
+          "order_index": 1,
+          "mood": "",
+          "colors": "",
+          "movement_style": "",
+          "eye_candy": "",
+          "special_notes": "",
+          "general_notes": "",
+          "prop_images": []
+        }
+      ],
       "rig_setup": {
-        "main_brand": "",
+        "main_brand": "JB-Lighting",
         "manufacturer": "",
         "spots": "",
         "manufacturer_spots": "",
@@ -25,7 +38,18 @@
         "phase_spots": "",
         "models_spots": [],
         "modes_spots": [],
-        "spots_items": [],
+        "spots_items": [
+          {
+            "count": "",
+            "manufacturer": "JB-Lighting",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
         "washes": "",
         "manufacturer_washes": "",
         "universe_washes": "",
@@ -73,10 +97,65 @@
         "power_sound": "",
         "power_video": "",
         "power_foh": "",
-        "power_other": ""
+        "power_other": "",
+        "washes_items": [
+          {
+            "count": "",
+            "manufacturer": "JB-Lighting",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
+        "beams_items": [
+          {
+            "count": "",
+            "manufacturer": "JB-Lighting",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
+        "blinders_items": [
+          {
+            "count": "",
+            "manufacturer": "JB-Lighting",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
+        "strobes_items": [
+          {
+            "count": "",
+            "manufacturer": "JB-Lighting",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
+        "custom_devices": []
       },
       "checklists": {
-        "preproduction": [],
+        "preproduction": [
+          {
+            "id": 44,
+            "text": "asd",
+            "done": true
+          }
+        ],
         "aufbau": [],
         "show": []
       }
@@ -164,6 +243,6 @@
     }
   ],
   "next_show_id": 54,
-  "next_song_id": 52,
-  "next_check_item_id": 44
+  "next_song_id": 54,
+  "next_check_item_id": 45
 }
