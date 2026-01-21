@@ -68,6 +68,14 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    # use_reloader=False behebt das STRG+C Problem unter Windows
-    # Für automatisches Neuladen bei Codeänderungen: use_reloader=True setzen
-    app.run(debug=True, use_reloader=False)
+    # Verwende Waitress als WSGI-Server für bessere Windows-Kompatibilität
+    # Waitress beendet sich sauber mit CTRL+C
+    try:
+        from waitress import serve
+        print("[INFO] Server startet auf http://127.0.0.1:5000")
+        print("[INFO] Drücke CTRL+C zum Beenden.")
+        serve(app, host='127.0.0.1', port=5000)
+    except ImportError:
+        # Fallback auf Flask dev server falls waitress nicht installiert
+        print("[WARN] Waitress nicht installiert. Nutze Flask Dev-Server.")
+        app.run(debug=True, use_reloader=False, host='127.0.0.1', port=5000)
