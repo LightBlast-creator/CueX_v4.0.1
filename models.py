@@ -27,6 +27,10 @@ class Show(db.Model):
     # Standard-Sequence-ID für den Export (z.B. 101, 201, 301 ...)
     ma3_sequence_id = db.Column(db.Integer, nullable=False, default=101)
 
+    # Modulare Feature-Auswahl (Komma-getrennte Liste)
+    # Mögliche Werte: stammdaten, cuelist, patch, kontakte, requisiten, video
+    modules = db.Column(db.String(200), default="stammdaten,cuelist,patch,kontakte,requisiten,video")
+
     # Rig-Infos (vereinfacht direkt an der Show)
     rig_manufacturer = db.Column(db.String(200), default="")
 

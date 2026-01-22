@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 800px;">
+    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary mb-3">← Zurück zur Übersicht</a>
+    <h2 class="mb-4">GDTF Fixture Suche</h2>
+
+    <div class="alert alert-info">
+        <strong>Tipp:</strong> Wähle in der Rig-Ansicht einen Hersteller aus – die Modelle werden automatisch aus GDTF
+        geladen.
+    </div>
+
+    <div class="card bg-dark text-light border-secondary">
+        <div class="card-header">
+            <h5 class="mb-0">Verfügbare Hersteller auf GDTF Share</h5>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">{{ manufacturers|length }} Hersteller gefunden</p>
+            <div class="row">
+                {% for m in manufacturers[:50] %}
+                <div class="col-md-4 col-lg-3 mb-2">
+                    <span class="badge bg-secondary">{{ m }}</span>
+                </div>
+                {% endfor %}
+                {% if manufacturers|length > 50 %}
+                <div class="col-12 mt-2">
+                    <small class="text-muted">... und {{ manufacturers|length - 50 }} weitere</small>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="https://gdtf-share.com/" target="_blank" class="btn btn-outline-primary">
+            <i class="bi bi-box-arrow-up-right"></i> GDTF Share Website öffnen
+        </a>
+    </div>
+</div>
+{% endblock %}

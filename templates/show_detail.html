@@ -210,43 +210,66 @@
     </form>
   </div>
 
-  <!-- Modern Tabs -->
+  <!-- Modern Tabs (Dynamisch basierend auf Modulen) -->
+  {% set modules = (show.modules or 'stammdaten,cuelist,patch,kontakte,requisiten,video').split(',') %}
   <nav class="modern-tabs">
+    {% if 'stammdaten' in modules %}
     <a class="tab-link {% if active_tab == 'meta' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='meta') }}">
       Stammdaten
     </a>
+    {% endif %}
+    {% if 'patch' in modules %}
     <a class="tab-link {% if active_tab == 'rig' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig') }}">
       Rig &amp; Strom
     </a>
+    {% endif %}
+    {% if 'cuelist' in modules %}
     <a class="tab-link {% if active_tab == 'songs' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}">
       Songs / Cue-Liste
     </a>
+    {% endif %}
+    {% if 'kontakte' in modules %}
     <a class="tab-link {% if active_tab == 'contacts' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='contacts') }}">
       Kontakte
     </a>
+    {% endif %}
+    {% if 'requisiten' in modules %}
     <a class="tab-link {% if active_tab == 'props' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='props') }}">
       Requisiten
     </a>
+    {% endif %}
+    {% if 'video' in modules %}
     <a class="tab-link {% if active_tab == 'videos' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='videos') }}">
       Video
     </a>
+    {% endif %}
   </nav>
 
-  <!-- Tab Content -->
+  <!-- Tab Content (Nur aktivierte Module laden) -->
   <div class="tab-content pt-3">
+    {% if 'stammdaten' in modules %}
     {% include "partials/show_meta_tab.html" %}
+    {% endif %}
+    {% if 'patch' in modules %}
     {% include "partials/show_rig_tab.html" %}
+    {% endif %}
+    {% if 'cuelist' in modules %}
     {% include "partials/show_songs_tab.html" %}
+    {% endif %}
+    {% if 'kontakte' in modules %}
     {% include "partials/show_contacts_tab.html" %}
+    {% endif %}
     {% include "partials/show_regie_tab.html" %}
+    {% if 'requisiten' in modules %}
     {% include "partials/show_props_tab.html" %}
-    {% if active_tab == 'videos' %}
+    {% endif %}
+    {% if 'video' in modules and active_tab == 'videos' %}
     {% include "partials/show_videos_tab.html" %}
     {% endif %}
   </div>

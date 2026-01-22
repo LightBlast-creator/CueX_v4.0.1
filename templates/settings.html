@@ -5,15 +5,31 @@
   <h2 class="mb-4">Einstellungen</h2>
   <form method="post" action="{{ url_for('main.settings') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <div class="mb-3">
-      <label for="gdtf_token" class="form-label">GDTF API-Token</label>
-      <input type="text" class="form-control" id="gdtf_token" name="gdtf_token" value="{{ gdtf_token or '' }}"
-        placeholder="Token hier einfügen">
-      <div class="form-text">
-        Deinen persönlichen GDTF-API-Token erhältst du auf <a href="https://gdtf-share.com/"
-          target="_blank">gdtf-share.com</a> nach dem Login.
+
+    <!-- GDTF Share Credentials -->
+    <div class="card bg-dark text-light border-secondary mb-4">
+      <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-lightbulb-fill me-2"></i>GDTF Share Login</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="gdtf_user" class="form-label">GDTF Username</label>
+          <input type="text" class="form-control" id="gdtf_user" name="gdtf_user" value="{{ gdtf_user or '' }}"
+            placeholder="Dein GDTF Share Username">
+        </div>
+        <div class="mb-3">
+          <label for="gdtf_password" class="form-label">GDTF Password</label>
+          <input type="password" class="form-control" id="gdtf_password" name="gdtf_password"
+            value="{{ gdtf_password or '' }}" placeholder="Dein GDTF Share Passwort">
+        </div>
+        <div class="form-text text-muted">
+          Dein GDTF Share Account. Registriere dich auf
+          <a href="https://gdtf-share.com/" target="_blank" class="text-info">gdtf-share.com</a>
+        </div>
       </div>
     </div>
+
+    <!-- Autosave Settings -->
     <div class="mb-3">
       <label for="autosave-interval" class="form-label">Autosave-Intervall</label>
       <select id="autosave-interval" name="autosave_interval" class="form-select">
@@ -24,10 +40,16 @@
       </select>
       <div class="form-text">Wähle, wie oft automatisch gespeichert werden soll.</div>
     </div>
+
     <button type="submit" class="btn btn-primary">Speichern</button>
   </form>
+
   {% if saved %}
-  <div class="alert alert-success mt-3">Token gespeichert!</div>
+  <div class="alert alert-success mt-3">Einstellungen gespeichert!</div>
+  {% endif %}
+
+  {% if gdtf_error %}
+  <div class="alert alert-danger mt-3">{{ gdtf_error }}</div>
   {% endif %}
 </div>
 {% endblock %}

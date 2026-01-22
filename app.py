@@ -65,6 +65,11 @@ with app.app_context():
             with engine.connect() as conn:
                 conn.execute(text("ALTER TABLE shows ADD COLUMN ma3_sequence_id INTEGER DEFAULT 101"))
                 conn.commit()
+        # Migration: modules Spalte hinzufügen (für modulares MVP)
+        if "modules" not in existing_columns:
+            with engine.connect() as conn:
+                conn.execute(text("ALTER TABLE shows ADD COLUMN modules VARCHAR(200) DEFAULT 'stammdaten,cuelist,patch,kontakte,requisiten,video'"))
+                conn.commit()
     db.create_all()
 
 if __name__ == "__main__":

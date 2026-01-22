@@ -1,31 +1,116 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app, jsonify
 import show_logic
+import gdtf_api
 import os
 
 main_bp = Blueprint('main', __name__)
 
-# GDTF Fixture Search Dummy-Route (früh registrieren)
+# GDTF API Endpoint: Fixtures für Hersteller (für Autocomplete)
+@main_bp.route('/api/gdtf/fixtures/<manufacturer>')
+def api_gdtf_fixtures(manufacturer):
+    """
+    Gibt alle Modelle eines Herstellers aus GDTF Share zurück.
+    Wird vom Frontend für Autocomplete genutzt.
+    """
+    if 'user' not in session:
+        return jsonify({'error': 'Nicht eingeloggt', 'models': []}), 401
+    
+    gdtf_user = session.get('gdtf_user', '')
+    gdtf_password = session.get('gdtf_password', '')
+    
+    if not gdtf_user or not gdtf_password:
+        return jsonify({
+            'error': 'GDTF Login fehlt. Bitte unter Einstellungen hinterlegen.',
+            'models': []
+        }), 400
+    
+    try:
+        fixtures = gdtf_api.get_fixtures_by_manufacturer(gdtf_user, gdtf_password, manufacturer)
+        # Nur Namen für Autocomplete
+        models = list(set(f.get('fixture', '') for f in fixtures if f.get('fixture')))
+        models.sort()
+        return jsonify({
+            'manufacturer': manufacturer,
+            'models': models,
+            'fixtures': fixtures,  # Vollständige Daten inkl. Modes
+            'count': len(models)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e), 'models': []}), 500
+
+
+# GDTF API Endpoint: Modes für ein spezifisches Fixture
+@main_bp.route('/api/gdtf/modes/<manufacturer>/<fixture_name>')
+def api_gdtf_modes(manufacturer, fixture_name):
+    """
+    Gibt alle Modes eines spezifischen Fixtures zurück (mit DMX-Footprint).
+    """
+    if 'user' not in session:
+        return jsonify({'error': 'Nicht eingeloggt', 'modes': []}), 401
+    
+    gdtf_user = session.get('gdtf_user', '')
+    gdtf_password = session.get('gdtf_password', '')
+    
+    if not gdtf_user or not gdtf_password:
+        return jsonify({'error': 'GDTF Login fehlt', 'modes': []}), 400
+    
+    try:
+        modes = gdtf_api.get_modes_for_fixture(gdtf_user, gdtf_password, manufacturer, fixture_name)
+        return jsonify({
+            'manufacturer': manufacturer,
+            'fixture': fixture_name,
+            'modes': modes
+        })
+    except Exception as e:
+        return jsonify({'error': str(e), 'modes': []}), 500
+
+
+# GDTF Fixture Search Page (erweitert)
 @main_bp.route('/gdtf_fixture_search')
 def gdtf_fixture_search():
     if 'user' not in session:
         return redirect(url_for('main.login'))
-    return '<h2>GDTF Fixture Suche (Demo)</h2><p>Hier kommt die API-Suche hin.</p>'
+    
+    gdtf_user = session.get('gdtf_user', '')
+    gdtf_password = session.get('gdtf_password', '')
+    
+    if not gdtf_user or not gdtf_password:
+        flash('Bitte zuerst GDTF Login-Daten in den Einstellungen hinterlegen.', 'warning')
+        return redirect(url_for('main.settings'))
+    
+    # Alle Hersteller aus GDTF laden (nutzt Cache)
+    try:
+        manufacturers = gdtf_api.get_manufacturers(gdtf_user, gdtf_password)
+        return render_template('gdtf_search.html', manufacturers=manufacturers)
+    except Exception as e:
+        flash(f'Fehler beim Laden der GDTF-Hersteller: {str(e)}', 'danger')
+        return redirect(url_for('main.settings'))
 
-# GDTF-Token Einstellungen-Route (früh registrieren)
+# GDTF-Einstellungen-Route
 @main_bp.route('/settings', methods=['GET', 'POST'])
 def settings():
     if 'user' not in session:
         return redirect(url_for('main.login'))
     saved = False
+    gdtf_error = None
     if request.method == 'POST':
-        token = request.form.get('gdtf_token', '').strip()
-        session['gdtf_token'] = token
+        gdtf_user = request.form.get('gdtf_user', '').strip()
+        gdtf_password = request.form.get('gdtf_password', '').strip()
+        session['gdtf_user'] = gdtf_user
+        session['gdtf_password'] = gdtf_password
         autosave_interval = request.form.get('autosave_interval', '0')
         session['autosave_interval'] = autosave_interval
+        gdtf_api.clear_cache()  # Cache leeren bei neuen Credentials
         saved = True
-    gdtf_token = session.get('gdtf_token', '')
+    gdtf_user = session.get('gdtf_user', '')
+    gdtf_password = session.get('gdtf_password', '')
     autosave_interval = session.get('autosave_interval', '0')
-    return render_template('settings.html', gdtf_token=gdtf_token, autosave_interval=autosave_interval, saved=saved)
+    return render_template('settings.html', 
+                           gdtf_user=gdtf_user, 
+                           gdtf_password=gdtf_password,
+                           autosave_interval=autosave_interval, 
+                           saved=saved,
+                           gdtf_error=gdtf_error)
 
 # Helper: Lampen zählen
 def calculate_total_lamps(rig):
@@ -98,6 +183,10 @@ def dashboard():
         genre = request.form.get('genre', '').strip()
         rig_type = request.form.get('rig_type', '').strip()
         
+        # Module aus Checkboxen (Liste von Werten)
+        modules_list = request.form.getlist('modules')
+        modules_str = ','.join(modules_list) if modules_list else 'stammdaten'
+        
         if name:
             new_show = show_logic.create_default_show(
                 name=name,
@@ -105,7 +194,8 @@ def dashboard():
                 date=date,
                 venue_type=venue_type,
                 genre=genre,
-                rig_type=rig_type
+                rig_type=rig_type,
+                modules=modules_str
             )
             show_logic.shows.append(new_show)
             show_logic.save_data()

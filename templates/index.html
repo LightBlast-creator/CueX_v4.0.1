@@ -188,6 +188,40 @@
             min-width: 100%;
         }
     }
+
+    /* Modul-Auswahl Grid */
+    .module-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+
+    .module-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: #1a1d23;
+        border: 1px solid #30363d;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+
+    .module-option:hover {
+        border-color: #3b82f6;
+        color: #f8f9fa;
+    }
+
+    .module-option input[type="checkbox"] {
+        accent-color: #3b82f6;
+    }
+
+    .module-option input[type="checkbox"]:checked+span {
+        color: #f8f9fa;
+    }
 </style>
 
 <div class="dashboard-header">
@@ -246,6 +280,37 @@
                 </div>
 
                 <input type="hidden" name="rig_type" value="">
+
+                <!-- Modul-Auswahl -->
+                <div class="mb-3">
+                    <label class="form-label">Was möchtest du verwalten?</label>
+                    <div class="module-grid">
+                        <label class="module-option">
+                            <input type="checkbox" name="modules" value="stammdaten" checked>
+                            <span>📋 Stammdaten</span>
+                        </label>
+                        <label class="module-option">
+                            <input type="checkbox" name="modules" value="cuelist">
+                            <span>🎵 Cue-Liste</span>
+                        </label>
+                        <label class="module-option">
+                            <input type="checkbox" name="modules" value="patch">
+                            <span>💡 Patch / Rig</span>
+                        </label>
+                        <label class="module-option">
+                            <input type="checkbox" name="modules" value="kontakte">
+                            <span>👤 Kontakte</span>
+                        </label>
+                        <label class="module-option">
+                            <input type="checkbox" name="modules" value="requisiten">
+                            <span>🎭 Requisiten</span>
+                        </label>
+                        <label class="module-option">
+                            <input type="checkbox" name="modules" value="video">
+                            <span>🎬 Video</span>
+                        </label>
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary">
                     Show erstellen

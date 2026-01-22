@@ -4,8 +4,9 @@
     <div class="col-md-8">
       <form method="post" action="{{ url_for('show_details.update_rig', show_id=show.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <div class="mb-3">
-          <a href="https://gdtf-share.com/" target="_blank" class="btn btn-gdtf mb-2">GDTF holen</a>
+        <div class="mb-3 d-flex gap-2">
+          <a href="https://gdtf-share.com/" target="_blank" class="btn btn-gdtf">GDTF holen (Extern)</a>
+          <a href="{{ url_for('main.gdtf_fixture_search') }}" class="btn btn-outline-info">GDTF Hersteller (Intern)</a>
         </div>
         <!-- Main Brand -->
         <div class="mb-3">
@@ -836,6 +837,46 @@
           </div>
         </div>
 
+        <!-- DMX-Adress-Übersicht Card -->
+        <div class="card mb-4 border-secondary bg-dark text-light">
+          <div class="card-header border-secondary d-flex justify-content-between align-items-center">
+            <h5 class="h6 mb-0 text-uppercase fw-bold text-white-50">
+              <i class="bi bi-diagram-3 me-2"></i>DMX-Adress-Übersicht
+            </h5>
+            <button type="button" id="refresh-dmx-overview" class="btn btn-sm btn-outline-info">
+              <i class="bi bi-arrow-clockwise"></i> Aktualisieren
+            </button>
+          </div>
+          <div class="card-body">
+            <div id="dmx-overview-container">
+              <div class="row mb-3">
+                <div class="col-md-6">
+                  <label class="form-label text-muted small">Universe filtern</label>
+                  <select id="dmx-universe-filter" class="form-select form-select-sm">
+                    <option value="">Alle Universen</option>
+                    <option value="1">Universe 1</option>
+                    <option value="2">Universe 2</option>
+                    <option value="3">Universe 3</option>
+                    <option value="4">Universe 4</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <div id="dmx-stats" class="text-end pt-4">
+                    <span class="text-muted small">Klicke "Aktualisieren" für DMX-Übersicht</span>
+                  </div>
+                </div>
+              </div>
+              <div id="dmx-grid" class="d-flex flex-wrap gap-1 mb-3" style="font-size: 0.65rem;">
+                <!-- DMX-Adressen werden hier dynamisch gerendert -->
+              </div>
+              <div class="d-flex gap-3 small">
+                <span><span class="badge bg-success me-1">&nbsp;</span> Belegt</span>
+                <span><span class="badge bg-secondary me-1">&nbsp;</span> Frei</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="mt-4 mb-3">
           <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase"
             style="letter-spacing: 0.05em;">
@@ -885,7 +926,21 @@
       {% endif %}
 
       <script>
-        function updateModelOptions(row, type) {
+        // GDTF API: Modelle für Hersteller laden
+        async function fetchGdtfModels(manufacturer) {
+          if (!manufacturer) return [];
+          try {
+            const resp = await fetch(`/api/gdtf/fixtures/${encodeURIComponent(manufacturer)}`);
+            if (!resp.ok) return [];
+            const data = await resp.json();
+            return data.models || [];
+          } catch (e) {
+            console.warn('[GDTF] Fehler beim Laden:', e);
+            return [];
+          }
+        }
+
+        async function updateModelOptions(row, type) {
           const manuSel = row.querySelector('.' + type + '-manufacturer');
           const modelInput = row.querySelector('.' + type + '-model');
           const modelList = row.querySelector('datalist[id^="' + type + '-model-list"]');
@@ -903,10 +958,47 @@
               modelList.appendChild(opt);
             });
           }
-          // Mode leeren
-          modeList.innerHTML = '';
+
+          // GDTF API im Hintergrund abfragen
+          if (manu) {
+            // Loading-Indicator
+            modelInput.placeholder = 'Lade GDTF...';
+            const gdtfModels = await fetchGdtfModels(manu);
+            modelInput.placeholder = '';
+
+            if (gdtfModels.length > 0) {
+              // Bestehende Optionen sammeln
+              const existing = new Set();
+              modelList.querySelectorAll('option').forEach(o => existing.add(o.value));
+
+              // Neue GDTF-Modelle hinzufügen
+              gdtfModels.forEach(function (model) {
+                if (!existing.has(model)) {
+                  const opt = document.createElement('option');
+                  opt.value = model;
+                  opt.textContent = model + ' (GDTF)';
+                  modelList.appendChild(opt);
+                }
+              });
+              console.log(`[GDTF] ${gdtfModels.length} Modelle für ${manu} geladen`);
+            }
+          }
         }
-        function updateModeOptions(row, type) {
+        // GDTF API: Modes für ein Fixture laden
+        async function fetchGdtfModes(manufacturer, fixtureName) {
+          if (!manufacturer || !fixtureName) return [];
+          try {
+            const resp = await fetch(`/api/gdtf/modes/${encodeURIComponent(manufacturer)}/${encodeURIComponent(fixtureName)}`);
+            if (!resp.ok) return [];
+            const data = await resp.json();
+            return data.modes || [];
+          } catch (e) {
+            console.warn('[GDTF] Fehler beim Mode-Laden:', e);
+            return [];
+          }
+        }
+
+        async function updateModeOptions(row, type) {
           const manuSel = row.querySelector('.' + type + '-manufacturer');
           const modelInput = row.querySelector('.' + type + '-model');
           const modeInput = row.querySelector('.' + type + '-mode');
@@ -915,12 +1007,103 @@
           const manu = manuSel.value;
           const model = modelInput.value;
           modeList.innerHTML = '';
+
+          // Lokale Modes zuerst (falls vorhanden)
           if (typeof LAMP_MODELS !== 'undefined' && LAMP_MODELS[manu] && LAMP_MODELS[manu][model]) {
             LAMP_MODELS[manu][model].forEach(function (mode) {
               const opt = document.createElement('option');
               opt.value = mode;
               modeList.appendChild(opt);
             });
+          }
+
+          // GDTF Modes laden
+          if (manu && model) {
+            modeInput.placeholder = 'Lade Modes...';
+            const gdtfModes = await fetchGdtfModes(manu, model);
+            modeInput.placeholder = '';
+
+            if (gdtfModes.length > 0) {
+              const existing = new Set();
+              modeList.querySelectorAll('option').forEach(o => existing.add(o.value));
+
+              gdtfModes.forEach(function (mode) {
+                const modeName = mode.name || mode;
+                const footprint = mode.dmx_footprint || 0;
+                if (!existing.has(modeName)) {
+                  const opt = document.createElement('option');
+                  opt.value = modeName;
+                  opt.textContent = footprint ? `${modeName} (${footprint} CH)` : modeName;
+                  opt.dataset.footprint = footprint; // Footprint speichern
+                  modeList.appendChild(opt);
+                }
+              });
+              console.log(`[GDTF] ${gdtfModes.length} Modes für ${model} geladen`);
+            }
+          }
+        }
+
+        // --- DMX ÜBERSICHT LOGIK ---
+        function renderDmxOverview() {
+          const grid = document.getElementById('dmx-grid');
+          const stats = document.getElementById('dmx-stats');
+          const uniFilter = document.getElementById('dmx-universe-filter').value;
+          if (!grid) return;
+
+          grid.innerHTML = '';
+          const occupied = new Set();
+
+          // Alle Reihen durchgehen und belegte Adressen sammeln
+          document.querySelectorAll('.rig-item-row').forEach(row => {
+            const uni = row.querySelector('input[name*="__universe"], .spots-universe, .washes-universe, .beams-universe, .blinders-universe, .strobes-universe')?.value;
+            const addr = parseInt(row.querySelector('input[name*="__address"], .spots-address, .washes-address, .beams-address, .blinders-address, .strobes-address')?.value);
+            const modeVal = row.querySelector('input[name*="__mode"], .spots-mode, .washes-mode, .beams-mode, .blinders-mode, .strobes-mode')?.value;
+
+            if (!uni || isNaN(addr) || addr < 1) return;
+            if (uniFilter && uni !== uniFilter) return;
+
+            // Footprint ermitteln (Versuch aus Mode-String zu extrahieren oder Dummy)
+            let footprint = 1;
+            const fpMatch = modeVal?.match(/\((\d+)\s*CH\)/i);
+            if (fpMatch) {
+              footprint = parseInt(fpMatch[1]);
+            } else {
+              // Fallback: Wenn wir den Mode-String nicht parsen können, schauen wir ob wir's aus der Datalist finden
+              const listId = row.querySelector('input[name*="__mode"]')?.getAttribute('list');
+              if (listId) {
+                const opt = document.querySelector(`#${listId} option[value="${modeVal}"]`);
+                if (opt && opt.dataset.footprint) footprint = parseInt(opt.dataset.footprint);
+              }
+            }
+
+            for (let i = 0; i < footprint; i++) {
+              if (addr + i <= 512) {
+                occupied.add(`${uni}-${addr + i}`);
+              }
+            }
+          });
+
+          // Grid rendern (nur für das gewählte Universum oder Standard Uni 1)
+          const activeUni = uniFilter || "1";
+          for (let i = 1; i <= 512; i++) {
+            const cell = document.createElement('div');
+            cell.style.width = '12px';
+            cell.style.height = '12px';
+            cell.style.border = '1px solid #444';
+            cell.title = `Addr ${i}`;
+
+            if (occupied.has(`${activeUni}-${i}`)) {
+              cell.className = 'bg-success';
+              cell.title += ' (BELEGT)';
+            } else {
+              cell.className = 'bg-secondary opacity-25';
+            }
+            grid.appendChild(cell);
+          }
+
+          if (stats) {
+            const count = Array.from(occupied).filter(key => key.startsWith(`${activeUni}-`)).length;
+            stats.innerHTML = `<span class="badge bg-info">Uni ${activeUni}: ${count} / 512 belegt</span>`;
           }
         }
         function setupLampDropdowns(type) {
@@ -944,6 +1127,23 @@
           setupLampDropdowns('beams');
           setupLampDropdowns('blinders');
           setupLampDropdowns('strobes');
+
+          // DMX Overview Handler
+          const refreshBtn = document.getElementById('refresh-dmx-overview');
+          if (refreshBtn) refreshBtn.addEventListener('click', renderDmxOverview);
+
+          const uniFilter = document.getElementById('dmx-universe-filter');
+          if (uniFilter) uniFilter.addEventListener('change', renderDmxOverview);
+
+          // Auto-Update bei Adressänderungen
+          document.addEventListener('change', function (e) {
+            if (e.target.name && (e.target.name.includes('address') || e.target.name.includes('universe') || e.target.name.includes('mode'))) {
+              renderDmxOverview();
+            }
+          });
+
+          // Initial render
+          setTimeout(renderDmxOverview, 1000);
         });
         function makeAddHandler(addButtonId, containerId) {
           const addBtn = document.getElementById(addButtonId);

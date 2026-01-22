@@ -163,6 +163,7 @@ def load_data() -> None:
         show.setdefault("venue_type", "")
         show.setdefault("genre", "")
         show.setdefault("rig_type", "")
+        show.setdefault("modules", "stammdaten,cuelist,patch,kontakte,requisiten,video")
 
         # Stammdaten-Extras
         for key in ("regie", "veranstalter", "vt_firma", "technischer_leiter", "notes"):
@@ -241,6 +242,7 @@ def create_default_show(
     venue_type: str,
     genre: str,
     rig_type: str,
+    modules: str = "stammdaten,cuelist,patch,kontakte,requisiten,video",
 ) -> Show:
     """Neue Show mit Default-Struktur anlegen (nur in-memory + JSON)."""
     global next_show_id
@@ -253,6 +255,7 @@ def create_default_show(
         "venue_type": venue_type or "",
         "genre": genre or "",
         "rig_type": rig_type or "",
+        "modules": modules or "stammdaten",
         "regie": "",
         "veranstalter": "",
         "vt_firma": "",
@@ -437,7 +440,7 @@ def sync_entire_show_to_db(show: Show) -> None:
         db_show.technischer_leiter = show.get("technischer_leiter", "") or ""
         db_show.notes = show.get("notes", "") or ""
         db_show.ma3_sequence_id = show.get("ma3_sequence_id", 101)
-
+        db_show.modules = show.get("modules", "stammdaten,cuelist,patch,kontakte,requisiten,video")
 
         # Rig / Strom
         rig = show.get("rig_setup") or {}
