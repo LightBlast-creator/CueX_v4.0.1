@@ -124,7 +124,8 @@ def update_meta(show_id: int):
 
     save_data()
     sync_entire_show_to_db(show)
-    return redirect(url_for("show_details.show_detail", show_id=show_id, tab="meta"))
+    return_tab = request.form.get("return_tab") or request.args.get("return_tab") or "meta"
+    return redirect(url_for("show_details.show_detail", show_id=show_id, tab=return_tab))
 
 @show_details_bp.route("/show/<int:show_id>/update_rig", methods=["POST"])
 def update_rig(show_id: int):
