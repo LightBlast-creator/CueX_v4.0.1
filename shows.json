@@ -24,7 +24,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Ganzen“ sehen. Unter Druck manchmal scharf, aber nicht unfair.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000002,
@@ -35,7 +36,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Schauspieler (20 bis 40). Talentiert, etwas impulsiv. Braucht klare Ansagen, will aber ernst genommen werden.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000003,
@@ -46,7 +48,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Schauspielerin (20 bis 40). Strukturiert, empathisch, vermittelt zwischen den Fronten. Hat die stärkste Nervenstärke im Team.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000004,
@@ -57,7 +60,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Veranstaltungstechniker Licht (25 bis 45). Ruhig, fachlich stark, denkt in Abläufen und Lösungen. Sagt Dinge direkt, aber professionell. (Name kann geändert werden.)",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000005,
@@ -68,7 +72,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "KI-Assistent (Stimme aus Laptop/Tablet/Intercom). Neutral, sehr schnell, manchmal unbeabsichtigt komisch. Spricht klar und knapp, fast wie ein Systemlog.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000006,
@@ -79,7 +84,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Intendantin/Produktionsleitung (40 bis 60). Wirtschaftlich denkend, freundlich im Ton, hart in der Deadline. Kommt „kurz rein“ und erhöht den Druck. Ort / Ausstattung • Probenbühne oder kleine Bühne; Tisch mit Laptop/Tablet; Headset/Intercom (kann gespielt werden); Requisitenstuhl; Script-Ordner.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000007,
@@ -90,7 +96,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "sichtbarer Lichtpult-Platz (oder seitlich angedeutet). Stücktext",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000008,
@@ -101,7 +108,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Licht: Arbeitslicht / Probenlicht. Leises Summen von Technik. PASCAL sitzt am Laptop",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000009,
@@ -112,7 +120,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "und tippt. NINA wärmt sich. LEO läuft unruhig. MARA steht mit Script und Stift.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000010,
@@ -123,7 +132,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Wir machen jetzt den Durchlauf. Ohne Unterbrechung. So, wie es morgen sein muss.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000011,
@@ -134,7 +144,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Ohne Unterbrechung ist super, wenn man nicht im Dunkeln spielt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000012,
@@ -145,7 +156,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Licht ist nicht „Dunkel“. Das ist „kein Cue getriggert“.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000013,
@@ -156,7 +168,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Das ist exakt das, was ich meinte.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000014,
@@ -167,7 +180,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Okay. Wir fangen an. Schritt für Schritt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000015,
@@ -178,7 +192,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Nein, Nina. Wir fangen nicht „Schritt für Schritt“ an. Wir fangen an wie im Leben: Es passiert, und ihr müsst drin bleiben. Seite 1",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000016,
@@ -189,7 +204,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Dann brauche ich den finalen Cue-Plan. Der Ordner hier ist Version drei. Gestern hieß es Version fünf.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000017,
@@ -200,7 +216,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Versionen sind Kunst. Die leben.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000018,
@@ -211,7 +228,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Technik lebt nicht von Kunst, sondern von Eindeutigkeit. Kurzer Moment Stille. NINA atmet einmal hörbar aus.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000019,
@@ -222,7 +240,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Mara. Gib Pascal bitte das, was „morgen gilt“. Sonst kämpfen wir gegeneinander statt fürs Stück.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000020,
@@ -233,7 +252,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Gut. Version fünf. (zeigt auf Ordner) Hier. Und ja: Es gibt Änderungen.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000021,
@@ -244,7 +264,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Änderungen sind okay. Unangekündigte Änderungen sind das Problem.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000022,
@@ -255,7 +276,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Willkommen im Theater.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000023,
@@ -266,7 +288,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "klappt den Laptop auf. Ein kurzes „Beep“.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000024,
@@ -277,7 +300,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Projekt geladen. „Die letzte Probe“. Status: unvollständig. Fehlende Verknüpfungen: 12.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000025,
@@ -288,7 +312,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Aha. Sogar der Computer ist enttäuscht.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000026,
@@ -299,7 +324,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Korrektur: Ich bin nicht enttäuscht. Ich melde Abweichungen.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000027,
@@ -310,7 +336,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Sehr gut. Dann melden wir jetzt weniger Abweichungen.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000028,
@@ -321,7 +348,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Durchlauf. Jetzt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000029,
@@ -332,7 +360,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "setzt ein Headset auf, zeigt „Startposition“. NINA und LEO gehen an ihre Markierungen.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000030,
@@ -343,7 +372,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Ready. Auf mein „Go“. (in Intercom-Positur) Standby Szene 1: Cue 1, Cue 2, Cue 3.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000031,
@@ -354,7 +384,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Standby bestätigt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000032,
@@ -365,7 +396,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Und… los.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000033,
@@ -376,7 +408,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Licht: Warmes Bühnenbild. NINA und LEO spielen. MARA beobachtet. PASCAL schaut",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000034,
@@ -387,7 +420,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "zwischen Script und Laptop.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000035,
@@ -398,7 +432,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Du warst nie wirklich weg. Du warst nur… nicht hier.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000036,
@@ -409,7 +444,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Und du warst nie wirklich hier. Du warst nur… laut.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000037,
@@ -420,7 +456,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "nickt minimal: Das ist gut. PASCAL hebt die Hand.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000038,
@@ -431,7 +468,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Go Cue 2. Licht ändert sich subtil. Alles läuft.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000039,
@@ -442,7 +480,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Sag’s. Jetzt. Oder nie.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000040,
@@ -453,7 +492,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Ich… ich kann nicht.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000041,
@@ -464,7 +504,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Standby Cue 3.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000042,
@@ -475,7 +516,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Warnung: Cue 3 ist nicht definiert. Vorschlag: Cue 3a verwenden.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000043,
@@ -486,7 +528,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "friert einen halben Schlag zu früh – er merkt, dass etwas nicht stimmt. Seite 2",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000044,
@@ -497,7 +540,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Was heißt „nicht definiert“?",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000045,
@@ -508,7 +552,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Leo! Bleib drin!",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000046,
@@ -519,7 +564,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Cue 3 fehlt in Version fünf. Es gibt nur 3a, 3b und 3c.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000047,
@@ -530,7 +576,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Welche Stimmung willst du?",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000048,
@@ -541,7 +588,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Die… die harte Kante. Der Bruch.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000049,
@@ -552,7 +600,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Dann ist das 3b.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000050,
@@ -563,7 +612,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Cue 3b: „Kalte Kante, Kontrast hoch“. Bereit.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000051,
@@ -574,7 +624,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Standby 3b… und Go. Licht kippt deutlich, die Szene bekommt Schärfe. LEO und NINA finden sofort wieder ins Spiel.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000052,
@@ -585,7 +636,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Dann sag ich es eben für uns beide: Ich habe Angst.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000053,
@@ -596,7 +648,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Endlich.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000054,
@@ -607,7 +660,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "atmet. Man sieht: Sie will unterbrechen, tut es aber nicht. Es läuft. Für einen Moment ist alles stimmig. Plötzlich tritt FRAU STEIN von der Seite auf – Clipboard, Uhr, kontrollierte Präsenz.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000055,
@@ -618,7 +672,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Mara. Pascal. Ein Moment.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000056,
@@ -629,7 +684,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "hält kurz die Hand hoch „gleich“. FRAU STEIN wartet keine Sekunde.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000057,
@@ -640,7 +696,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Morgen ist Premiere. Presse sitzt. Wir haben heute noch genau… (blickt auf die Uhr) …vierzig Minuten. Wenn ich noch einmal „Cue fehlt“ höre, streichen wir Effekte und spielen im Arbeitslicht. Klar? Stille. Das ist die Drohung, die niemand hören will.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000058,
@@ -651,7 +708,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Arbeitslicht ist ehrlich. Aber hässlich.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000059,
@@ -662,7 +720,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Wir schaffen das. Wenn wir aufhören, uns zu bekämpfen.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000060,
@@ -673,7 +732,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Frau Stein, wir können das stabilisieren. Aber dann gilt: Ab jetzt keine neuen Änderungen ohne Ansage. Mara: Final heißt final.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000061,
@@ -684,7 +744,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Du hast recht. (an alle) Stopp. Kurzer Reset. Pascal, sag mir, was du brauchst. Jetzt konkret.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000062,
@@ -695,7 +756,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Zwei Dinge. Erstens: Finaler Cue-Plan als eine Version, die nicht „lebt“. Zweitens: Wir definieren die fehlenden Übergänge sofort: 3, 7 und 11.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000063,
@@ -706,7 +768,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Hinweis: 7 und 11 sind ebenfalls nicht definiert.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000064,
@@ -717,7 +780,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Danke, CUE. Wirklich.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000065,
@@ -728,7 +792,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Gern. Ich optimiere die Wahrheit nicht.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000066,
@@ -739,7 +804,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Gut. Wir definieren es jetzt. Cue 3 ist 3b. Cue 7: Traum, weich, Hoffnung. Cue 11: Ende. Kein Pathos. Klarheit.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000067,
@@ -750,7 +816,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Verstanden. CUE, lege Cue 7 als „weich, Hoffnung“ an. Cue 11 als „klar, ruhig“.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000068,
@@ -761,7 +828,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Bestätigung: Cue 7 erstellt. Cue 11 erstellt. Status: vollständig.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000069,
@@ -772,7 +840,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "So will ich das hören. (geht ab) Ein Moment: Alle sind erschöpft – und gleichzeitig wieder ein Team.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000070,
@@ -783,7 +852,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Du musst nicht alles allein tragen. Seite 3",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000071,
@@ -794,7 +864,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Ich weiß. Ich vergesse es nur, wenn’s brennt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000072,
@@ -805,7 +876,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Dann sag „es brennt“, bevor es brennt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000073,
@@ -816,7 +888,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Und ich… bleibe im Spiel, auch wenn’s wackelt. Aber wenn’s dunkel wird, sag’s vorher.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000074,
@@ -827,7 +900,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Deal.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000075,
@@ -838,7 +912,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Okay. Noch einmal ab der Stelle. Und diesmal läuft’s durch. Wir sind nicht perfekt. Aber wir sind bereit.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000076,
@@ -849,7 +924,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Standby Cue 3b.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000077,
@@ -860,7 +936,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Standby bestätigt.",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         },
         {
           "id": 1000078,
@@ -871,7 +948,8 @@
           "movement_style": "",
           "eye_candy": "",
           "special_notes": "Du warst nie wirklich weg… Licht: sauberer Übergang. Die Probe geht weiter. Das Stück hat wieder Boden unter den Füßen. BLACKOUT. Seite 4",
-          "general_notes": ""
+          "general_notes": "",
+          "prop_images": []
         }
       ],
       "rig_setup": {
@@ -940,9 +1018,91 @@
         "aufbau": [],
         "show": []
       }
+    },
+    {
+      "id": 73,
+      "name": "asd",
+      "artist": "asd",
+      "date": "2026-01-22",
+      "venue_type": "asd",
+      "genre": "asd",
+      "rig_type": "",
+      "modules": "stammdaten,cuelist,patch,kontakte,requisiten,video",
+      "regie": "",
+      "veranstalter": "",
+      "vt_firma": "",
+      "technischer_leiter": "",
+      "notes": "",
+      "songs": [],
+      "rig_setup": {
+        "main_brand": "",
+        "manufacturer": "",
+        "spots": "",
+        "manufacturer_spots": "",
+        "universe_spots": "",
+        "address_spots": "",
+        "watt_spots": "",
+        "phase_spots": "",
+        "models_spots": [],
+        "modes_spots": [],
+        "spots_items": [],
+        "washes": "",
+        "manufacturer_washes": "",
+        "universe_washes": "",
+        "address_washes": "",
+        "watt_washes": "",
+        "phase_washes": "",
+        "models_washes": [],
+        "modes_washes": [],
+        "beams": "",
+        "manufacturer_beams": "",
+        "universe_beams": "",
+        "address_beams": "",
+        "watt_beams": "",
+        "phase_beams": "",
+        "models_beams": [],
+        "modes_beams": [],
+        "blinders": "",
+        "manufacturer_blinders": "",
+        "universe_blinders": "",
+        "address_blinders": "",
+        "watt_blinders": "",
+        "phase_blinders": "",
+        "models_blinders": [],
+        "modes_blinders": [],
+        "strobes": "",
+        "manufacturer_strobes": "",
+        "universe_strobes": "",
+        "address_strobes": "",
+        "watt_strobes": "",
+        "phase_strobes": "",
+        "models_strobes": [],
+        "modes_strobes": [],
+        "positions": "",
+        "notes": "",
+        "count_spots": "",
+        "count_washes": "",
+        "count_beams": "",
+        "count_blinders": "",
+        "count_strobes": "",
+        "truss_info": "",
+        "truss_height": "",
+        "specials": "",
+        "power_main": "",
+        "power_light": "",
+        "power_sound": "",
+        "power_video": "",
+        "power_foh": "",
+        "power_other": ""
+      },
+      "checklists": {
+        "preproduction": [],
+        "aufbau": [],
+        "show": []
+      }
     }
   ],
-  "next_show_id": 73,
-  "next_song_id": 81,
+  "next_show_id": 74,
+  "next_song_id": 83,
   "next_check_item_id": 46
 }

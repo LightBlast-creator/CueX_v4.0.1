@@ -78,7 +78,74 @@
       <!-- Bestehende Songs/Szenen -->
       {% set songs = show.songs or [] %}
       {% if songs %}
-      <div class="d-flex flex-column gap-2">
+
+      <!-- Suchleiste (Sticky) -->
+      <div class="sticky-top bg-dark pb-3 pt-2" style="top: 0; z-index: 10;">
+        <div class="input-group border border-secondary rounded overflow-hidden d-flex flex-nowrap align-items-center">
+          <span class="input-group-text bg-transparent border-0 text-secondary pe-2 ps-3" style="min-width: 40px;">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" id="cueSearchInput"
+            class="form-control bg-transparent text-light border-0 shadow-none ps-0"
+            placeholder="Suche nach Name, Cue-Nummer, Notizen..." autocomplete="off">
+          <button class="btn btn-outline-secondary border-0 text-secondary pe-3" type="button" id="clearSearchBtn"
+            title="Suche löschen">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <style>
+          /* Seamless Search Bar Style */
+          #cueSearchInput::placeholder {
+            color: #6c757d;
+            opacity: 1;
+          }
+
+          .input-group {
+            transition: border-color 0.2s;
+            background-color: rgba(255, 255, 255, 0.02);
+          }
+
+          .input-group:focus-within {
+            border-color: #adb5bd !important;
+            background-color: rgba(255, 255, 255, 0.05);
+          }
+
+          .input-group:hover {
+            border-color: #adb5bd !important;
+          }
+
+          .input-group-text,
+          #cueSearchInput,
+          #clearSearchBtn {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            border-radius: 0 !important;
+          }
+
+          #clearSearchBtn:hover {
+            color: #f8f9fa !important;
+          }
+
+          /* Entferne Default-Browser-Input-Ränder */
+          #cueSearchInput:focus,
+          .input-group-text:focus,
+          .btn:focus {
+            box-shadow: none !important;
+            outline: none !important;
+          }
+        </style>
+      </div>
+
+      <div class="d-flex flex-column gap-2" id="cuesListContainer">
+        <!-- Keine Treffer Warnung -->
+        <div id="noSearchResults" class="text-center py-4 text-muted d-none">
+          <i class="bi bi-search display-6 mb-2 d-block opacity-50"></i>
+          <p>Keine Cues gefunden, die deiner Suche entsprechen.</p>
+          <button class="btn btn-sm btn-outline-light mt-2" onclick="document.getElementById('clearSearchBtn').click()">
+            Filter zurücksetzen
+          </button>
+        </div>
+
         {% for song in songs|sort(attribute="order_index") %}
         {% set song_key = song.id if song.id is not none else loop.index %}
         {% set regie_text = (song.special_notes or song.general_notes or '')|replace('\n',' ') %}
@@ -239,3 +306,71 @@
     </div>
   </div>
 </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('cueSearchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    const cuesContainer = document.getElementById('cuesListContainer');
+    const noResultsMsg = document.getElementById('noSearchResults');
+
+    if (!searchInput || !cuesContainer) return;
+
+    // Alle Cue-Karten sammeln
+    const cueCards = Array.from(cuesContainer.querySelectorAll('.song-card'));
+
+    function performSearch() {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      cueCards.forEach(card => {
+        // 1. Sichtbarer Text (innerText)
+        const textContent = card.innerText.toLowerCase();
+
+        // 2. Relevante Input-Felder (Name, Notizen, etc.) 
+        // Wir schließen System-Felder (csrf_token, ids etc.) explizit aus
+        const relevantInputs = Array.from(card.querySelectorAll('input:not([type="hidden"]), textarea'));
+        const inputsContent = relevantInputs.map(input => input.value.toLowerCase()).join(' ');
+
+        // 3. Spezifische Hidden Fields, die wir DOCH durchsuchen wollen (falls collapsed)
+        // Z.B. Name ist ein Input, der im Collapsed-State vielleicht nicht im innerText ist (obwohl er im Header steht)
+        // Aber Header-Text ist im innerText.
+        // Wir suchen sicherheitshalber in inputs mit namen 'song_name', 'song_special_notes' etc.
+        const specificHiddenInputs = Array.from(card.querySelectorAll('input[name="song_name"], input[name="song_special_notes"], textarea[name="song_special_notes"], textarea[name="song_general_notes"]'));
+        const hiddenContent = specificHiddenInputs.map(input => input.value.toLowerCase()).join(' ');
+
+        const content = textContent + ' ' + inputsContent + ' ' + hiddenContent;
+
+        if (query === '' || content.includes(query)) {
+          card.classList.remove('d-none');
+          visibleCount++;
+        } else {
+          card.classList.add('d-none');
+        }
+      });
+
+      // "Keine Treffer" anzeigen
+      if (visibleCount === 0 && query !== '') {
+        noResultsMsg.classList.remove('d-none');
+      } else {
+        noResultsMsg.classList.add('d-none');
+      }
+
+      // Clear Button Visibility
+      clearBtn.style.display = query ? 'block' : 'none';
+    }
+
+    // Event Listeners
+    searchInput.addEventListener('input', performSearch);
+
+    clearBtn.addEventListener('click', function () {
+      searchInput.value = '';
+      performSearch();
+      searchInput.focus();
+    });
+
+    // Initial verstecken des Clear Buttons
+    clearBtn.style.display = 'none';
+  });
+</script>
