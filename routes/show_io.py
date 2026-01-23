@@ -300,4 +300,4 @@ def export_techrider_pdf(show_id: int):
 def export_ma3(show_id: int):
     db_show = ShowModel.query.get_or_404(show_id)
     file_path = ma3_export.export_ma3_plugin_to_file(db_show)
-    return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="text/x-lua")
+    return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="application/zip")

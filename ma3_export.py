@@ -94,12 +94,14 @@ def build_ma3_lua(db_show: Any) -> str:
         cue_name = str(_get_attr(it, "title", "name", default=f"Cue {i}"))
         mood = str(_get_attr(it, "mood", "stimmung", default=""))
         colors = str(_get_attr(it, "colors", "farben", default=""))
+        notes = str(_get_attr(it, "special_notes", "general_notes", "notes", default=""))
 
         lines.append("    {")
         lines.append(f"      index  = {i},")
         lines.append(f'      name   = "{q(cue_name)}",')
         lines.append(f'      mood   = "{q(mood)}",')
         lines.append(f'      colors = "{q(colors)}",')
+        lines.append(f'      notes  = "{q(notes)}",')
         lines.append("    },")
 
     lines.append("  }")
@@ -128,38 +130,75 @@ def build_ma3_lua(db_show: Any) -> str:
     lines.append("")
     lines.append("  CmdIndirectWait('ClearAll')")
     lines.append("")
+    lines.append("  CmdIndirectWait('ClearAll')")
+    lines.append("")
     lines.append("  -- Update-Modus: Store /O (überschreibt Cue-Slots, löscht aber nicht die Sequence)")
     lines.append("  for _, c in ipairs(show.cues) do")
     lines.append("    local label = _safe(c.name)")
+    lines.append("    local note  = _safe(c.notes)")
     lines.append("    if _safe(c.mood) ~= '' or _safe(c.colors) ~= '' then")
-    lines.append("      label = label .. ' - ' .. _safe(c.mood) .. ' - ' .. _safe(c.colors)")
+    lines.append("      label = label .. ' [' .. _safe(c.mood) .. '|' .. _safe(c.colors) .. ']'")
     lines.append("    end")
     lines.append("    CmdIndirectWait(string.format('Store Sequence %d Cue %d /O', seq, c.index))")
     lines.append("    CmdIndirectWait(string.format('Label Sequence %d Cue %d \"%s\"', seq, c.index, label))")
+    lines.append("    if note ~= '' then")
+    lines.append("      CmdIndirectWait(string.format('Set Sequence %d Cue %d Property \"Note\" \"%s\"', seq, c.index, note))")
+    lines.append("    end")
     lines.append("  end")
     lines.append("")
     lines.append("  CmdIndirectWait(string.format('Label Sequence %d \"%s\"', seq, _safe(show.title)))")
+    lines.append("  CmdIndirectWait(string.format('Select Sequence %d', seq))")
     lines.append("  CmdIndirectWait(string.format('Select Sequence %d', seq))")
     lines.append('  Printf(\"Fertig. Sequence/Cues angelegt oder aktualisiert.\")')
     lines.append("end")
     lines.append("")
     lines.append("return main")
     lines.append("")
+    
     return "\n".join(lines)
+
+
+def build_ma3_xml(title: str, lua_filename: str) -> str:
+    """
+    Erzeugt die XML-Definition für das Plugin, die auf die Lua-Datei verweist.
+    """
+    safe_title = _safe_filename(title)
+    xml_lines = []
+    xml_lines.append('<?xml version="1.0" encoding="UTF-8"?>')
+    xml_lines.append('<GMA3 DataVersion="1.9.0.0">')
+    xml_lines.append(f'    <UserPlugin Name="{safe_title}" Version="1.0.0" Path="">')
+    xml_lines.append(f'        <ComponentLua Name="Main" FileName="{lua_filename}"/>')
+    xml_lines.append('    </UserPlugin>')
+    xml_lines.append('</GMA3>')
+    return "\n".join(xml_lines)
 
 
 def export_ma3_plugin_to_file(db_show: Any, export_dir: str | Path | None = None) -> Path:
     """
-    Schreibt eine MA3-Lua-Datei auf Disk und gibt den Dateipfad als Path zurück.
+    Erzeugt ein ZIP-Archiv mit .xml und .lua Datei und gibt den Pfad zurück.
     """
+    import zipfile
+    
     out_dir = Path(export_dir).resolve() if export_dir else EXPORT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
 
     title = str(_get_attr(db_show, "title", "name", default="Show"))
-    filename = f"{_safe_filename(title)}_MA3.lua"
-    file_path = (out_dir / filename).resolve()
+    safe_name = _safe_filename(title)
+    
+    # Dateinamen
+    zip_filename = f"{safe_name}_MA3.zip"
+    lua_filename = f"{safe_name}.lua"
+    xml_filename = f"{safe_name}.xml"
+    
+    zip_path = (out_dir / zip_filename).resolve()
 
-    lua = build_ma3_lua(db_show)
-    file_path.write_text(lua, encoding="utf-8")
+    # Content generieren
+    lua_content = build_ma3_lua(db_show)
+    xml_content = build_ma3_xml(title, lua_filename)
 
-    return file_path
+    # ZIP erstellen
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+        zf.writestr(lua_filename, lua_content)
+        zf.writestr(xml_filename, xml_content)
+
+    return zip_path
