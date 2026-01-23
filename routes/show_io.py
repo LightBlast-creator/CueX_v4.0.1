@@ -39,96 +39,195 @@ def import_cuelist_pdf(show_id: int):
     nlp = spacy.load('de_core_news_sm')
     doc = nlp(text)
 
-    # 1. Rollen extrahieren
+    # 1. Rollen extrahieren - Verbesserter Algorithmus für Theaterskripte
     roles = []
-    roles_section = re.search(r"Rollen:(.*?)(?:Ort:|Zeit:|Szene|\n\n)", text, re.DOTALL | re.IGNORECASE)
+    roles_with_description = {}  # {role_name: description}
+    
+    # Strategie 1: Suche nach "Rollen:" Abschnitt und parse Bullet-Point-Format
+    # Pattern: • MARA: Regisseurin (Mitte 30 bis 50). Beschreibung...
+    roles_section = re.search(r"Rollen[:\s]*(.*?)(?:\n\n|\nOrt:|\nZeit:|\nSzene|\n[A-Z]{2,}:)", text, re.DOTALL | re.IGNORECASE)
     if roles_section:
         for line in roles_section.group(1).splitlines():
             line = line.strip()
-            if line:
-                role = re.split(r"[\s\t\-–—:]+", line, 1)[0]
-                if role and role.upper() == role:
-                    roles.append(role)
-                elif role:
-                    roles.append(role.split()[0])
-
-    if not roles:
-        from collections import Counter
-        import spacy.lang.de.stop_words as stopwords_mod
-        stopwords = set(stopwords_mod.STOP_WORDS)
-        word_counter = Counter()
-        for line in text.splitlines():
-            words = re.findall(r"\b[A-ZÄÖÜß][a-zäöüß]+\b", line)
-            if words and line and line[0].isupper():
-                words = words[1:] if len(words) > 1 else []
-            for w in words:
-                if w.lower() not in stopwords and len(w) > 1:
-                    word_counter[w] += 1
-        roles.extend([w for w, c in word_counter.items() if c >= 2])
-
-    spacy_roles = set(ent.text for ent in doc.ents if ent.label_ == 'PER')
-    for r in spacy_roles:
-        if r not in roles:
-            roles.append(r)
-
-    # 2. Szenen und Cues extrahieren
-    cues = []
-    spacy_scenes = set(ent.text for ent in doc.ents if ent.label_ in ('ORG', 'LOC') and 'Szene' in ent.text)
-    spacy_cues = [ent.text for ent in doc.ents if ent.label_ in ('MISC', 'EVENT')]
+            # Überspringe leere Zeilen
+            if not line:
+                continue
+            # Pattern für Bullet-Points: • NAME: Beschreibung oder - NAME: Beschreibung
+            bullet_match = re.match(r'^[•\-\*]\s*([A-ZÄÖÜ][A-ZÄÖÜa-zäöüß\s]+?):\s*(.*)$', line)
+            if bullet_match:
+                role_name = bullet_match.group(1).strip()
+                description = bullet_match.group(2).strip()
+                if role_name and role_name not in roles:
+                    roles.append(role_name)
+                    roles_with_description[role_name] = description
+                continue
+            # Pattern ohne Bullet: NAME: Beschreibung (wenn Zeile mit Großbuchstaben beginnt)
+            colon_match = re.match(r'^([A-ZÄÖÜ][A-ZÄÖÜa-zäöüß\s]+?):\s*(.*)$', line)
+            if colon_match:
+                role_name = colon_match.group(1).strip()
+                description = colon_match.group(2).strip()
+                # Nur akzeptieren wenn es wie ein Name aussieht (max 3 Wörter, keine Satzzeichen)
+                if role_name and len(role_name.split()) <= 3 and role_name not in roles:
+                    roles.append(role_name)
+                    roles_with_description[role_name] = description
     
-    for s in spacy_scenes:
-        if s not in [c.get('scene') for c in cues]:
-            cues.append({'scene': s, 'role': None, 'text': '', 'uncertain': True})
-    for c in spacy_cues:
-        cues.append({'scene': None, 'role': None, 'text': c, 'uncertain': True})
+    # Strategie 2: Suche nach GROSSBUCHSTABEN-Namen gefolgt von Doppelpunkt im gesamten Text
+    # Pattern: MARA: oder LEO: (typisch für Theaterskripte)
+    if not roles:
+        uppercase_roles = re.findall(r'^[•\-\*\s]*([A-ZÄÖÜ][A-ZÄÖÜ\s]+):\s', text, re.MULTILINE)
+        for role in uppercase_roles:
+            role = role.strip()
+            # Filtere technische Begriffe aus
+            if role and role not in roles and role.upper() not in ['SZENE', 'ORT', 'ZEIT', 'CUE', 'LICHT', 'TON', 'MUSIK', 'ROLLEN', 'DATUM']:
+                roles.append(role)
+    
+    # Strategie 3: Suche nach Pattern "• NAME:" am Zeilenanfang (auch gemischte Groß/Klein)
+    if not roles:
+        bullet_roles = re.findall(r'^[•\-\*]\s*([A-ZÄÖÜ][a-zäöüßA-ZÄÖÜ\s]+?):', text, re.MULTILINE)
+        for role in bullet_roles:
+            role = role.strip()
+            if role and role not in roles and len(role.split()) <= 3:
+                roles.append(role)
+    
+    # Strategie 4: Fallback auf spaCy NER für Personennamen (nur wenn noch keine Rollen gefunden)
+    if not roles:
+        spacy_roles = set(ent.text for ent in doc.ents if ent.label_ == 'PER')
+        for r in spacy_roles:
+            if r not in roles and len(r) > 1:
+                roles.append(r)
+    
+    # Bereinige Rollennamen (entferne Klammern, führende/trailing Leerzeichen)
+    roles = [re.sub(r'\s*\([^)]*\)\s*', '', role).strip() for role in roles]
+    roles = [role for role in roles if role]  # Entferne leere Strings
+    roles = list(dict.fromkeys(roles))  # Deduplizieren, Reihenfolge beibehalten
 
+    # 2. Szenen und Dialog-Cues extrahieren
+    # Theaterskript-Format: ROLLE: Dialog-Text oder • ROLLE: Dialog-Text
+    cues = []
     current_scene = None
     current_role = None
-    current_text = []
-    role_patterns = [re.compile(rf"^\s*{re.escape(role)}[\s:：-]*", re.IGNORECASE) for role in roles]
-    marker_patterns = [re.compile(r"(Licht|Ton|Cue|Szene|Musik|Effekt|Sound)", re.IGNORECASE)]
-    cue_number_pattern = re.compile(r"^\s*\d+[.:]?\s*")
-
+    current_dialogue = []
+    
+    # Pattern für Rollen-Zeilen: "ROLLE:" oder "• ROLLE:" oder "ROLLE (Regieanweisung):"
+    # Wir erstellen Patterns basierend auf den erkannten Rollen
+    role_pattern_str = '|'.join([re.escape(role) for role in roles]) if roles else r'[A-ZÄÖÜ][A-ZÄÖÜa-zäöüß\s]+'
+    
+    # Pattern 1: Mit Doppelpunkt - "ROLLE: text" oder "ROLLE (Anweisung): text"
+    dialogue_line_pattern_colon = re.compile(
+        rf'^[•\-\*\s]*({role_pattern_str})(?:\s*\([^)]*\))?\s*[:：]\s*(.*)$',
+        re.IGNORECASE
+    )
+    
+    # Pattern 2: Ohne Doppelpunkt - "ROLLE text" (Rolle muss exakt am Zeilenanfang stehen)
+    # Nur matchen wenn die Rolle bekannt ist und direkt am Anfang steht
+    dialogue_line_pattern_no_colon = re.compile(
+        rf'^({role_pattern_str})(?:\s*\([^)]*\))?\s+(.+)$',
+        re.IGNORECASE
+    ) if roles else None
+    
+    # Pattern für Szenen-Marker
+    scene_pattern = re.compile(r'^(?:Szene|Scene|Akt|Act)\s*\d*\s*[:：\-–]?\s*(.*)?$', re.IGNORECASE)
+    
+    # Überspringe den Rollen-Abschnitt am Anfang (vor dem eigentlichen Dialog)
+    in_roles_section = False
+    roles_section_ended = False
+    
     for line in text.splitlines():
-        line = line.strip()
-        if not line:
+        line_stripped = line.strip()
+        if not line_stripped:
             continue
-        if re.match(r"Szene ?\d+", line, re.IGNORECASE):
-            if current_role and current_text:
-                cues.append({"scene": current_scene, "role": current_role, "text": " ".join(current_text), "uncertain": False})
-            current_scene = line
+        
+        # Erkenne Beginn des Rollen-Abschnitts
+        if re.match(r'^Rollen\s*[:：]?\s*$', line_stripped, re.IGNORECASE):
+            in_roles_section = True
+            continue
+        
+        # Erkenne Ende des Rollen-Abschnitts (wenn eine Szene beginnt oder ein klarer Abschnittswechsel)
+        if in_roles_section:
+            # Prüfe ob wir noch im Rollen-Abschnitt sind (Bullet-Points oder Rollenbeschreibungen)
+            if re.match(r'^[•\-\*]', line_stripped) or re.match(r'^[A-ZÄÖÜ][A-ZÄÖÜa-zäöüß\s]+:', line_stripped):
+                # Noch im Rollen-Abschnitt - ist das eine Rollenbeschreibung?
+                # Rollenbeschreibungen haben typischerweise Klammern mit Alter oder sind länger
+                if '(' in line_stripped or len(line_stripped) > 100:
+                    continue  # Überspringe Rollenbeschreibungen
+            else:
+                in_roles_section = False
+                roles_section_ended = True
+        
+        # Prüfe auf Szenen-Marker
+        scene_match = scene_pattern.match(line_stripped)
+        if scene_match:
+            # Speichere vorherigen Dialog
+            if current_role and current_dialogue:
+                cues.append({
+                    'scene': current_scene,
+                    'role': current_role,
+                    'text': ' '.join(current_dialogue),
+                    'uncertain': False
+                })
+            current_scene = line_stripped
             current_role = None
-            current_text = []
+            current_dialogue = []
             continue
         
-        matched_role = None
-        for idx, pat in enumerate(role_patterns):
-            m = pat.match(line)
-            if m:
-                matched_role = roles[idx]
-                break
+        # Prüfe auf Dialog-Zeile - erst mit Doppelpunkt, dann ohne
+        dialogue_match = dialogue_line_pattern_colon.match(line_stripped)
+        if not dialogue_match and dialogue_line_pattern_no_colon:
+            dialogue_match = dialogue_line_pattern_no_colon.match(line_stripped)
         
-        if matched_role:
-            if current_role and current_text:
-                cues.append({"scene": current_scene, "role": current_role, "text": " ".join(current_text), "uncertain": False})
-            current_role = matched_role
-            rest = line[m.end():].strip()
-            current_text = [rest] if rest else []
-            continue
+        if dialogue_match:
+            # Speichere vorherigen Dialog
+            if current_role and current_dialogue:
+                cues.append({
+                    'scene': current_scene,
+                    'role': current_role,
+                    'text': ' '.join(current_dialogue),
+                    'uncertain': False
+                })
             
-        marker_found = any(pat.search(line) for pat in marker_patterns)
-        cue_number_found = cue_number_pattern.match(line)
-        if marker_found or cue_number_found:
-            cues.append({"scene": current_scene, "role": None, "text": line, "uncertain": True})
-            continue
+            # Starte neuen Dialog
+            matched_role_name = dialogue_match.group(1).strip()
+            dialogue_text = dialogue_match.group(2).strip() if dialogue_match.group(2) else ''
             
+            # Finde die korrekte Rolle (case-insensitive Matching)
+            current_role = None
+            for role in roles:
+                if role.upper() == matched_role_name.upper():
+                    current_role = role
+                    break
+            if not current_role:
+                current_role = matched_role_name
+            
+            current_dialogue = [dialogue_text] if dialogue_text else []
+            continue
+        
+        # Fortsetzung des aktuellen Dialogs
         if current_role:
-            current_text.append(line)
+            current_dialogue.append(line_stripped)
         else:
-            cues.append({"scene": current_scene, "role": None, "text": line, "uncertain": True})
-            
-    if current_role and current_text:
-        cues.append({"scene": current_scene, "role": current_role, "text": " ".join(current_text), "uncertain": False})
+            # Zeile ohne erkannte Rolle - als unsicheren Cue hinzufügen (nur wenn nicht im Rollen-Abschnitt)
+            if not in_roles_section and roles_section_ended:
+                # Prüfe ob es technische Marker enthält
+                is_technical = any(marker in line_stripped.lower() for marker in ['licht', 'ton', 'cue', 'musik', 'effekt', 'sound'])
+                if is_technical or len(line_stripped) > 20:
+                    cues.append({
+                        'scene': current_scene,
+                        'role': None,
+                        'text': line_stripped,
+                        'uncertain': True
+                    })
+    
+    # Letzten Dialog speichern
+    if current_role and current_dialogue:
+        cues.append({
+            'scene': current_scene,
+            'role': current_role,
+            'text': ' '.join(current_dialogue),
+            'uncertain': False
+        })
+    
+    # Filtere leere Cues und dedupliziere
+    cues = [c for c in cues if c.get('role') or c.get('text')]
 
     return render_template("import_cuelist_pdf_preview.html", show=show, pdf_text=text, cues=cues, roles=roles)
 
