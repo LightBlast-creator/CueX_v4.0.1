@@ -136,8 +136,47 @@
     .create-show-card .card-title {
         font-size: 1.1rem;
         font-weight: 600;
-        margin-bottom: 1.25rem;
+        margin-bottom: 0;
         color: #f8f9fa;
+    }
+
+    .create-show-card .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        padding-bottom: 0;
+        transition: padding-bottom 0.3s ease;
+    }
+
+    .create-show-card .card-header.expanded {
+        padding-bottom: 1.25rem;
+    }
+
+    .create-show-card .toggle-icon {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+        color: #9ca3af;
+    }
+
+    .create-show-card .toggle-icon.rotated {
+        transform: rotate(180deg);
+    }
+
+    .create-show-card .card-header:hover .toggle-icon {
+        color: #3b82f6;
+    }
+
+    .create-show-card .form-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, opacity 0.3s ease;
+        opacity: 0;
+    }
+
+    .create-show-card .form-body.expanded {
+        max-height: 600px;
+        opacity: 1;
     }
 
     .create-show-card .form-label {
@@ -156,6 +195,19 @@
         padding: 0.75rem;
         font-weight: 600;
         margin-top: 0.5rem;
+    }
+
+    /* Quick-Add Button (wenn eingeklappt) */
+    .quick-add-hint {
+        display: none;
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .create-show-card:not(.expanded) .quick-add-hint {
+        display: block;
     }
 
     /* Empty State */
@@ -248,74 +300,85 @@
 <div class="row g-4">
     <!-- Linke Spalte: Neue Show anlegen -->
     <div class="col-lg-4 col-xl-3">
-        <div class="create-show-card">
-            <div class="card-title">Neue Show anlegen</div>
-            <form method="post">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="create-show-card {{ 'expanded' if not shows or shows|length == 0 else '' }}" id="createShowCard">
+            <!-- Klappbarer Header -->
+            <div class="card-header {{ 'expanded' if not shows or shows|length == 0 else '' }}" id="createShowHeader"
+                onclick="toggleCreateShowForm()">
+                <div class="card-title">➕ Neue Show anlegen</div>
+                <span class="toggle-icon {{ 'rotated' if not shows or shows|length == 0 else '' }}"
+                    id="toggleIcon">▼</span>
+            </div>
+            <p class="quick-add-hint">Klicken zum Öffnen</p>
 
-                <div class="mb-3">
-                    <label class="form-label">Show- / Projektname</label>
-                    <input type="text" name="name" class="form-control" placeholder="z.B. Tour XYZ" required>
-                </div>
+            <!-- Klappbarer Formular-Body -->
+            <div class="form-body {{ 'expanded' if not shows or shows|length == 0 else '' }}" id="createShowForm">
+                <form method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                <div class="mb-3">
-                    <label class="form-label">Artist / Produktion</label>
-                    <input type="text" name="artist" class="form-control" placeholder="Artist / Band">
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Datum</label>
-                    <input type="date" name="date" class="form-control">
-                </div>
-
-                <div class="row">
-                    <div class="col-6 mb-3">
-                        <label class="form-label">Venue-Typ</label>
-                        <input type="text" name="venue_type" class="form-control" placeholder="Club, Halle">
+                    <div class="mb-3">
+                        <label class="form-label">Show- / Projektname</label>
+                        <input type="text" name="name" class="form-control" placeholder="z.B. Tour XYZ" required>
                     </div>
-                    <div class="col-6 mb-3">
-                        <label class="form-label">Genre</label>
-                        <input type="text" name="genre" class="form-control" placeholder="Rock, EDM">
+
+                    <div class="mb-3">
+                        <label class="form-label">Artist / Produktion</label>
+                        <input type="text" name="artist" class="form-control" placeholder="Artist / Band">
                     </div>
-                </div>
 
-                <input type="hidden" name="rig_type" value="">
-
-                <!-- Modul-Auswahl -->
-                <div class="mb-3">
-                    <label class="form-label">Was möchtest du verwalten?</label>
-                    <div class="module-grid">
-                        <label class="module-option">
-                            <input type="checkbox" name="modules" value="stammdaten" checked>
-                            <span>📋 Stammdaten</span>
-                        </label>
-                        <label class="module-option">
-                            <input type="checkbox" name="modules" value="cuelist">
-                            <span>🎵 Cue-Liste</span>
-                        </label>
-                        <label class="module-option">
-                            <input type="checkbox" name="modules" value="patch">
-                            <span>💡 Patch / Rig</span>
-                        </label>
-                        <label class="module-option">
-                            <input type="checkbox" name="modules" value="kontakte">
-                            <span>👤 Kontakte</span>
-                        </label>
-                        <label class="module-option">
-                            <input type="checkbox" name="modules" value="requisiten">
-                            <span>🎭 Requisiten</span>
-                        </label>
-                        <label class="module-option">
-                            <input type="checkbox" name="modules" value="video">
-                            <span>🎬 Video</span>
-                        </label>
+                    <div class="mb-3">
+                        <label class="form-label">Datum</label>
+                        <input type="date" name="date" class="form-control">
                     </div>
-                </div>
 
-                <button type="submit" class="btn btn-primary">
-                    Show erstellen
-                </button>
-            </form>
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Venue-Typ</label>
+                            <input type="text" name="venue_type" class="form-control" placeholder="Club, Halle">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Genre</label>
+                            <input type="text" name="genre" class="form-control" placeholder="Rock, EDM">
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="rig_type" value="">
+
+                    <!-- Modul-Auswahl -->
+                    <div class="mb-3">
+                        <label class="form-label">Was möchtest du verwalten?</label>
+                        <div class="module-grid">
+                            <label class="module-option">
+                                <input type="checkbox" name="modules" value="stammdaten" checked>
+                                <span>📋 Stammdaten</span>
+                            </label>
+                            <label class="module-option">
+                                <input type="checkbox" name="modules" value="cuelist">
+                                <span>🎵 Cue-Liste</span>
+                            </label>
+                            <label class="module-option">
+                                <input type="checkbox" name="modules" value="patch">
+                                <span>💡 Patch / Rig</span>
+                            </label>
+                            <label class="module-option">
+                                <input type="checkbox" name="modules" value="kontakte">
+                                <span>👤 Kontakte</span>
+                            </label>
+                            <label class="module-option">
+                                <input type="checkbox" name="modules" value="requisiten">
+                                <span>🎭 Requisiten</span>
+                            </label>
+                            <label class="module-option">
+                                <input type="checkbox" name="modules" value="video">
+                                <span>🎬 Video</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        Show erstellen
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -359,4 +422,23 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    /**
+     * Toggled das "Neue Show anlegen" Formular auf/zu
+     * Smooth Animation für bessere UX
+     */
+    function toggleCreateShowForm() {
+        const header = document.getElementById('createShowHeader');
+        const formBody = document.getElementById('createShowForm');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const card = document.getElementById('createShowCard');
+
+        // Toggle expanded class
+        header.classList.toggle('expanded');
+        formBody.classList.toggle('expanded');
+        toggleIcon.classList.toggle('rotated');
+        card.classList.toggle('expanded');
+    }
+</script>
 {% endblock %}

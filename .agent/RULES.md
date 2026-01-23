@@ -44,6 +44,7 @@ Nach jedem Ein/Ausbau oder Umbau von features.
 Die Anwendung CueX soll später auch die Möglichkeit haben sich in eine Vollwerige Software zu entwickeln. 
 
 ## LOGIN
+Verhindetere dass dir der fehler mit admin/admin passiert das stimmt nicht!
 zur ENtwicklung sind die Login Daten Benutzername: Admin und Passwort Admin123
 
 ## Anwendung starten
@@ -51,3 +52,9 @@ Printe mir bitte immer den Befehl wie ich die Anwendung hart beenden kann und de
 
 ## DSGVO
 achte wie ein absoluter Experte auf die DSGVO konformität, mach keine ausnahmen, die anwendung muss später zu 100% DSGVO konform sein. 
+
+## Arbeitstag ende 
+Immer wenn wir den Arbeitstag beenden muss der code und die anwendung refractort werden. danach ein Ganzer anwendungstest durchführen. 
+
+## Github 
+Github werde nur ich befüllen du hast da Absolut nichts zu machen !

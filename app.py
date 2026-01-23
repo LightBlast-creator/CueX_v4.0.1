@@ -19,6 +19,8 @@ app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-secret-change
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///shows.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['TEMPLATES_AUTO_RELOAD'] = True  # Force template reloading
+app.jinja_env.auto_reload = True
 
 # Database init
 db.init_app(app)
@@ -73,14 +75,9 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    # Verwende Waitress als WSGI-Server für bessere Windows-Kompatibilität
-    # Waitress beendet sich sauber mit CTRL+C
-    try:
-        from waitress import serve
-        print("[INFO] Server startet auf http://127.0.0.1:5000")
-        print("[INFO] Drücke CTRL+C zum Beenden.")
-        serve(app, host='127.0.0.1', port=5000)
-    except ImportError:
-        # Fallback auf Flask dev server falls waitress nicht installiert
-        print("[WARN] Waitress nicht installiert. Nutze Flask Dev-Server.")
-        app.run(debug=True, use_reloader=False, host='127.0.0.1', port=5000)
+    # Verwende Flask Debug-Server für automatisches Template-Reloading
+    # Debug-Modus lädt Templates bei JEDER Anfrage neu (kein Caching)
+    print("[INFO] Flask Debug-Server startet auf http://127.0.0.1:5000")
+    print("[INFO] Templates werden automatisch neu geladen (kein Caching)")
+    print("[INFO] Drücke CTRL+C zum Beenden.")
+    app.run(debug=True, host='127.0.0.1', port=5000)
