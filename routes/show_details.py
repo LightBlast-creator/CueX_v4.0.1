@@ -1,8 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app, jsonify
 from core.show_logic import find_show, save_data, sync_entire_show_to_db, MANUFACTURERS, create_song, create_check_item, toggle_check_item, remove_show, delete_check_item
 from core.models import db, Show as ShowModel, ContactPersonModel
 
-import math
+from services.power_service import calculate_rig_power
 
 show_details_bp = Blueprint('show_details', __name__)
 
@@ -21,60 +21,7 @@ def show_detail(show_id: int):
 
     # ---------------- GET: Rig-Power-Berechnung ----------------
     rig = show.get("rig_setup", {}) or {}
-
-    def _to_float(value):
-        try:
-            s = str(value).strip().replace(",", ".")
-            return float(s) if s else 0.0
-        except Exception:
-            return 0.0
-
-    # Leistung aus den "Watt gesamt"-Feldern der Gerätegruppen
-    prefixes = ("spots", "washes", "beams", "blinders", "strobes")
-    total_watt = 0.0
-    for prefix in prefixes:
-        items = rig.get(f"{prefix}_items")
-        if items:
-            for it in items:
-                w = _to_float(it.get("watt") or 0)
-                try:
-                    cnt = int((it.get("count") or "0").strip() or 0)
-                except Exception:
-                    cnt = 0
-                total_watt += w * cnt
-        else:
-            total_watt += _to_float(rig.get(f"watt_{prefix}"))
-
-    # Summe der Strom-Einträge Main/Light/...
-    power_fields = ["power_main", "power_light", "power_sound", "power_video", "power_foh", "power_other"]
-    total_power = sum(_to_float(rig.get(f)) for f in power_fields)
-
-    rig_power_summary = None
-    if total_watt > 0 or total_power > 0:
-        total_kw = None
-        apparent_kva = None
-        current_1ph = None
-        current_3ph = None
-        cos_phi = None
-
-        if total_watt > 0:
-            cos_phi = 0.95  # angenommener Leistungsfaktor
-            total_kw = total_watt / 1000.0
-            apparent_kva = total_kw / cos_phi
-            # 1~ 230 V
-            current_1ph = total_watt / (230.0 * cos_phi)
-            # 3~ 400 V symmetrisch: P = sqrt(3) * U * I * cos φ
-            current_3ph = total_watt / (math.sqrt(3.0) * 400.0 * cos_phi)
-
-        rig_power_summary = {
-            "total_watt": total_watt if total_watt > 0 else None,
-            "total_kw": total_kw,
-            "apparent_kva": apparent_kva,
-            "current_1ph": current_1ph,
-            "current_3ph": current_3ph,
-            "cos_phi": cos_phi,
-            "total_power": total_power if total_power > 0 else None,
-        }
+    rig_power_summary = calculate_rig_power(rig)
 
     # Kontakte (aus der DB) holen
     db_show = db.session.get(ShowModel, show_id)
@@ -567,6 +514,69 @@ def delete_show(show_id: int):
             db.session.commit()
     except Exception as e:
         print(f"Error deleting show from DB: {e}")
-        db.session.rollback()
-
     return redirect(url_for("main.dashboard"))
+
+
+@show_details_bp.route("/show/<int:show_id>/api/get_rig", methods=["GET"])
+def api_get_rig(show_id: int):
+    show = find_show(show_id)
+    if not show:
+        return jsonify({"error": "Show not found"}), 404
+        
+    rig = show.get("rig_setup", {}) or {}
+    
+    # Flatten items for the frontend
+    items = []
+    
+    # Helper to add items
+    def add_items(prefix):
+        raw_items = rig.get(f"{prefix}_items", [])
+        for it in raw_items:
+            # Check if this item group has saved positions
+            # For simplicity in V1, we might need to store positions IN the item dict.
+            # But the item dict in JSON is a list of dicts. 
+            # We need to ensure we can map them back.
+            # Ideally, we used a unique ID per fixture, but we generated them on the fly in MVR export.
+            # Here we might need to stick to the list index or add IDs if missing.
+            
+            count = 0
+            try: count = int(it.get("count", 0))
+            except: pass
+            
+            # Position data might be stored in a separate list or inside the item?
+            # Let's say we store 'positions_data': { 'spots_items_0_0': {x:100, y:100}, ... }
+            # Or we enrich the items directly in the backend if we saved them there.
+            pass
+            
+    # Actually, let's keep it simple:
+    # We return the whole rig object. The frontend can parse count/watt etc.
+    # But for positions: where do we store them?
+    # Let's verify where 'update_rig' saves data. It saves to 'rig_setup'.
+    # We can add a 'visual_plan' dict to rig_setup where keys are stable IDs.
+    
+    visual_plan = rig.get("visual_plan", {})
+    return jsonify({
+        "rig": rig,
+        "visual_plan": visual_plan
+    })
+
+
+@show_details_bp.route("/show/<int:show_id>/api/save_rig_positions", methods=["POST"])
+def api_save_rig_positions(show_id: int):
+    show = find_show(show_id)
+    if not show:
+        return jsonify({"error": "Show not found"}), 404
+        
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data"}), 400
+        
+    rig = show.get("rig_setup", {})
+    # Save the visual plan (x, y, rotation for each fixture 'key')
+    rig["visual_plan"] = data.get("visual_plan", {})
+    
+    save_data()
+    sync_entire_show_to_db(show)
+    
+    return jsonify({"success": True})
+

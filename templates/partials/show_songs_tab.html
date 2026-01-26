@@ -8,6 +8,9 @@
         </h5>
         <div class="d-flex gap-2">
           {% include "partials/import_cuelist_pdf.html" %}
+          <a href="{{ url_for('show_io.export_mvr', show_id=show.id) }}" class="btn btn-outline-secondary btn-sm px-2" title="MVR (My Virtual Rig) Export">
+            <i class="bi bi-box-seam fs-6"></i> MVR
+          </a>
           <button type="button" class="btn btn-outline-secondary btn-sm px-2" data-bs-toggle="modal"
             data-bs-target="#ma3SettingsModal" title="MA3 Export Einstellungen">
             <i class="bi bi-gear fs-6"></i> MA3

@@ -1,0 +1,50 @@
+<div class="tab-pane fade {% if active_tab == 'rig_plan' %}show active{% endif %}" id="tab-rig-plan">
+    <div class="row h-100">
+        <!-- Sidebar Tools -->
+        <div class="col-md-3 border-end border-secondary">
+            <h5 class="h6 text-uppercase fw-bold text-muted mb-3">Tools</h5>
+
+            <div class="d-grid gap-2 mb-4">
+                <button class="btn btn-primary btn-sm" id="btnSaveRigPlan">
+                    <i class="bi bi-save me-2"></i>Positionen Speichern
+                </button>
+                <button class="btn btn-outline-secondary btn-sm" id="btnResetView">
+                    <i class="bi bi-arrows-move me-2"></i>Reset Zoom/Pan
+                </button>
+            </div>
+
+            <h6 class="small text-muted text-uppercase mb-2">Objekte hinzufügen</h6>
+            <div class="list-group mb-3" id="libraryContainer">
+                <!-- Wird per JS gefüllt: Liste verfügbarer Fixture-Typen aus dem Setup -->
+                <div class="text-muted small fst-italic p-2">Lade Fixtures...</div>
+            </div>
+
+            <div class="alert alert-info small">
+                <i class="bi bi-info-circle me-1"></i>
+                Drag & Drop: Ziehe Geräte auf die Bühne. <br>
+                Shift + Drag: Mehrfachauswahl.<br>
+                Delete: Entfernen.
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="col-md-9 bg-dark position-relative p-0" style="min-height: 600px; overflow: hidden;"
+            id="canvasWrapper">
+            <div class="position-absolute top-0 start-0 m-2 text-white-50 small pointer-events-none"
+                style="z-index: 10;">
+                Bühne (Draufsicht)
+            </div>
+            <canvas id="rigCanvas" width="800" height="600"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Data injection for JS -->
+<script>
+    window.currentShowId = {{ show.id }};
+    // Wir übergeben die Rig-Items als JSON an das Frontend
+    // Dies enthält die Counts und Typen, aber (noch) keine Einzel-Positionen,
+    // es sei denn wir haben sie schon gespeichert.
+    // Für Phase 3: Wir laden die gespeicherten Positionen separat oder via API.
+</script>
+<script src="{{ url_for('static', filename='js/rig_editor.js') }}"></script>

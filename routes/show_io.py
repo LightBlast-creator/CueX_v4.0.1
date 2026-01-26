@@ -7,7 +7,9 @@ from services.exporters.pdf_export import build_show_report_pdf, build_techrider
 from services.exporters.pdf_export_cuelist import build_cuelist_pdf
 from services.pdf_import_service import extract_cues_from_pdf
 from services.exporters import ma3_export
+from services.exporters import ma3_export
 from services.exporters import eos_macro
+from services.exporters import mvr_export
 
 import io
 import json
@@ -153,3 +155,12 @@ def export_eos_macro(show_id: int):
         abort(404)
     file_path = eos_macro.export_eos_macro_to_file(db_show)
     return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="text/plain")
+
+
+@show_io_bp.route("/show/<int:show_id>/export_mvr")
+def export_mvr(show_id: int):
+    show = find_show(show_id)
+    if not show:
+        abort(404)
+    file_path = mvr_export.export_mvr_to_file(show)
+    return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="application/zip")

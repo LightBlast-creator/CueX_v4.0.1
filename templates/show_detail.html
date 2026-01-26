@@ -237,6 +237,11 @@
       Rig &amp; Strom
     </a>
     {% endif %}
+    <!-- Rig Editor Tab -->
+    <a class="tab-link {% if active_tab == 'rig_plan' %}active{% endif %}"
+      href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig_plan') }}">
+      <i class="bi bi-grip-horizontal me-1"></i>Rig Plan
+    </a>
     {% if 'cuelist' in modules %}
     <a class="tab-link {% if active_tab == 'songs' %}active{% endif %}"
       href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}">
@@ -271,6 +276,8 @@
     {% if 'patch' in modules %}
     {% include "partials/show_rig_tab.html" %}
     {% endif %}
+    <!-- Rig Editor Content -->
+    {% include "partials/rig_editor_tab.html" %}
     {% if 'cuelist' in modules %}
     {% include "partials/show_songs_tab.html" %}
     {% endif %}
