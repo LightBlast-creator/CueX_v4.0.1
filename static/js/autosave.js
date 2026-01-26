@@ -2,40 +2,42 @@
  * AutosaveManager
  * 
  * Automatically saves forms with the class 'autosave-form'.
- * Requires:
- * - Form action attribute set to the POST URL.
- * - Input fields with 'name' attributes.
- * - A status indicator element with ID 'saveStatus_{formId}' (optional).
+ * Uses Event Delegation to handle forms present at load OR added later.
  */
 class AutosaveManager {
     constructor() {
-        this.forms = document.querySelectorAll('.autosave-form');
         this.timeouts = new Map();
         this.delay = 300; // 300ms debounce
-
         this.init();
     }
 
     init() {
-        console.log("AutosaveManager Initialized");
-        // DEBUG: Alert to prove file is loaded
-        // alert("Autosave Script Loaded! Forms found: " + this.forms.length);
+        console.log("AutosaveManager (Delegation) Initialized");
 
-        this.forms.forEach(form => {
-            console.log("Attaching to form:", form.id);
-            // Add listeners to all inputs
-            const inputs = form.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                input.addEventListener('input', () => this.scheduleSave(form));
-                input.addEventListener('change', () => this.scheduleSave(form));
-            });
+        // Global Listener for Input/Change
+        document.addEventListener('input', (e) => this.handleInput(e));
+        document.addEventListener('change', (e) => this.handleInput(e));
 
-            // Prevent default submit if user hits Enter (unless it's a textarea)
-            form.addEventListener('submit', (e) => {
+        // Global Listener for Submit
+        document.addEventListener('submit', (e) => {
+            const form = e.target.closest('.autosave-form');
+            if (form) {
                 e.preventDefault();
                 this.saveForm(form);
-            });
+            }
         });
+    }
+
+    handleInput(e) {
+        const target = e.target;
+        // Only care about inputs/textareas/selects inside an .autosave-form
+        const form = target.closest('.autosave-form');
+        if (!form) return;
+
+        // Ignore utility inputs if needed (e.g. search fields inside a form, though unlikely)
+        if (target.type === 'button' || target.type === 'submit') return;
+
+        this.scheduleSave(form);
     }
 
     scheduleSave(form) {
@@ -85,6 +87,9 @@ class AutosaveManager {
             if (response.ok) {
                 console.log(`[Autosave] ${formId} saved successfully.`);
                 this.updateStatus(form, 'saved');
+
+                // Optional: Update form values from response if server modifies them?
+                // For now, we assume one-way sync is enough.
             } else {
                 console.error('[Autosave] Server returned error', response.status);
                 this.updateStatus(form, 'error');
@@ -96,8 +101,6 @@ class AutosaveManager {
     }
 
     updateStatus(form, state) {
-        // Look for specific status container or fall back to generic approach
-        // We assume an ID convention: saveStatus_{formId}
         const statusId = `saveStatus_${form.id}`;
         const indicator = document.getElementById(statusId);
 
@@ -116,6 +119,7 @@ class AutosaveManager {
                 indicator.className = 'badge bg-success';
                 indicator.innerHTML = '<i class="bi bi-check-circle me-1"></i>Gespeichert';
                 setTimeout(() => {
+                    // Check if text is still "Gespeichert" before resetting (avoid race conditions)
                     if (indicator.innerHTML.includes('Gespeichert')) {
                         indicator.className = 'badge bg-secondary';
                         indicator.innerHTML = '<i class="bi bi-check2 me-1"></i>Aktuell';

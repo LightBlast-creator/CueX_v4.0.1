@@ -2,11 +2,15 @@
 <div class="tab-pane fade {% if active_tab == 'rig' %}show active{% endif %}" id="tab-rig">
   <div class="row">
     <div class="col-md-8">
-      <form method="post" action="{{ url_for('show_details.update_rig', show_id=show.id) }}">
+      <form method="post" action="{{ url_for('show_details.update_rig', show_id=show.id) }}" class="autosave-form"
+        id="rigForm">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="mb-3 d-flex gap-2">
           <a href="https://gdtf-share.com/" target="_blank" class="btn btn-gdtf">GDTF holen (Extern)</a>
           <a href="{{ url_for('main.gdtf_fixture_search') }}" class="btn btn-outline-info">GDTF Hersteller (Intern)</a>
+          <div class="ms-auto d-flex align-items-center">
+            <span id="saveStatus_rigForm" class="badge bg-secondary"><i class="bi bi-check2 me-1"></i>Aktuell</span>
+          </div>
         </div>
         <!-- Main Brand -->
         <div class="mb-3">
@@ -877,12 +881,7 @@
           </div>
         </div>
 
-        <div class="mt-4 mb-3">
-          <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase"
-            style="letter-spacing: 0.05em;">
-            <i class="bi bi-save me-2"></i>Rig &amp; Strom speichern
-          </button>
-        </div>
+
       </form>
 
       <!-- Power summary -->

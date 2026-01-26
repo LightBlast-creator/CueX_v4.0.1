@@ -32,11 +32,14 @@
                   </form>
                   <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
                     data-bs-target="#contactEdit{{ c.id }}">Bearbeiten</button>
+                  <span id="saveStatus_contactForm_{{ c.id }}" class="badge bg-secondary ms-2 align-self-center"><i
+                      class="bi bi-check2 me-1"></i>Aktuell</span>
                 </div>
               </div>
               <div class="collapse mt-2" id="contactEdit{{ c.id }}">
                 <form method="post"
-                  action="{{ url_for('show_details.update_contact', show_id=show.id, contact_id=c.id) }}">
+                  action="{{ url_for('show_details.update_contact', show_id=show.id, contact_id=c.id) }}"
+                  class="autosave-form" id="contactForm_{{ c.id }}">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <div class="row g-2">
                     <div class="col-md-4"><input class="form-control form-control-sm" name="role" value="{{ c.role }}"
@@ -52,9 +55,10 @@
                     <div class="col-12 mt-2"><input class="form-control form-control-sm" name="notes"
                         value="{{ c.notes or '' }}" placeholder="Notizen"></div>
                   </div>
-                  <div class="mt-2">
+                  <!-- Manual button removed for autosave -->
+                  <!-- <div class="mt-2">
                     <button class="btn btn-primary btn-sm" type="submit">Speichern</button>
-                  </div>
+                  </div> -->
                 </form>
               </div>
             </div>
@@ -64,22 +68,13 @@
           <p class="text-muted">Noch keine Kontakte hinterlegt.</p>
           {% endif %}
           <!-- Neuen Kontakt hinzufügen -->
-          <h6 class="mt-3">Neuen Kontakt anlegen</h6>
-          <form method="post" action="{{ url_for('show_details.add_contact', show_id=show.id) }}">
+          <!-- Quick Add Contact Button -->
+          <form method="post" action="{{ url_for('show_details.add_contact', show_id=show.id) }}" class="mt-3">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="row g-2">
-              <div class="col-md-4"><input class="form-control form-control-sm" name="role" placeholder="Projektleiter">
-              </div>
-              <div class="col-md-4"><input class="form-control form-control-sm" name="name" placeholder="Tel"></div>
-              <div class="col-md-4"><input class="form-control form-control-sm" name="company" placeholder="E-mail">
-              </div>
-              <div class="col-md-4"><input class="form-control form-control-sm" name="phone" placeholder="Firma"></div>
-              <div class="col-12"><input class="form-control form-control-sm mt-2" name="notes" placeholder="Notizen">
-              </div>
-            </div>
-            <div class="mt-2">
-              <button class="btn btn-primary btn-sm" type="submit">Kontakt hinzufügen</button>
-            </div>
+            <input type="hidden" name="role" value="Neuer Kontakt">
+            <button type="submit" class="btn btn-outline-success w-100 py-2 border-dashed">
+              <i class="bi bi-plus-lg me-2"></i><strong>Neuen Kontakt erstellen (Click & Edit)</strong>
+            </button>
           </form>
         </div>
       </div>

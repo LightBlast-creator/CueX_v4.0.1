@@ -8,7 +8,8 @@
         </h5>
         <div class="d-flex gap-2">
           {% include "partials/import_cuelist_pdf.html" %}
-          <a href="{{ url_for('show_io.export_mvr', show_id=show.id) }}" class="btn btn-outline-secondary btn-sm px-2" title="MVR (My Virtual Rig) Export">
+          <a href="{{ url_for('show_io.export_mvr', show_id=show.id) }}" class="btn btn-outline-secondary btn-sm px-2"
+            title="MVR (My Virtual Rig) Export">
             <i class="bi bi-box-seam fs-6"></i> MVR
           </a>
           <button type="button" class="btn btn-outline-secondary btn-sm px-2" data-bs-toggle="modal"
@@ -25,66 +26,14 @@
         </div>
       </div>
 
-      <!-- Neuen Song/Szene hinzufügen -->
-      <div class="card mb-4 border-secondary bg-dark text-light">
-        <div class="card-header border-secondary p-0">
-          <button class="btn btn-link w-100 text-start text-light text-decoration-none py-2 px-3" type="button"
-            data-bs-toggle="collapse" data-bs-target="#collapseAddScene" aria-expanded="false"
-            aria-controls="collapseAddScene">
-            <i class="bi bi-plus-circle me-2"></i>Neue Szene / Song anlegen
-          </button>
-        </div>
-        <div id="collapseAddScene" class="collapse">
-          <div class="card-body">
-            <form method="post" action="{{ url_for('show_details.add_song_route', show_id=show.id) }}">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-              <input type="hidden" name="active_tab" value="songs">
-              <div class="row mb-2">
-                <div class="col-md-6">
-                  <label class="form-label small text-muted">Name / Cue-Name</label>
-                  <input type="text" name="song_name"
-                    class="form-control form-control-sm bg-dark text-light border-secondary">
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label small text-muted">Stimmung</label>
-                  <input type="text" name="song_mood"
-                    class="form-control form-control-sm bg-dark text-light border-secondary">
-                </div>
-              </div>
-              <div class="row mb-2">
-                <div class="col-md-6">
-                  <label class="form-label small text-muted">Farben</label>
-                  <input type="text" name="song_colors"
-                    class="form-control form-control-sm bg-dark text-light border-secondary">
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label small text-muted">Movement Style</label>
-                  <input type="text" name="song_movement_style"
-                    class="form-control form-control-sm bg-dark text-light border-secondary">
-                </div>
-              </div>
-              <div class="mb-2">
-                <label class="form-label small text-muted">Eye Candy / Specials</label>
-                <input type="text" name="song_eye_candy"
-                  class="form-control form-control-sm bg-dark text-light border-secondary">
-              </div>
-              <div class="mb-2">
-                <label class="form-label small text-muted">Special Notes (Regie)</label>
-                <textarea name="song_special_notes" rows="1"
-                  class="form-control form-control-sm bg-dark text-light border-secondary"></textarea>
-              </div>
-              <div class="mb-3">
-                <label class="form-label small text-muted">Allgemeine Notizen</label>
-                <textarea name="song_general_notes" rows="1"
-                  class="form-control form-control-sm bg-dark text-light border-secondary"></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg me-1"></i>Szene hinzufügen
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
+      <!-- Quick Add Scene Button -->
+      <form method="post" action="{{ url_for('show_details.add_song_route', show_id=show.id) }}" class="mb-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="song_name" value="Neue Szene">
+        <button type="submit" class="btn btn-outline-success w-100 py-3 border-dashed">
+          <i class="bi bi-plus-lg fs-4 me-2"></i><span class="fs-5 fw-bold">Neue Szene erstellen (Click & Edit)</span>
+        </button>
+      </form>
 
       <!-- Bestehende Songs/Szenen -->
       {% set songs = show.songs or [] %}
@@ -185,6 +134,8 @@
                   <i class="bi bi-megaphone me-1"></i>{{ regie_preview }}
                 </span>
                 {% endif %}
+                <span id="saveStatus_songForm_{{ song.id }}" class="badge bg-secondary ms-2"><i
+                    class="bi bi-check2 me-1"></i>Aktuell</span>
               </div>
             </button>
             <div class="d-flex gap-1 ms-2 flex-shrink-0">
@@ -221,7 +172,8 @@
           </div>
           <div id="songCollapse{{ song_key }}" class="collapse song-collapse" data-song-id="{{ song_key }}">
             <div class="card-body py-3">
-              <form method="post" action="{{ url_for('show_details.update_song', show_id=show.id) }}">
+              <form method="post" action="{{ url_for('show_details.update_song', show_id=show.id) }}"
+                class="autosave-form" id="songForm_{{ song.id }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="song_id" value="{{ song.id }}">
                 <div class="row mb-2">
@@ -269,9 +221,10 @@
                       class="form-control form-control-sm bg-dark text-light border-secondary">{{ song.general_notes or '' }}</textarea>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-outline-primary btn-sm">
+                <!-- Manual button removed for autosave -->
+                <!-- <button type="submit" class="btn btn-outline-primary btn-sm">
                   <i class="bi bi-check-lg me-1"></i>Speichern
-                </button>
+                </button> -->
               </form>
             </div>
           </div>

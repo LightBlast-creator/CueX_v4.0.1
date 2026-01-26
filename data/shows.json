@@ -183,7 +183,18 @@
         "phase_spots": "",
         "models_spots": [],
         "modes_spots": [],
-        "spots_items": [],
+        "spots_items": [
+          {
+            "count": "1",
+            "manufacturer": "High End Systems",
+            "model": "1",
+            "mode": "1",
+            "universe": "1",
+            "address": "1",
+            "watt": "1",
+            "phase": "1"
+          }
+        ],
         "washes": "",
         "manufacturer_washes": "",
         "universe_washes": "",
@@ -232,7 +243,72 @@
         "power_video": "",
         "power_foh": "",
         "power_other": "",
-        "visual_plan": {}
+        "visual_plan": {
+          "spots_0_0": {
+            "x": 120,
+            "y": 420,
+            "rotation": 0
+          },
+          "strobes_0_0": {
+            "x": 520,
+            "y": 320,
+            "rotation": 0
+          },
+          "washes_0_0": {
+            "x": 660,
+            "y": 160,
+            "rotation": 0
+          }
+        },
+        "washes_items": [
+          {
+            "count": "1",
+            "manufacturer": "ARRI",
+            "model": "1",
+            "mode": "1",
+            "universe": "1",
+            "address": "1",
+            "watt": "1",
+            "phase": "1"
+          }
+        ],
+        "beams_items": [
+          {
+            "count": "",
+            "manufacturer": "",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
+        "blinders_items": [
+          {
+            "count": "",
+            "manufacturer": "",
+            "model": "",
+            "mode": "",
+            "universe": "",
+            "address": "",
+            "watt": "",
+            "phase": ""
+          }
+        ],
+        "strobes_items": [
+          {
+            "count": "1",
+            "manufacturer": "ARRI",
+            "model": "1",
+            "mode": "1",
+            "universe": "1",
+            "address": "1",
+            "watt": "1",
+            "phase": "1"
+          }
+        ],
+        "custom_devices": []
       },
       "checklists": {
         "preproduction": [],
@@ -245,6 +321,6 @@
     }
   ],
   "next_show_id": 91,
-  "next_song_id": 84,
+  "next_song_id": 87,
   "next_check_item_id": 46
 }

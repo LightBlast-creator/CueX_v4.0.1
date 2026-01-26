@@ -185,6 +185,10 @@ def update_rig(show_id: int):
 
     save_data()
     sync_entire_show_to_db(show)
+    
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Rig stored successfully"})
+        
     return redirect(url_for("show_details.show_detail", show_id=show_id, tab="rig"))
 
 
@@ -364,6 +368,10 @@ def update_song(show_id: int):
             break
     save_data()
     sync_entire_show_to_db(show)
+    
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Song stored successfully"})
+        
     if from_regie:
         return redirect(url_for("show_details.show_regie_view", show_id=show_id))
     return redirect(url_for("show_details.show_detail", show_id=show_id, tab="songs"))
@@ -489,6 +497,10 @@ def update_contact(show_id: int, contact_id: int):
     except Exception as e:
         db.session.rollback()
         print(f"[DB] Fehler beim Aktualisieren des Kontakts: {e}")
+        
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Contact updated"})
+        
     return redirect(url_for("show_details.show_detail", show_id=show_id, tab="contacts"))
 
 @show_details_bp.route("/show/<int:show_id>/contacts/<int:contact_id>/delete", methods=["POST"])
