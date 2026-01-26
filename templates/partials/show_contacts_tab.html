@@ -14,53 +14,78 @@
           {% if contacts %}
           <div class="list-group mb-3">
             {% for c in contacts %}
-            <div class="list-group-item">
-              <div class="d-flex justify-content-between">
-                <div>
-                  <strong>{{ c.role }}</strong>
-                  {% if c.name %} — {{ c.name }}{% endif %}
-                  {% if c.company %}<div class="small text-muted">{{ c.company }}</div>{% endif %}
-                  <div class="small">{{ c.phone or '' }} {{ c.email or '' }}</div>
-                  {% if c.notes %}<div class="small mt-1">{{ c.notes }}</div>{% endif %}
+            <div class="list-group-item bg-dark border-secondary mb-2 rounded p-3">
+              <!-- Header Row: Role Label + Actions -->
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="text-white-50 small text-uppercase">
+                  <i class="bi bi-person-badge me-1"></i>{{ c.role or 'Neuer Kontakt' }}
                 </div>
-                <div class="d-flex flex-column gap-1">
+                <div class="d-flex align-items-center gap-2">
+                  <!-- Status Badge -->
+                  <span id="saveStatus_contactForm_{{ c.id }}" class="badge bg-secondary"><i
+                      class="bi bi-check2 me-1"></i>Aktuell</span>
+
+                  <!-- Delete Button -->
                   <form method="post"
                     action="{{ url_for('show_details.delete_contact', show_id=show.id, contact_id=c.id) }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-outline-danger btn-sm" type="submit"
-                      onclick="return confirm('Kontakt löschen?');">Löschen</button>
+                    <button class="btn btn-sm text-danger border-0 p-0 ms-2" type="button"
+                      onclick="if(confirm('Kontakt löschen?')) this.form.submit();" title="Löschen">
+                      <i class="bi bi-trash fs-5"></i>
+                    </button>
                   </form>
-                  <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#contactEdit{{ c.id }}">Bearbeiten</button>
-                  <span id="saveStatus_contactForm_{{ c.id }}" class="badge bg-secondary ms-2 align-self-center"><i
-                      class="bi bi-check2 me-1"></i>Aktuell</span>
                 </div>
               </div>
-              <div class="collapse mt-2" id="contactEdit{{ c.id }}">
-                <form method="post"
-                  action="{{ url_for('show_details.update_contact', show_id=show.id, contact_id=c.id) }}"
-                  class="autosave-form" id="contactForm_{{ c.id }}">
-                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                  <div class="row g-2">
-                    <div class="col-md-4"><input class="form-control form-control-sm" name="role" value="{{ c.role }}"
-                        placeholder="Rolle"></div>
-                    <div class="col-md-4"><input class="form-control form-control-sm" name="name"
-                        value="{{ c.name or '' }}" placeholder="Name"></div>
-                    <div class="col-md-4"><input class="form-control form-control-sm" name="company"
-                        value="{{ c.company or '' }}" placeholder="Firma"></div>
-                    <div class="col-md-4 mt-2"><input class="form-control form-control-sm" name="phone"
-                        value="{{ c.phone or '' }}" placeholder="Telefon"></div>
-                    <div class="col-md-4 mt-2"><input class="form-control form-control-sm" name="email"
-                        value="{{ c.email or '' }}" placeholder="Email"></div>
-                    <div class="col-12 mt-2"><input class="form-control form-control-sm" name="notes"
-                        value="{{ c.notes or '' }}" placeholder="Notizen"></div>
+
+              <!-- Main Edit Form -->
+              <form method="post"
+                action="{{ url_for('show_details.update_contact', show_id=show.id, contact_id=c.id) }}"
+                class="autosave-form" id="contactForm_{{ c.id }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="row g-2">
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                        name="role" id="role_{{c.id}}" value="{{ c.role }}" placeholder="Rolle">
+                      <label for="role_{{c.id}}" class="text-muted">Rolle / Position</label>
+                    </div>
                   </div>
-                  <!-- Manual button removed for autosave -->
-                  <!-- <div class="mt-2">
-                    <button class="btn btn-primary btn-sm" type="submit">Speichern</button>
-                  </div> -->
-                </form>
-              </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                        name="name" id="name_{{c.id}}" value="{{ c.name or '' }}" placeholder="Name">
+                      <label for="name_{{c.id}}" class="text-muted">Ansprechpartner</label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-floating">
+                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                        name="company" id="company_{{c.id}}" value="{{ c.company or '' }}" placeholder="Firma">
+                      <label for="company_{{c.id}}" class="text-muted">Firma / Unternehmen</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text bg-dark border-secondary text-secondary"><i
+                          class="bi bi-telephone"></i></span>
+                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                        name="phone" value="{{ c.phone or '' }}" placeholder="Telefon">
+                    </div>
+                  </div>
+                  <div class="col-md-6 mt-2">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-text bg-dark border-secondary text-secondary"><i
+                          class="bi bi-envelope"></i></span>
+                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                        name="email" value="{{ c.email or '' }}" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
+                      name="notes" value="{{ c.notes or '' }}" placeholder="Notizen / Sonstiges / Absprachen...">
+                  </div>
+                </div>
+              </form>
             </div>
             {% endfor %}
           </div>

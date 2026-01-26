@@ -96,7 +96,7 @@ def update_meta(show_id: int):
     save_data()
     sync_entire_show_to_db(show)
     
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.accept_mimetypes.accept_json:
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify(success=True)
 
     return_tab = request.form.get("return_tab") or request.args.get("return_tab") or "meta"
