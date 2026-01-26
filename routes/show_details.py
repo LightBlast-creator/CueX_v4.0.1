@@ -76,7 +76,7 @@ def show_detail(show_id: int):
         }
 
     # Kontakte (aus der DB) holen
-    db_show = ShowModel.query.get(show_id)
+    db_show = db.session.get(ShowModel, show_id)
     contacts = db_show.contacts if db_show else []
 
     # Optional: restore values set by POST handlers (stored in session)
@@ -121,6 +121,24 @@ def update_meta(show_id: int):
             show["ma3_sequence_id"] = 101
     else:
         show["ma3_sequence_id"] = 101
+
+    eos_seq_raw = (request.form.get("eos_macro_id") or "").strip()
+    if eos_seq_raw:
+        try:
+            show["eos_macro_id"] = int(eos_seq_raw)
+        except ValueError:
+            show["eos_macro_id"] = 101
+    else:
+        show["eos_macro_id"] = 101
+
+    eos_cl_raw = (request.form.get("eos_cuelist_id") or "").strip()
+    if eos_cl_raw:
+        try:
+            show["eos_cuelist_id"] = int(eos_cl_raw)
+        except ValueError:
+            show["eos_cuelist_id"] = 1
+    else:
+        show["eos_cuelist_id"] = 1
 
     save_data()
     sync_entire_show_to_db(show)
@@ -499,7 +517,7 @@ def add_contact(show_id: int):
 
 @show_details_bp.route("/show/<int:show_id>/contacts/<int:contact_id>/update", methods=["POST"])
 def update_contact(show_id: int, contact_id: int):
-    contact = ContactPersonModel.query.get(contact_id)
+    contact = db.session.get(ContactPersonModel, contact_id)
     if not contact or contact.show_id != show_id:
         abort(404)
     contact.role = request.form.get("role", "").strip() or contact.role
@@ -518,7 +536,7 @@ def update_contact(show_id: int, contact_id: int):
 
 @show_details_bp.route("/show/<int:show_id>/contacts/<int:contact_id>/delete", methods=["POST"])
 def delete_contact(show_id: int, contact_id: int):
-    contact = ContactPersonModel.query.get(contact_id)
+    contact = db.session.get(ContactPersonModel, contact_id)
     if not contact or contact.show_id != show_id:
         abort(404)
     try:
@@ -542,7 +560,7 @@ def delete_show(show_id: int):
     
     # Remove from DB
     try:
-        db_show = ShowModel.query.get(show_id)
+        db_show = db.session.get(ShowModel, show_id)
         if db_show:
             db.session.delete(db_show)
             db.session.commit()

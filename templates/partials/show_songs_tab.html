@@ -10,7 +10,11 @@
           {% include "partials/import_cuelist_pdf.html" %}
           <button type="button" class="btn btn-outline-secondary btn-sm px-2" data-bs-toggle="modal"
             data-bs-target="#ma3SettingsModal" title="MA3 Export Einstellungen">
-            <i class="bi bi-gear fs-6"></i>
+            <i class="bi bi-gear fs-6"></i> MA3
+          </button>
+          <button type="button" class="btn btn-outline-secondary btn-sm px-2" data-bs-toggle="modal"
+            data-bs-target="#eosSettingsModal" title="EOS Export Einstellungen">
+            <i class="bi bi-gear fs-6"></i> EOS
           </button>
           <a href="{{ url_for('show_io.export_cuelist_pdf', show_id=show.id) }}" class="btn btn-outline-info btn-sm">
             <i class="bi bi-file-pdf me-1"></i>PDF Export
@@ -331,6 +335,48 @@
               value="{{ show.ma3_sequence_id or 101 }}">
             <div class="form-text small text-white-50">
               Ziel-Sequence Nummer in GrandMA3 (z.B. 101).
+            </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EOS Settings Modal -->
+<div class="modal fade" id="eosSettingsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content bg-dark text-light border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title h6">EOS Export Einstellungen</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{{ url_for('show_details.update_meta', show_id=show.id) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="return_tab" value="songs">
+
+          <div class="mb-3">
+            <label class="form-label small text-muted">Basis-Macronummer</label>
+            <input type="number" name="eos_macro_id"
+              class="form-control form-control-sm bg-dark text-light border-secondary" min="1" step="1"
+              value="{{ show.eos_macro_id or 101 }}">
+            <div class="form-text small text-white-50">
+              Startnummer für das EOS-Macro.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small text-muted">Cuelist-Nummer</label>
+            <input type="number" name="eos_cuelist_id"
+              class="form-control form-control-sm bg-dark text-light border-secondary" min="1" step="1"
+              value="{{ show.eos_cuelist_id or 1 }}">
+            <div class="form-text small text-white-50">
+              Ziel-Cuelist in EOS (meist 1).
             </div>
           </div>
 

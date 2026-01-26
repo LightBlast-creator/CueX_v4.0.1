@@ -1,0 +1,163 @@
+Clear_CommandLine
+# EOS Macro Export for: asd
+# Macro ID: 1
+# Generated: 2026-01-26T10:52:28
+
+Macro 1 Label asd Enter
+
+Cue 1 Label  Enter
+Cue 1 Notes Ganzen“ sehen. Unter Druck manchmal scharf, aber nicht unfair. Enter
+Cue 2 Label LEO Enter
+Cue 2 Notes Schauspieler (20 bis 40). Talentiert, etwas impulsiv. Braucht klare Ansagen, will aber ernst genommen werden. Enter
+Cue 3 Label NINA Enter
+Cue 3 Notes Schauspielerin (20 bis 40). Strukturiert, empathisch, vermittelt zwischen den Fronten. Hat die stärkste Nervenstärke im Team. Enter
+Cue 4 Label PASCAL Enter
+Cue 4 Notes Veranstaltungstechniker Licht (25 bis 45). Ruhig, fachlich stark, denkt in Abläufen und Lösungen. Sagt Dinge direkt, aber professionell. (Name kann geändert werden.) Enter
+Cue 5 Label CUE Enter
+Cue 5 Notes KI-Assistent (Stimme aus Laptop/Tablet/Intercom). Neutral, sehr schnell, manchmal unbeabsichtigt komisch. Spricht klar und knapp, fast wie ein Systemlog. Enter
+Cue 6 Label FRAU STEIN Enter
+Cue 6 Notes Intendantin/Produktionsleitung (40 bis 60). Wirtschaftlich denkend, freundlich im Ton, hart in der Deadline. Kommt „kurz rein“ und erhöht den Druck. Ort / Ausstattung • Probenbühne oder kleine Bühne; Tisch mit Laptop/Tablet; Headset/Intercom (kann gespielt werden); Requisitenstuhl; Script-Ordner. Enter
+Cue 7 Label Optional Enter
+Cue 7 Notes sichtbarer Lichtpult-Platz (oder seitlich angedeutet). Stücktext Enter
+Cue 8 Label Szene 1 – „Die Nerven liegen blank“ Enter
+Cue 8 Notes Licht: Arbeitslicht / Probenlicht. Leises Summen von Technik. PASCAL sitzt am Laptop Enter
+Cue 9 Label Szene 1 – „Die Nerven liegen blank“ Enter
+Cue 9 Notes und tippt. NINA wärmt sich. LEO läuft unruhig. MARA steht mit Script und Stift. Enter
+Cue 10 Label Szene 1 – „Die Nerven liegen blank“ MARA Enter
+Cue 10 Notes Wir machen jetzt den Durchlauf. Ohne Unterbrechung. So, wie es morgen sein muss. Enter
+Cue 11 Label Szene 1 – „Die Nerven liegen blank“ LEO Enter
+Cue 11 Notes Ohne Unterbrechung ist super, wenn man nicht im Dunkeln spielt. Enter
+Cue 12 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 12 Notes Licht ist nicht „Dunkel“. Das ist „kein Cue getriggert“. Enter
+Cue 13 Label Szene 1 – „Die Nerven liegen blank“ LEO Enter
+Cue 13 Notes Das ist exakt das, was ich meinte. Enter
+Cue 14 Label Szene 1 – „Die Nerven liegen blank“ NINA Enter
+Cue 14 Notes Okay. Wir fangen an. Schritt für Schritt. Enter
+Cue 15 Label Szene 1 – „Die Nerven liegen blank“ MARA Enter
+Cue 15 Notes Nein, Nina. Wir fangen nicht „Schritt für Schritt“ an. Wir fangen an wie im Leben: Es passiert, und ihr müsst drin bleiben. Seite 1 Enter
+Cue 16 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 16 Notes Dann brauche ich den finalen Cue-Plan. Der Ordner hier ist Version drei. Gestern hieß es Version fünf. Enter
+Cue 17 Label Szene 1 – „Die Nerven liegen blank“ MARA Enter
+Cue 17 Notes Versionen sind Kunst. Die leben. Enter
+Cue 18 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 18 Notes Technik lebt nicht von Kunst, sondern von Eindeutigkeit. Kurzer Moment Stille. NINA atmet einmal hörbar aus. Enter
+Cue 19 Label Szene 1 – „Die Nerven liegen blank“ NINA Enter
+Cue 19 Notes Mara. Gib Pascal bitte das, was „morgen gilt“. Sonst kämpfen wir gegeneinander statt fürs Stück. Enter
+Cue 20 Label Szene 1 – „Die Nerven liegen blank“ MARA Enter
+Cue 20 Notes Gut. Version fünf. (zeigt auf Ordner) Hier. Und ja: Es gibt Änderungen. Enter
+Cue 21 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 21 Notes Änderungen sind okay. Unangekündigte Änderungen sind das Problem. Enter
+Cue 22 Label Szene 1 – „Die Nerven liegen blank“ LEO Enter
+Cue 22 Notes Willkommen im Theater. Enter
+Cue 23 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 23 Notes klappt den Laptop auf. Ein kurzes „Beep“. Enter
+Cue 24 Label Szene 1 – „Die Nerven liegen blank“ CUE Enter
+Cue 24 Notes Projekt geladen. „Die letzte Probe“. Status: unvollständig. Fehlende Verknüpfungen: 12. Enter
+Cue 25 Label Szene 1 – „Die Nerven liegen blank“ LEO Enter
+Cue 25 Notes Aha. Sogar der Computer ist enttäuscht. Enter
+Cue 26 Label Szene 1 – „Die Nerven liegen blank“ CUE Enter
+Cue 26 Notes Korrektur: Ich bin nicht enttäuscht. Ich melde Abweichungen. Enter
+Cue 27 Label Szene 1 – „Die Nerven liegen blank“ NINA Enter
+Cue 27 Notes Sehr gut. Dann melden wir jetzt weniger Abweichungen. Enter
+Cue 28 Label Szene 1 – „Die Nerven liegen blank“ MARA Enter
+Cue 28 Notes Durchlauf. Jetzt. Enter
+Cue 29 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 29 Notes setzt ein Headset auf, zeigt „Startposition“. NINA und LEO gehen an ihre Markierungen. Enter
+Cue 30 Label Szene 1 – „Die Nerven liegen blank“ PASCAL Enter
+Cue 30 Notes Ready. Auf mein „Go“. (in Intercom-Positur) Standby Szene 1: Cue 1, Cue 2, Cue 3. Enter
+Cue 31 Label Szene 1 – „Die Nerven liegen blank“ CUE Enter
+Cue 31 Notes Standby bestätigt. Enter
+Cue 32 Label Szene 1 – „Die Nerven liegen blank“ MARA Enter
+Cue 32 Notes Und… los. Enter
+Cue 33 Label Szene 2 – „Das Stück kippt – und fängt sich“ Enter
+Cue 33 Notes Licht: Warmes Bühnenbild. NINA und LEO spielen. MARA beobachtet. PASCAL schaut Enter
+Cue 34 Label Szene 2 – „Das Stück kippt – und fängt sich“ Enter
+Cue 34 Notes zwischen Script und Laptop. Enter
+Cue 35 Label Szene 2 – „Das Stück kippt – und fängt sich“ NINA Enter
+Cue 35 Notes Du warst nie wirklich weg. Du warst nur… nicht hier. Enter
+Cue 36 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 36 Notes Und du warst nie wirklich hier. Du warst nur… laut. Enter
+Cue 37 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 37 Notes nickt minimal: Das ist gut. PASCAL hebt die Hand. Enter
+Cue 38 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 38 Notes Go Cue 2. Licht ändert sich subtil. Alles läuft. Enter
+Cue 39 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 39 Notes Sag’s. Jetzt. Oder nie. Enter
+Cue 40 Label Szene 2 – „Das Stück kippt – und fängt sich“ NINA Enter
+Cue 40 Notes Ich… ich kann nicht. Enter
+Cue 41 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 41 Notes Standby Cue 3. Enter
+Cue 42 Label Szene 2 – „Das Stück kippt – und fängt sich“ CUE Enter
+Cue 42 Notes Warnung: Cue 3 ist nicht definiert. Vorschlag: Cue 3a verwenden. Enter
+Cue 43 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 43 Notes friert einen halben Schlag zu früh – er merkt, dass etwas nicht stimmt. Seite 2 Enter
+Cue 44 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 44 Notes Was heißt „nicht definiert“? Enter
+Cue 45 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 45 Notes Leo! Bleib drin! Enter
+Cue 46 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 46 Notes Cue 3 fehlt in Version fünf. Es gibt nur 3a, 3b und 3c. Enter
+Cue 47 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 47 Notes Welche Stimmung willst du? Enter
+Cue 48 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 48 Notes Die… die harte Kante. Der Bruch. Enter
+Cue 49 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 49 Notes Dann ist das 3b. Enter
+Cue 50 Label Szene 2 – „Das Stück kippt – und fängt sich“ CUE Enter
+Cue 50 Notes Cue 3b: „Kalte Kante, Kontrast hoch“. Bereit. Enter
+Cue 51 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 51 Notes Standby 3b… und Go. Licht kippt deutlich, die Szene bekommt Schärfe. LEO und NINA finden sofort wieder ins Spiel. Enter
+Cue 52 Label Szene 2 – „Das Stück kippt – und fängt sich“ NINA Enter
+Cue 52 Notes Dann sag ich es eben für uns beide: Ich habe Angst. Enter
+Cue 53 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 53 Notes Endlich. Enter
+Cue 54 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 54 Notes atmet. Man sieht: Sie will unterbrechen, tut es aber nicht. Es läuft. Für einen Moment ist alles stimmig. Plötzlich tritt FRAU STEIN von der Seite auf – Clipboard, Uhr, kontrollierte Präsenz. Enter
+Cue 55 Label Szene 2 – „Das Stück kippt – und fängt sich“ FRAU STEIN Enter
+Cue 55 Notes Mara. Pascal. Ein Moment. Enter
+Cue 56 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 56 Notes hält kurz die Hand hoch „gleich“. FRAU STEIN wartet keine Sekunde. Enter
+Cue 57 Label Szene 2 – „Das Stück kippt – und fängt sich“ FRAU STEIN Enter
+Cue 57 Notes Morgen ist Premiere. Presse sitzt. Wir haben heute noch genau… (blickt auf die Uhr) …vierzig Minuten. Wenn ich noch einmal „Cue fehlt“ höre, streichen wir Effekte und spielen im Arbeitslicht. Klar? Stille. Das ist die Drohung, die niemand hören will. Enter
+Cue 58 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 58 Notes Arbeitslicht ist ehrlich. Aber hässlich. Enter
+Cue 59 Label Szene 2 – „Das Stück kippt – und fängt sich“ NINA Enter
+Cue 59 Notes Wir schaffen das. Wenn wir aufhören, uns zu bekämpfen. Enter
+Cue 60 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 60 Notes Frau Stein, wir können das stabilisieren. Aber dann gilt: Ab jetzt keine neuen Änderungen ohne Ansage. Mara: Final heißt final. Enter
+Cue 61 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 61 Notes Du hast recht. (an alle) Stopp. Kurzer Reset. Pascal, sag mir, was du brauchst. Jetzt konkret. Enter
+Cue 62 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 62 Notes Zwei Dinge. Erstens: Finaler Cue-Plan als eine Version, die nicht „lebt“. Zweitens: Wir definieren die fehlenden Übergänge sofort: 3, 7 und 11. Enter
+Cue 63 Label Szene 2 – „Das Stück kippt – und fängt sich“ CUE Enter
+Cue 63 Notes Hinweis: 7 und 11 sind ebenfalls nicht definiert. Enter
+Cue 64 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 64 Notes Danke, CUE. Wirklich. Enter
+Cue 65 Label Szene 2 – „Das Stück kippt – und fängt sich“ CUE Enter
+Cue 65 Notes Gern. Ich optimiere die Wahrheit nicht. Enter
+Cue 66 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 66 Notes Gut. Wir definieren es jetzt. Cue 3 ist 3b. Cue 7: Traum, weich, Hoffnung. Cue 11: Ende. Kein Pathos. Klarheit. Enter
+Cue 67 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 67 Notes Verstanden. CUE, lege Cue 7 als „weich, Hoffnung“ an. Cue 11 als „klar, ruhig“. Enter
+Cue 68 Label Szene 2 – „Das Stück kippt – und fängt sich“ CUE Enter
+Cue 68 Notes Bestätigung: Cue 7 erstellt. Cue 11 erstellt. Status: vollständig. Enter
+Cue 69 Label Szene 2 – „Das Stück kippt – und fängt sich“ FRAU STEIN Enter
+Cue 69 Notes So will ich das hören. (geht ab) Ein Moment: Alle sind erschöpft – und gleichzeitig wieder ein Team. Enter
+Cue 70 Label Szene 2 – „Das Stück kippt – und fängt sich“ NINA Enter
+Cue 70 Notes Du musst nicht alles allein tragen. Seite 3 Enter
+Cue 71 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 71 Notes Ich weiß. Ich vergesse es nur, wenn’s brennt. Enter
+Cue 72 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 72 Notes Dann sag „es brennt“, bevor es brennt. Enter
+Cue 73 Label Szene 2 – „Das Stück kippt – und fängt sich“ LEO Enter
+Cue 73 Notes Und ich… bleibe im Spiel, auch wenn’s wackelt. Aber wenn’s dunkel wird, sag’s vorher. Enter
+Cue 74 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 74 Notes Deal. Enter
+Cue 75 Label Szene 2 – „Das Stück kippt – und fängt sich“ MARA Enter
+Cue 75 Notes Okay. Noch einmal ab der Stelle. Und diesmal läuft’s durch. Wir sind nicht perfekt. Aber wir sind bereit. Enter
+Cue 76 Label Szene 2 – „Das Stück kippt – und fängt sich“ PASCAL Enter
+Cue 76 Notes Standby Cue 3b. Enter
+Cue 77 Label Szene 2 – „Das Stück kippt – und fängt sich“ CUE Enter
+Cue 77 Notes Standby bestätigt. Enter
+Cue 78 Label Szene 2 – „Das Stück kippt – und fängt sich“ NINA Enter
+Cue 78 Notes Du warst nie wirklich weg… Licht: sauberer Übergang. Die Probe geht weiter. Das Stück hat wieder Boden unter den Füßen. BLACKOUT. Seite 4 Enter

@@ -422,11 +422,12 @@ def sync_entire_show_to_db(show: Show) -> None:
         return
 
     try:
-        # Show-Objekt holen oder neu anlegen
-        db_show = ShowModel.query.get(show_id)
+        # Show-Objekt    # Neue Syntax (SQLAlchemy 2.0 konform)
+        db_show = db.session.get(ShowModel, show_id)
         if not db_show:
-            db_show = ShowModel(id=show_id)
-            db.session.add(db_show)
+            return None
+        db_show = ShowModel(id=show_id)
+        db.session.add(db_show)
 
         # Stammdaten
         db_show.name = show.get("name", "") or ""
@@ -441,6 +442,8 @@ def sync_entire_show_to_db(show: Show) -> None:
         db_show.technischer_leiter = show.get("technischer_leiter", "") or ""
         db_show.notes = show.get("notes", "") or ""
         db_show.ma3_sequence_id = show.get("ma3_sequence_id", 101)
+        db_show.eos_macro_id = show.get("eos_macro_id", 101)
+        db_show.eos_cuelist_id = show.get("eos_cuelist_id", 1)
         db_show.modules = show.get("modules", "stammdaten,cuelist,patch,kontakte,requisiten,video")
 
         # Rig / Strom

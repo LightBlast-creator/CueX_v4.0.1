@@ -1,10 +1,12 @@
 from flask import Blueprint, request, redirect, url_for, abort, send_file, render_template, current_app
 from show_logic import find_show, save_data, sync_entire_show_to_db
 from models import Show as ShowModel
-from exports.export_nomad_csv import export_cues_to_csv
+from exports.export_nomad_csv import export_cues_to_csv, export_cues_to_xlsx
+from exports.export_asc import export_show_to_asc
 from pdf_export import build_show_report_pdf, build_techrider_pdf
 from pdf_export_cuelist import build_cuelist_pdf
 import ma3_export
+import exports.eos_macro as eos_macro
 import io
 import json
 import html
@@ -19,6 +21,39 @@ def export_nomad_csv(show_id: int):
     file_path = f"exports/nomad_show_{show_id}.csv"
     export_cues_to_csv(show_id, file_path)
     return send_file(file_path, as_attachment=True, download_name=f"nomad_show_{show_id}.csv")
+
+@show_io_bp.route("/show/<int:show_id>/export_eos_xlsx", methods=["GET"])
+def export_eos_xlsx(show_id: int):
+    file_path = f"exports/eos_show_{show_id}.xlsx"
+    export_cues_to_xlsx(show_id, file_path)
+    return send_file(file_path, as_attachment=True, download_name=f"eos_show_{show_id}.xlsx")
+
+@show_io_bp.route("/show/<int:show_id>/export_asc", methods=["GET"])
+def export_asc(show_id: int):
+    show = find_show(show_id)
+    if not show:
+        abort(404)
+        
+    # Sicheren Dateinamen erstellen
+    custom_name = request.args.get("filename")
+    if custom_name:
+        # User-Eingabe säubern (nur erlaubte Zeichen, aber Leerzeichen ok)
+        safe_title = re.sub(r'[\\/*?:"<>|]', "", custom_name)
+    else:
+        # Fallback auf Show-Titel
+        raw_title = show.get("title", f"Show {show_id}")
+        safe_title = re.sub(r'[\\/*?:"<>|]', "", raw_title) # Windows forbidden chars entfernen
+        safe_title = safe_title.replace(" ", "_")
+    
+    # Endung .asc sicherstellen
+    if not safe_title.lower().endswith(".asc"):
+        safe_title += ".asc"
+    
+    filename = safe_title
+    file_path = f"exports/{filename}"
+    
+    export_show_to_asc(show_id, file_path)
+    return send_file(file_path, as_attachment=True, download_name=filename)
 
 @show_io_bp.route("/show/<int:show_id>/import_cuelist_pdf", methods=["POST"])
 def import_cuelist_pdf(show_id: int):
@@ -298,6 +333,17 @@ def export_techrider_pdf(show_id: int):
 
 @show_io_bp.route("/show/<int:show_id>/export_ma3")
 def export_ma3(show_id: int):
-    db_show = ShowModel.query.get_or_404(show_id)
+    db_show = db.session.get(ShowModel, show_id)
+    if not db_show:
+        abort(404)
     file_path = ma3_export.export_ma3_plugin_to_file(db_show)
     return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="application/zip")
+
+
+@show_io_bp.route("/show/<int:show_id>/export_eos_macro")
+def export_eos_macro(show_id: int):
+    db_show = db.session.get(ShowModel, show_id)
+    if not db_show:
+        abort(404)
+    file_path = eos_macro.export_eos_macro_to_file(db_show)
+    return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="text/plain")

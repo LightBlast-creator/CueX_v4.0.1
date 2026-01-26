@@ -27,6 +27,12 @@ class Show(db.Model):
     # Standard-Sequence-ID für den Export (z.B. 101, 201, 301 ...)
     ma3_sequence_id = db.Column(db.Integer, nullable=False, default=101)
 
+    # EOS-spezifisch
+    # Standard-Macro-ID für den Export
+    eos_macro_id = db.Column(db.Integer, nullable=False, default=101)
+    # Standard-Cuelist-ID für den Export
+    eos_cuelist_id = db.Column(db.Integer, nullable=False, default=1)
+
     # Modulare Feature-Auswahl (Komma-getrennte Liste)
     # Mögliche Werte: stammdaten, cuelist, patch, kontakte, requisiten, video
     modules = db.Column(db.String(200), default="stammdaten,cuelist,patch,kontakte,requisiten,video")

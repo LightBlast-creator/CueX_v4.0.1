@@ -72,6 +72,14 @@ with app.app_context():
             with engine.connect() as conn:
                 conn.execute(text("ALTER TABLE shows ADD COLUMN modules VARCHAR(200) DEFAULT 'stammdaten,cuelist,patch,kontakte,requisiten,video'"))
                 conn.commit()
+        if "eos_macro_id" not in existing_columns:
+            with engine.connect() as conn:
+                conn.execute(text("ALTER TABLE shows ADD COLUMN eos_macro_id INTEGER DEFAULT 101"))
+                conn.commit()
+        if "eos_cuelist_id" not in existing_columns:
+            with engine.connect() as conn:
+                conn.execute(text("ALTER TABLE shows ADD COLUMN eos_cuelist_id INTEGER DEFAULT 1"))
+                conn.commit()
     db.create_all()
 
 if __name__ == "__main__":

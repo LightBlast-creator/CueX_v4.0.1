@@ -195,9 +195,21 @@
       <a href="{{ url_for('show_io.export_ma3', show_id=show.id) }}" class="btn btn-export">
         GrandMA3 Plugin (.zip)
       </a>
-      <a href="{{ url_for('show_io.export_nomad_csv', show_id=show.id) }}" class="btn btn-export">
-        ETC Nomad
-      </a>
+      <button onclick="exportEOS()" class="btn btn-export">
+        ETC EOS
+      </button>
+
+      <script>
+        function exportEOS() {
+          // Aktuellen Show-Namen als Vorschlag nehmen (aus dem DOM oder fest)
+          // Hier einfach leer lassen oder Standardvorschlag
+          let filename = prompt("Bitte Dateinamen eingeben (ohne .asc):", "{{ show.title }}");
+          if (filename) {
+            // Leerzeichen sind ok, Backend kümmert sich
+            window.location.href = "{{ url_for('show_io.export_asc', show_id=show.id) }}" + "?filename=" + encodeURIComponent(filename);
+          }
+        }
+      </script>
     </div>
 
     <div class="divider"></div>
