@@ -16,6 +16,7 @@ sys.modules["app"] = sys.modules.get(__name__)
 app = Flask(__name__, template_folder="templates")
 
 # Configuration
+# WARNUNG: Dieser Key ist nur für die Entwicklung! In Produktion muss er via Environment Variable gesetzt werden.
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-secret-change-me')
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///shows.db"

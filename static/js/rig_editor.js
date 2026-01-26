@@ -240,11 +240,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // ------------- Saving -------------
+    // ------------- Autosave -------------
+    let saveTimeout;
+    const AUTOSAVE_DELAY = 1000; // 1 second
 
-    document.getElementById('btnSaveRigPlan').addEventListener('click', async () => {
+    function triggerAutosave() {
+        // Change button state to "Pending"
         const btn = document.getElementById('btnSaveRigPlan');
-        const oldHtml = btn.innerHTML;
+        if (btn) {
+            btn.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2"></span>Warten...';
+            btn.classList.replace('btn-success', 'btn-primary');
+        }
+
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(saveRigPlan, AUTOSAVE_DELAY);
+    }
+
+    // Event Listeners for Changes
+    canvas.on('object:modified', triggerAutosave);
+    canvas.on('object:added', triggerAutosave);
+    canvas.on('object:removed', triggerAutosave);
+
+    // ------------- Saving Logic (extracted) -------------
+
+    async function saveRigPlan() {
+        const btn = document.getElementById('btnSaveRigPlan');
+        if (!btn) return;
+        const oldHtml = '<i class="bi bi-save me-2"></i>Positionen Speichern'; // Default Text restoration
+
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Speichern...';
 
@@ -259,36 +282,58 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Alles, was NICHT mehr auf dem Canvas ist? 
-        // Unser Ansatz: Was in der Library ist, ist nicht in visualPlan. 
-        // Aber hier aktualisieren wir visualPlan nur für Dinge AUF dem Canvas.
-        // Was ist mit Dingen, die wir zurück in die Library geworfen haben (Del)?
-        // TODO: Delete handling.
+        // Delete Logic: Check what is missing from canvas vs what we had loading?
+        // Current simplified logic: We only update positions of existing items.
+        // Known issue: Deleting visual item does not remove it from visualPlan completely in backend unless we send full replacement?
+        // The backend replaces `rig["visual_plan"] = data.get("visual_plan", {})`.
+        // So sending the current state is correct for "what is on canvas".
+        // BUT: If something is in `rigData` but not on canvas, it's just "not placed". 
+        // We need to ensure we don't lose data of items that are just "not loaded yet"? No, we load everything.
 
         try {
-            await fetch(`/show/${showId}/api/save_rig_positions`, {
+            // CSRF Token holen
+            const csrfToken = document.querySelector('input[name="csrf_token"]')?.value;
+
+            const resp = await fetch(`/show/${showId}/api/save_rig_positions`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
                 body: JSON.stringify({ visual_plan: visualPlan })
             });
 
+            if (!resp.ok) {
+                const text = await resp.text();
+                throw new Error(`Server error: ${resp.status} - ${text}`);
+            }
+
             // Feedback
+            btn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Gespeichert!';
+            btn.classList.replace('btn-primary', 'btn-success');
+
+            // Re-enable (but keep "Saved" look for a moment)
             setTimeout(() => {
-                btn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Gespeichert!';
-                btn.classList.replace('btn-primary', 'btn-success');
-                setTimeout(() => {
-                    btn.innerHTML = oldHtml;
-                    btn.classList.replace('btn-success', 'btn-primary');
-                    btn.disabled = false;
-                }, 2000);
-            }, 500);
+                btn.disabled = false;
+                // Don't reset text immediately if we want to show state, but for manual click validation it's nice.
+                // For autosave, maybe keep "Saved!" until next change?
+                // Let's reset to "Save" to indicate it's ready.
+                btn.innerHTML = oldHtml;
+                btn.classList.replace('btn-success', 'btn-primary');
+            }, 2000);
 
         } catch (e) {
             console.error(e);
-            alert("Fehler beim Speichern!");
-            btn.innerHTML = oldHtml;
+            btn.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Fehler!';
+            btn.classList.add('btn-danger');
             btn.disabled = false;
         }
+    }
+
+    // Manual Save Button
+    document.getElementById('btnSaveRigPlan').addEventListener('click', () => {
+        clearTimeout(saveTimeout); // Cancel pending autosave to avoid double save
+        saveRigPlan();
     });
 
     // ------------- Features -------------

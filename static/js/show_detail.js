@@ -13,18 +13,16 @@ function getAutosaveInterval() {
 }
 
 // Setze das Intervall aus der Session (wird vom Server im Template gesetzt)
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   if (typeof AUTOSAVE_INTERVAL_FROM_SERVER !== 'undefined') {
     sessionStorage.setItem('autosaveInterval', AUTOSAVE_INTERVAL_FROM_SERVER);
   }
 });
 
 function saveAllRiders() {
-  // TODO: Hier Backend-Logik zum Speichern aller Rider einbinden
-  // Beispiel: fetch('/save_riders', { method: 'POST', body: ... })
+  // Placeholder for future backend sync
   const now = new Date();
   autosaveNext = Date.now() + getAutosaveInterval();
-  console.log('Rider-Daten wurden automatisch gespeichert:', now);
 }
 
 function setAutosaveCountdown(ms) {
@@ -32,7 +30,7 @@ function setAutosaveCountdown(ms) {
   const countdown = document.getElementById('autosave-countdown');
   if (ms > 0 && countdown) {
     autosaveNext = Date.now() + ms;
-    autosaveCountdownTimer = setInterval(function() {
+    autosaveCountdownTimer = setInterval(function () {
       const diff = autosaveNext - Date.now();
       if (diff > 0) {
         const sec = Math.ceil(diff / 1000);
@@ -46,13 +44,13 @@ function setAutosaveCountdown(ms) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   // Nur in Show-Detail aktivieren
   if (document.getElementById('autosave-countdown')) {
     const ms = getAutosaveInterval();
     if (ms > 0) {
       setAutosaveCountdown(ms);
-      setInterval(function() {
+      setInterval(function () {
         saveAllRiders();
         setAutosaveCountdown(ms);
       }, ms);
@@ -70,9 +68,9 @@ const scrollToEl = (el) => {
   window.scrollTo(0, Math.max(top, 0));
 };
 const cleanup = () => {
-  try { sessionStorage.removeItem(KEY_SCROLL); } catch (e) {}
-  try { sessionStorage.removeItem(KEY_URL); } catch (e) {}
-  try { sessionStorage.removeItem(KEY_FOCUS); } catch (e) {}
+  try { sessionStorage.removeItem(KEY_SCROLL); } catch (e) { }
+  try { sessionStorage.removeItem(KEY_URL); } catch (e) { }
+  try { sessionStorage.removeItem(KEY_FOCUS); } catch (e) { }
 };
 const reveal = () => document.documentElement.classList.remove('preload');
 // Vor jedem Submit: Scroll + URL speichern, offenes Cue merken, focus_cue merken
@@ -85,13 +83,13 @@ document.addEventListener('submit', function (ev) {
     const form = ev.target;
     const focusInput = form?.querySelector?.('input[name="focus_cue"]');
     if (focusInput?.value) sessionStorage.setItem(KEY_FOCUS, focusInput.value);
-  } catch (e) {}
+  } catch (e) { }
 }, true);
 // Beim Öffnen eines Cue: merken
 document.addEventListener('shown.bs.collapse', function (e) {
   const el = e.target;
   if (el?.classList?.contains('song-collapse') && el.id) {
-    try { sessionStorage.setItem(KEY_OPEN, el.id); } catch (e) {}
+    try { sessionStorage.setItem(KEY_OPEN, el.id); } catch (e) { }
   }
 });
 document.addEventListener('DOMContentLoaded', function () {
@@ -101,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
     openId = sessionStorage.getItem(KEY_OPEN);
     focusId = sessionStorage.getItem(KEY_FOCUS);
     sameUrl = sessionStorage.getItem(KEY_URL) === location.pathname;
-  } catch (e) {}
+  } catch (e) { }
   if (scrollY === null || !sameUrl) {
     cleanup();
     reveal();
