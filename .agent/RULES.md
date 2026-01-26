@@ -8,10 +8,10 @@ Diese Regeln dienen als Leitfaden für die Entwicklung von CueX, um Konsistenz, 
 > 1. GDTF-Logindaten dürfen NIEMALS vom Agenten eingegeben werden. Der User muss diese selbst eingeben. (Ausnahme: Admin/Admin123 für App-Login beim Testen).
 > 2. DSGVO-Konformität ist oberstes Gebot.
 > 3. Frontend immer auf Deutsch. 
-Verhindetere dass dir der fehler mit admin/admin passiert das stimmt nicht!
-zur ENtwicklung sind die Login Daten Benutzername: Admin und Passwort Admin123
-
-Niemals Selber login Daten von GDTF eingeben das MUSS der User Selber machen um sich mit GTDF zu verbinden. 
+> 4. Verhindetere dass dir der fehler mit admin/admin passiert das stimmt nicht!
+> 5. zur ENtwicklung sind die Login Daten Benutzername: Admin und Passwort Admin123
+> 6. NIE WIEDER SELBER FRAGEN OB COMMITTET WERDEN SOLL ES MACHE NUR ICH SELBER
+> 7. Niemals Selber login Daten von GDTF eingeben das MUSS der User Selber machen um sich mit GTDF zu verbinden. 
 
 ## 1. Sprache & Dokumentation
 - **Frontend/UI**: Die Benutzeroberfläche ist aktuell auf **Deutsch** (Labels, Buttons, Fehlermeldungen).

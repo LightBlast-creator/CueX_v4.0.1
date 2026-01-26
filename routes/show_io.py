@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, abort, send_file, render_template, current_app
 from show_logic import find_show, save_data, sync_entire_show_to_db
-from models import Show as ShowModel
+from models import Show as ShowModel, db
 from exports.export_nomad_csv import export_cues_to_csv, export_cues_to_xlsx
 from exports.export_asc import export_show_to_asc
 from pdf_export import build_show_report_pdf, build_techrider_pdf
@@ -335,6 +335,13 @@ def export_techrider_pdf(show_id: int):
 def export_ma3(show_id: int):
     db_show = db.session.get(ShowModel, show_id)
     if not db_show:
+        # Fallback: Aus JSON laden und synchronisieren
+        show_data = find_show(show_id)
+        if show_data:
+            sync_entire_show_to_db(show_data)
+            db_show = db.session.get(ShowModel, show_id)
+            
+    if not db_show:
         abort(404)
     file_path = ma3_export.export_ma3_plugin_to_file(db_show)
     return send_file(file_path, as_attachment=True, download_name=file_path.name, mimetype="application/zip")
@@ -343,6 +350,13 @@ def export_ma3(show_id: int):
 @show_io_bp.route("/show/<int:show_id>/export_eos_macro")
 def export_eos_macro(show_id: int):
     db_show = db.session.get(ShowModel, show_id)
+    if not db_show:
+        # Fallback
+        show_data = find_show(show_id)
+        if show_data:
+            sync_entire_show_to_db(show_data)
+            db_show = db.session.get(ShowModel, show_id)
+            
     if not db_show:
         abort(404)
     file_path = eos_macro.export_eos_macro_to_file(db_show)
