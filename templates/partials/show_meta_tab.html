@@ -1,7 +1,14 @@
 <div class="tab-pane fade {% if active_tab == 'meta' %}show active{% endif %}" id="tab-meta">
   <div class="row">
     <div class="col-md-8">
-      <form method="post" action="{{ url_for('show_details.update_meta', show_id=show.id) }}">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Stammdaten</h5>
+        <span id="saveStatus_metaForm" class="badge bg-secondary">
+          <i class="bi bi-check2 me-1"></i>Aktuell
+        </span>
+      </div>
+      <form method="post" action="{{ url_for('show_details.update_meta', show_id=show.id) }}" class="autosave-form"
+        id="metaForm">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="row mb-3">
           <div class="col-md-6">
@@ -59,9 +66,7 @@
           <label class="form-label">Allgemeine Notizen</label>
           <textarea name="notes" rows="3" class="form-control form-control-sm">{{ show.notes or '' }}</textarea>
         </div>
-        <button type="submit" class="btn btn-primary btn-sm">
-          Stammdaten speichern
-        </button>
+        <!-- Button removed for autosave -->
       </form>
     </div>
     <!-- Checklisten-Spalte -->

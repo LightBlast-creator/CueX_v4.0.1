@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app, jsonify, make_response
 from core.show_logic import find_show, save_data, sync_entire_show_to_db, MANUFACTURERS, create_song, create_check_item, toggle_check_item, remove_show, delete_check_item
 from core.models import db, Show as ShowModel, ContactPersonModel
 
@@ -32,7 +32,8 @@ def show_detail(show_id: int):
     restore_tab = session.pop('restore_tab', None)
 
     # Template bekommt Show + Herstellerliste + aktiven Tab + Kontakte
-    return render_template(
+    # Template bekommt Show + Herstellerliste + aktiven Tab + Kontakte
+    resp = make_response(render_template(
         "show_detail.html",
         show=show,
         manufacturers=MANUFACTURERS,
@@ -41,7 +42,11 @@ def show_detail(show_id: int):
         contacts=contacts,
         restore_scroll=restore_scroll,
         restore_tab=restore_tab,
-    )
+    ))
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 @show_details_bp.route("/show/<int:show_id>/update_meta", methods=["POST"])
 def update_meta(show_id: int):
@@ -90,6 +95,10 @@ def update_meta(show_id: int):
 
     save_data()
     sync_entire_show_to_db(show)
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' or request.accept_mimetypes.accept_json:
+        return jsonify(success=True)
+
     return_tab = request.form.get("return_tab") or request.args.get("return_tab") or "meta"
     return redirect(url_for("show_details.show_detail", show_id=show_id, tab=return_tab))
 

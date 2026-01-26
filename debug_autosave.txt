@@ -1,0 +1,24 @@
+
+[2026-01-27 00:24:38.606953] Update Meta for Show 89
+Headers: Host: 127.0.0.1:5000
+Connection: keep-alive
+Content-Length: 1283
+Sec-Ch-Ua-Platform: "Windows"
+X-Csrftoken: Ijg4NmQyMzQ2NTQzOTI5YTFhMjU0YTcyNDVhOThiZjdhM2M1NDM1NzUi.aXf3pw.5YKV9NcSEZ2nq90d-5KwTdpn94M
+Sec-Ch-Ua: "Google Chrome";v="143", "Chromium";v="143", "Not A(Brand";v="24"
+Sec-Ch-Ua-Mobile: ?0
+X-Requested-With: XMLHttpRequest
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36
+Accept: application/json
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywxWucc2ZMVlBy9MO
+Origin: http://127.0.0.1:5000
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: http://127.0.0.1:5000/show/89?tab=meta&song_id=
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7
+Cookie: session=.eJwNjLsOhCAQAH_F29pGHgJ21_sHF2NWXJScBwmrlfHfj2qKycwNcziQd2IYPjc0ZwXw5T0xQwtj3mJqqIR8bIWi318wPVMLnkuYz_ylBANY269Cql4r6YTDDoVWaITS6OwSDEpfjTa6_i6mUov3-osJnj_efCY4.aXfTcg.PYzXdngOAwH00qyU5ZarssC3LZI
+
+
+Form Data: ImmutableMultiDict([('csrf_token', 'Ijg4NmQyMzQ2NTQzOTI5YTFhMjU0YTcyNDVhOThiZjdhM2M1NDM1NzUi.aXf3pw.5YKV9NcSEZ2nq90d-5KwTdpn94M'), ('name', 'asdasd'), ('artist', 'asd'), ('date', ''), ('venue_type', ''), ('genre', ''), ('rig_type', ''), ('regie', ''), ('veranstalter', ''), ('vt_firma', ''), ('technischer_leiter', ''), ('notes', '')])

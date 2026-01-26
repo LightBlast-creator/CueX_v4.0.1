@@ -242,14 +242,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ------------- Autosave -------------
     let saveTimeout;
-    const AUTOSAVE_DELAY = 1000; // 1 second
+    const AUTOSAVE_DELAY = 500; // 0.5 second
 
     function triggerAutosave() {
-        // Change button state to "Pending"
+        // Feedback UI elements
+        const indicator = document.getElementById('saveStatusIndicator');
         const btn = document.getElementById('btnSaveRigPlan');
+
+        // Update Indicator
+        if (indicator) {
+            indicator.className = 'badge bg-warning text-dark w-100 py-2';
+            indicator.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Speichert gleich...';
+        }
+
+        // Update Button (if present)
         if (btn) {
             btn.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2"></span>Warten...';
-            btn.classList.replace('btn-success', 'btn-primary');
+            // Don't disable yet, just visual feedback
         }
 
         clearTimeout(saveTimeout);
@@ -264,12 +273,20 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------- Saving Logic (extracted) -------------
 
     async function saveRigPlan() {
+        const indicator = document.getElementById('saveStatusIndicator');
         const btn = document.getElementById('btnSaveRigPlan');
-        if (!btn) return;
-        const oldHtml = '<i class="bi bi-save me-2"></i>Positionen Speichern'; // Default Text restoration
+        const oldBtnText = '<i class="bi bi-save me-2"></i>Positionen Speichern';
 
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Speichern...';
+        if (indicator) {
+            indicator.className = 'badge bg-info text-dark w-100 py-2';
+            indicator.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Speichert...';
+        }
+
+        if (btn) {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Speichern...';
+        }
+
 
         // Positionen aus Canvas lesen
         canvas.getObjects().forEach(obj => {
@@ -309,25 +326,47 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Feedback
-            btn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Gespeichert!';
-            btn.classList.replace('btn-primary', 'btn-success');
+            // Feedback Success
+            if (indicator) {
+                indicator.className = 'badge bg-success w-100 py-2';
+                indicator.innerHTML = '<i class="bi bi-check-circle me-1"></i>Gespeichert';
 
-            // Re-enable (but keep "Saved" look for a moment)
-            setTimeout(() => {
-                btn.disabled = false;
-                // Don't reset text immediately if we want to show state, but for manual click validation it's nice.
-                // For autosave, maybe keep "Saved!" until next change?
-                // Let's reset to "Save" to indicate it's ready.
-                btn.innerHTML = oldHtml;
-                btn.classList.replace('btn-success', 'btn-primary');
-            }, 2000);
+                setTimeout(() => {
+                    if (indicator.innerHTML.includes('Gespeichert')) {
+                        indicator.className = 'badge bg-secondary w-100 py-2';
+                        indicator.innerHTML = '<i class="bi bi-check2 me-1"></i>Aktuell';
+                    }
+                }, 3000);
+            }
+
+            if (btn) {
+                btn.classList.replace('btn-primary', 'btn-success');
+                btn.innerHTML = '<i class="bi bi-check-lg me-2"></i>Gespeichert!';
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = oldBtnText;
+                    btn.classList.replace('btn-success', 'btn-primary');
+                }, 2000);
+            }
 
         } catch (e) {
             console.error(e);
-            btn.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Fehler!';
-            btn.classList.add('btn-danger');
-            btn.disabled = false;
+            if (indicator) {
+                indicator.className = 'badge bg-danger w-100 py-2';
+                indicator.innerHTML = '<i class="bi bi-exclamation-triangle me-1"></i>Netzwerkfehler';
+            }
+            if (btn) {
+                btn.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Fehler!';
+                btn.classList.add('btn-danger');
+                btn.disabled = false;
+            }
         }
+    }
+
+    // Attach listener to button if it exists (for manual trigger)
+    const manualSaveBtn = document.getElementById('btnSaveRigPlan');
+    if (manualSaveBtn) {
+        manualSaveBtn.addEventListener('click', saveRigPlan);
     }
 
     // Manual Save Button
