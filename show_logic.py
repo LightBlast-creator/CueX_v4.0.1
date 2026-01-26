@@ -515,3 +515,19 @@ def sync_entire_show_to_db(show: Show) -> None:
 
 # Beim Import einmal Daten laden
 load_data()
+
+
+def ensure_show_in_db(show_id: int):
+    """
+    Stellt sicher, dass die Show in der Datenbank existiert.
+    Falls sie fehlt (aber im JSON existiert), wird sie synchronisiert.
+    Gibt das ShowModel oder None zurück.
+    """
+    db_show = db.session.get(ShowModel, show_id)
+    if not db_show:
+        # Fallback: Versuch aus JSON zu laden
+        show_data = find_show(show_id)
+        if show_data:
+            sync_entire_show_to_db(show_data)
+            db_show = db.session.get(ShowModel, show_id)
+    return db_show
