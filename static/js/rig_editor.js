@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Check dependencies
     if (typeof fabric === 'undefined') {
-        document.getElementById('libraryContainer').innerHTML = `<div class="alert alert-danger">Fabric.js nicht geladen! Internetverbindung prüfen.</div>`;
+        document.getElementById('libraryContainer').innerHTML = `<div class="alert alert-danger">Fabric.js konnte nicht geladen werden! Bitte Internetverbindung prüfen (CDN).</div>`;
         return;
     }
 
