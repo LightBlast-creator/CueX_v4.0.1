@@ -1,7 +1,8 @@
 import pytest
 from app import app
-from models import db, Show as ShowModel
-from show_logic import sync_entire_show_to_db
+from core.models import db, Show as ShowModel
+from core.show_logic import sync_entire_show_to_db
+
 
 def test_export_asc(client, sample_show):
     """Test USITT ASCII export route returns a valid file."""

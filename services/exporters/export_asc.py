@@ -1,4 +1,5 @@
-from show_logic import find_show
+from core.show_logic import find_show
+
 
 def export_show_to_asc(show_id: int, file_path: str):
     """

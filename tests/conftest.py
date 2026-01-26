@@ -3,8 +3,9 @@ import os
 import tempfile
 import json
 from app import app
-from show_logic import shows, save_data, DATA_FILE, next_show_id
-import show_logic
+from core.show_logic import shows, save_data, DATA_FILE, next_show_id
+from core import show_logic
+
 
 @pytest.fixture
 def client():

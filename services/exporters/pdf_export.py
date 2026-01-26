@@ -15,7 +15,8 @@ def _find_logo_path() -> Optional[str]:
     Gibt den absoluten Pfad zurück oder None, falls kein Logo gefunden wird.
     """
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    staticimg_dir = os.path.join(base_dir, "static", "staticimg")
+    staticimg_dir = os.path.join(base_dir, "..", "..", "static", "staticimg")
+
 
     candidates = [
         os.path.join(staticimg_dir, "LightBlastblack .png"),
@@ -329,7 +330,8 @@ def build_show_report_pdf(show: Show) -> Tuple[io.BytesIO, str]:
         margin = 20
         x = 40
         for idx, img_name in enumerate(prop_images):
-            img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "props", img_name)
+            img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "static", "props", img_name)
+
             try:
                 img = ImageReader(img_path)
                 pdf.drawImage(img, x, y - thumb_size, width=thumb_size, height=thumb_size, preserveAspectRatio=True, mask='auto')

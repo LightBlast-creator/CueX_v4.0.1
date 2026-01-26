@@ -7,7 +7,8 @@ import re
 from typing import Any, List
 
 # Export-Verzeichnis (wird automatisch angelegt)
-EXPORT_DIR = (Path(__file__).resolve().parent / "exports" / "ma3").resolve()
+EXPORT_DIR = (Path(__file__).resolve().parent.parent.parent / "exports" / "ma3").resolve()
+
 
 
 def _safe_filename(name: str) -> str:

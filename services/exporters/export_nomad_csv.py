@@ -1,7 +1,8 @@
 import csv
 import openpyxl
 from openpyxl.styles import Font
-from show_logic import find_show
+from core.show_logic import find_show
+
 
 def export_cues_to_csv(show_id: int, file_path: str):
     """

@@ -81,7 +81,8 @@ def build_eos_macro(db_show: Any) -> str:
 
 def export_eos_macro_to_file(db_show: Any) -> Path:
     """Schreibt das Macro in eine Textdatei im exports Verzeichnis"""
-    export_dir = (Path(__file__).resolve().parent.parent / "exports").resolve()
+    export_dir = (Path(__file__).resolve().parent.parent.parent / "exports").resolve()
+
     export_dir.mkdir(parents=True, exist_ok=True)
     
     title = _get_attr(db_show, "title", "name", default="Show")

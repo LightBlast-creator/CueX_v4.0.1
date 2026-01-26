@@ -2,7 +2,8 @@ from flask import Blueprint, request, redirect, url_for, abort, current_app
 from pathlib import Path
 import werkzeug
 import uuid
-from show_logic import find_show, save_data
+from core.show_logic import find_show, save_data
+
 
 show_assets_bp = Blueprint('show_assets', __name__)
 

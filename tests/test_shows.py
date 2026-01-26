@@ -1,4 +1,5 @@
-import show_logic
+from core import show_logic
+
 
 def test_create_show(client):
     """Test creating a new show via the dashboard form."""

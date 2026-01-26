@@ -3,12 +3,14 @@ import json
 import os
 import copy
 
-from models import db, Show as ShowModel, Song as SongModel, ChecklistItem as ChecklistItemModel
+from .models import db, Show as ShowModel, Song as SongModel, ChecklistItem as ChecklistItemModel
+
 
 Show = Dict
 Song = Dict
 
-DATA_FILE = "shows.json"
+DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "shows.json")
+
 
 shows: List[Show] = []
 next_show_id: int = 1

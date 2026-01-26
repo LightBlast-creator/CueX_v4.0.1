@@ -1,4 +1,5 @@
-import show_logic
+from core import show_logic
+
 
 def test_add_song(client, sample_show):
     """Test adding a song to a show."""

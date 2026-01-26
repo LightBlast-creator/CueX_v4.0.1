@@ -1,6 +1,8 @@
 @echo off
 echo [CueX] Cleanup wird durchgefuehrt...
 echo.
+cd /d "%~dp0.."
+
 
 REM Stoppe Server falls laeuft
 echo [1/4] Server beenden...

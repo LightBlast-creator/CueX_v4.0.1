@@ -8,7 +8,8 @@ except Exception:
     CSRFProtect = None
     _CSRF_AVAILABLE = False
 from sqlalchemy import inspect, text
-from models import db
+from core.models import db
+
 
 sys.modules["app"] = sys.modules.get(__name__)
 
@@ -43,7 +44,8 @@ else:
     print("[WARN] Flask-WTF nicht installiert — CSRF deaktiviert. Installiere 'Flask-WTF' für Schutz.")
 
 # Domain Logic Import (ensure it loads)
-import show_logic
+from core import show_logic
+
 
 # Register Blueprints
 from routes.main import main_bp

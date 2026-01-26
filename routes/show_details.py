@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app
-from show_logic import find_show, save_data, sync_entire_show_to_db, MANUFACTURERS, create_song, create_check_item, toggle_check_item, remove_show, delete_check_item
-from models import db, Show as ShowModel, ContactPersonModel
+from core.show_logic import find_show, save_data, sync_entire_show_to_db, MANUFACTURERS, create_song, create_check_item, toggle_check_item, remove_show, delete_check_item
+from core.models import db, Show as ShowModel, ContactPersonModel
+
 import math
 
 show_details_bp = Blueprint('show_details', __name__)

@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app, jsonify
-import show_logic
-import gdtf_api
+from core import show_logic
+from services import gdtf_api
+
 import os
 
 main_bp = Blueprint('main', __name__)
