@@ -46,7 +46,7 @@
 
 <!-- Data injection for JS -->
 <script>
-    window.currentShowId = {{ show.id }};
+    window.currentShowId = Number('{{ show.id }}');
     // Wir übergeben die Rig-Items als JSON an das Frontend
     // Dies enthält die Counts und Typen, aber (noch) keine Einzel-Positionen,
     // es sei denn wir haben sie schon gespeichert.

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% set active_tab = request.args.get("tab", "meta") %}
 {% if autosave_interval is defined %}
-<script>var AUTOSAVE_INTERVAL_FROM_SERVER = {{ autosave_interval| tojson }};</script>
+<script>var AUTOSAVE_INTERVAL_FROM_SERVER = Number('{{ autosave_interval }}' || 0);</script>
 {% endif %}
 
 {% block content %}
