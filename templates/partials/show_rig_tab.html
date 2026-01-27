@@ -1,7 +1,7 @@
 {% set rig = show.rig_setup %}
 <div class="tab-pane fade {% if active_tab == 'rig' %}show active{% endif %}" id="tab-rig">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-12">
       <form method="post" action="{{ url_for('show_details.update_rig', show_id=show.id) }}" class="autosave-form"
         id="rigForm">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -1184,14 +1184,7 @@
         makeAddHandler('add-custom-device-row', 'custom-devices-rows');
       </script>
 
-    </div> <!-- End of col-md-8 -->
-
-    <!-- Checklisten-Spalte (Right Column) -->
-    <div class="col-md-4" id="checklists">
-      <div class="sticky-top" style="top: 1rem; z-index: 10;">
-        {% include "partials/checklists_block.html" ignore missing %}
-      </div>
-    </div>
+    </div> <!-- End of col-12 -->
 
   </div> <!-- End of row -->
 </div> <!-- End of tab-pane -->

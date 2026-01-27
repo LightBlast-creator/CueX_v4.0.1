@@ -1,176 +1,19 @@
 {
   "shows": [
     {
-      "id": 89,
-      "name": "asdasdasdagagaga",
-      "artist": "asdasdgagas",
-      "date": "",
-      "venue_type": "asdsgsdgsgs",
-      "genre": "asddas",
-      "rig_type": "asd",
-      "modules": "stammdaten,cuelist,patch,kontakte,requisiten,video",
-      "regie": "sgsg",
-      "veranstalter": "as",
-      "vt_firma": "asd",
-      "technischer_leiter": "dasd",
-      "notes": "agvfag23214r1231",
-      "songs": [],
-      "rig_setup": {
-        "main_brand": "",
-        "manufacturer": "",
-        "spots": "",
-        "manufacturer_spots": "",
-        "universe_spots": "",
-        "address_spots": "",
-        "watt_spots": "",
-        "phase_spots": "",
-        "models_spots": [],
-        "modes_spots": [],
-        "spots_items": [
-          {
-            "count": "1",
-            "manufacturer": "ARRI",
-            "model": "1",
-            "mode": "1",
-            "universe": "1",
-            "address": "1",
-            "watt": "1",
-            "phase": "1"
-          }
-        ],
-        "washes": "",
-        "manufacturer_washes": "",
-        "universe_washes": "",
-        "address_washes": "",
-        "watt_washes": "",
-        "phase_washes": "",
-        "models_washes": [],
-        "modes_washes": [],
-        "beams": "",
-        "manufacturer_beams": "",
-        "universe_beams": "",
-        "address_beams": "",
-        "watt_beams": "",
-        "phase_beams": "",
-        "models_beams": [],
-        "modes_beams": [],
-        "blinders": "",
-        "manufacturer_blinders": "",
-        "universe_blinders": "",
-        "address_blinders": "",
-        "watt_blinders": "",
-        "phase_blinders": "",
-        "models_blinders": [],
-        "modes_blinders": [],
-        "strobes": "",
-        "manufacturer_strobes": "",
-        "universe_strobes": "",
-        "address_strobes": "",
-        "watt_strobes": "",
-        "phase_strobes": "",
-        "models_strobes": [],
-        "modes_strobes": [],
-        "positions": "",
-        "notes": "",
-        "count_spots": "",
-        "count_washes": "",
-        "count_beams": "",
-        "count_blinders": "",
-        "count_strobes": "",
-        "truss_info": "",
-        "truss_height": "",
-        "specials": "",
-        "power_main": "",
-        "power_light": "",
-        "power_sound": "",
-        "power_video": "",
-        "power_foh": "",
-        "power_other": "",
-        "visual_plan": {
-          "spots_0_0": {
-            "x": 600,
-            "y": 460,
-            "rotation": 0
-          },
-          "washes_0_0": {
-            "x": 380,
-            "y": 160,
-            "rotation": 0
-          }
-        },
-        "washes_items": [
-          {
-            "count": "1",
-            "manufacturer": "High End Systems",
-            "model": "1",
-            "mode": "1",
-            "universe": "1",
-            "address": "1",
-            "watt": "1",
-            "phase": ""
-          }
-        ],
-        "beams_items": [
-          {
-            "count": "",
-            "manufacturer": "",
-            "model": "",
-            "mode": "",
-            "universe": "",
-            "address": "",
-            "watt": "",
-            "phase": ""
-          }
-        ],
-        "blinders_items": [
-          {
-            "count": "",
-            "manufacturer": "",
-            "model": "",
-            "mode": "",
-            "universe": "",
-            "address": "",
-            "watt": "",
-            "phase": ""
-          }
-        ],
-        "strobes_items": [
-          {
-            "count": "",
-            "manufacturer": "",
-            "model": "",
-            "mode": "",
-            "universe": "",
-            "address": "",
-            "watt": "",
-            "phase": ""
-          }
-        ],
-        "custom_devices": []
-      },
-      "checklists": {
-        "preproduction": [],
-        "aufbau": [],
-        "show": []
-      },
-      "ma3_sequence_id": 101,
-      "eos_macro_id": 101,
-      "eos_cuelist_id": 1
-    },
-    {
       "id": 90,
       "name": "testasd",
-      "artist": "asdasd",
+      "artist": "",
       "date": "",
-      "venue_type": "asd",
-      "genre": "asd",
+      "venue_type": "",
+      "genre": "",
       "rig_type": "",
       "modules": "stammdaten,cuelist,patch,kontakte,requisiten,video",
-      "regie": "das",
-      "veranstalter": "as",
-      "vt_firma": "das",
-      "technischer_leiter": "da",
-      "notes": "da",
+      "regie": "",
+      "veranstalter": "",
+      "vt_firma": "",
+      "technischer_leiter": "",
+      "notes": "",
       "songs": [
         {
           "id": 1000001,
@@ -192,7 +35,7 @@
           "name": "Szene 1 – „Die Nerven liegen blank“ MARA",
           "mood": "",
           "colors": "",
-          "movement_style": "",
+          "movement_style": "asd",
           "eye_candy": "",
           "special_notes": "Wir machen jetzt den Durchlauf. Ohne Unterbrechung. So, wie es morgen sein muss.",
           "general_notes": "",
