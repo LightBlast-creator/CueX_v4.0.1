@@ -136,6 +136,20 @@ def _empty_checklists() -> Dict:
     }
 
 
+import uuid
+
+def _ensure_rig_uids(rig: Dict):
+    """Stellt sicher, dass jedes Item im Rig eine eindeutige ID (UID) hat."""
+    prefixes = ["spots", "washes", "beams", "blinders", "strobes", "custom_devices"]
+    for prefix in prefixes:
+        items_key = f"{prefix}_items" if prefix != "custom_devices" else "custom_devices"
+        items = rig.get(items_key, [])
+        if isinstance(items, list):
+            for item in items:
+                if isinstance(item, dict) and not item.get("uid"):
+                    item["uid"] = str(uuid.uuid4())[:8]
+
+
 def load_data() -> None:
     """Lädt Shows + IDs aus shows.json, falls vorhanden, und sorgt für Defaults."""
     global shows, next_show_id, next_song_id, next_check_item_id
@@ -197,6 +211,10 @@ def load_data() -> None:
             defaults = _empty_rig_setup()
             for key, default_val in defaults.items():
                 rig.setdefault(key, default_val)
+        
+        # Ensure UIDs for rig items
+        _ensure_rig_uids(rig)
+        
         show["rig_setup"] = rig
 
         # Checklisten-Struktur

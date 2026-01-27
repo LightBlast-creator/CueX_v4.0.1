@@ -83,6 +83,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_spots__phase[]" class="form-control form-control-sm"
                     value="{{ it.phase }}">
+                  <input type="hidden" name="rig_spots__uid[]" value="{{ it.uid }}">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -132,6 +133,7 @@
                 <div class="col-md-1">
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_spots__phase[]" class="form-control form-control-sm" value="">
+                  <input type="hidden" name="rig_spots__uid[]" value="">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -208,6 +210,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_washes__phase[]" class="form-control form-control-sm"
                     value="{{ it.phase }}">
+                  <input type="hidden" name="rig_washes__uid[]" value="{{ it.uid }}">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -262,6 +265,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_washes__phase[]" class="form-control form-control-sm"
                     value="{{ rig.phase_washes or '' }}">
+                  <input type="hidden" name="rig_washes__uid[]" value="">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -338,6 +342,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_beams__phase[]" class="form-control form-control-sm"
                     value="{{ it.phase }}">
+                  <input type="hidden" name="rig_beams__uid[]" value="{{ it.uid }}">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -392,6 +397,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_beams__phase[]" class="form-control form-control-sm"
                     value="{{ rig.phase_beams or '' }}">
+                  <input type="hidden" name="rig_beams__uid[]" value="">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -469,6 +475,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_blinders__phase[]" class="form-control form-control-sm"
                     value="{{ it.phase }}">
+                  <input type="hidden" name="rig_blinders__uid[]" value="{{ it.uid }}">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -523,6 +530,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_blinders__phase[]" class="form-control form-control-sm"
                     value="{{ rig.phase_blinders or '' }}">
+                  <input type="hidden" name="rig_blinders__uid[]" value="">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -601,6 +609,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_strobes__phase[]" class="form-control form-control-sm"
                     value="{{ it.phase }}">
+                  <input type="hidden" name="rig_strobes__uid[]" value="{{ it.uid }}">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -655,6 +664,7 @@
                   <label class="form-label small text-muted">Phase</label>
                   <input type="text" name="rig_strobes__phase[]" class="form-control form-control-sm"
                     value="{{ rig.phase_strobes or '' }}">
+                  <input type="hidden" name="rig_strobes__uid[]" value="">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -725,6 +735,7 @@
                   <label class="form-label small text-muted">Watt</label>
                   <input type="text" name="custom_devices__watt[]" class="form-control form-control-sm"
                     value="{{ it.watt }}">
+                  <input type="hidden" name="custom_devices__uid[]" value="{{ it.uid }}">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -765,6 +776,7 @@
                 <div class="col-md-1">
                   <label class="form-label small text-muted">Watt</label>
                   <input type="text" name="custom_devices__watt[]" class="form-control form-control-sm">
+                  <input type="hidden" name="custom_devices__uid[]" value="">
                 </div>
                 <div class="col-md-1">
                   <button type="button" class="btn btn-sm btn-outline-danger remove-row w-100" title="Entfernen"><i
@@ -1156,11 +1168,37 @@
             if (!first) return;
             const clone = first.cloneNode(true);
             // clear inputs
-            clone.querySelectorAll('input').forEach(i => i.value = '');
+            clone.querySelectorAll('input').forEach(i => {
+              if (i.type === 'hidden' && i.name.includes('__uid')) {
+                i.value = Math.random().toString(36).substr(2, 8);
+              } else {
+                i.value = '';
+              }
+            });
             clone.querySelectorAll('select').forEach(s => s.selectedIndex = 0);
             container.appendChild(clone);
           });
         }
+        async function savePatchAjax() {
+          const form = document.querySelector('form[action*="update_rig"]');
+          if (!form) return;
+          const formData = new FormData(form);
+          try {
+            const resp = await fetch(form.action, {
+              method: 'POST',
+              body: formData,
+              headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+            if (resp.ok) {
+              console.log('[Patch] Automatisch gespeichert');
+              // Trigger canvas refresh to remove orphaned icons
+              if (typeof loadRigData === 'function') loadRigData();
+            }
+          } catch (e) {
+            console.error('[Patch] Autosave Fehler:', e);
+          }
+        }
+
         document.addEventListener('click', function (e) {
           if (e.target && e.target.classList.contains('remove-row')) {
             const row = e.target.closest('.rig-item-row');
@@ -1174,6 +1212,7 @@
             } else {
               row.remove();
             }
+            savePatchAjax();
           }
         });
         makeAddHandler('add-spot-row', 'spots-rows');

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let rigData = {};
     let visualPlan = {};
     let isSaving = false; // Flag to prevent concurrent POST requests
+    let isInitializing = false; // Flag to suppress autosave during data loading
 
     // Standard-Farben für Typen
     const TYPE_COLORS = {
@@ -100,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------- Data Loading -------------
 
     async function loadRigData() {
+        isInitializing = true;
         try {
             const resp = await fetch(`/show/${showId}/api/get_rig`);
             const json = await resp.json();
@@ -112,8 +114,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <i class="bi bi-exclamation-triangle me-2"></i>Fehler beim Laden:<br>${e.message}<br>
                 <small>Server neu starten?</small>
             </div>`;
+        } finally {
+            isInitializing = false;
         }
     }
+    window.loadRigData = loadRigData;
 
     // ------------- Orchestration & Rendering -------------
 
@@ -291,6 +296,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const AUTOSAVE_DELAY = 300; // 0.3 seconds for tighter sync
 
     function triggerAutosave() {
+        if (isInitializing) return; // Don't trigger while loading data
+
         // Feedback UI elements
         const indicator = document.getElementById('saveStatusIndicator');
         const btn = document.getElementById('btnSaveRigPlan');
@@ -431,18 +438,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // DEL Taste zum Entfernen
     window.addEventListener('keydown', (e) => {
+        // Schutz: Nicht löschen, wenn wir gerade in einem Input tippen
+        if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
         if (e.key === 'Delete' || e.key === 'Backspace') {
-            const active = canvas.getActiveObjects();
-            if (active.length) {
-                active.forEach(obj => {
-                    if (obj.id) {
-                        delete visualPlan[obj.id]; // Aus Plan löschen
-                    }
+            const activeItems = canvas.getActiveObjects();
+            if (activeItems.length > 0) {
+                activeItems.forEach(obj => {
+                    // Rekursiver Helper: Löscht IDs aus dem Plan, auch wenn sie in Gruppen stecken
+                    const processRemoval = (o) => {
+                        if (o.id) {
+                            delete visualPlan[o.id];
+                        }
+                        if (o._objects) {
+                            o._objects.forEach(processRemoval);
+                        }
+                    };
+
+                    processRemoval(obj);
                     canvas.remove(obj);
                 });
+
                 canvas.discardActiveObject();
-                // Library aktualisieren (damit sie wieder auftauchen)
-                renderUI();
+                renderLibrary(); // Sidebar updaten (Objekte fließen zurück)
+                triggerAutosave(); // Sofort wegspeichern
+                canvas.requestRenderAll();
             }
         }
     });
@@ -544,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function () {
             items.forEach((item, itemIdx) => {
                 const count = parseInt(item.count || 0);
                 for (let i = 0; i < count; i++) {
-                    const key = `${prefix}_${itemIdx}_${i}`;
+                    const key = item.uid ? `${item.uid}_${i}` : `${prefix}_${itemIdx}_${i}`;
                     if (visualPlan[key]) {
                         const meta = {
                             universe: item.universe || '1',
@@ -561,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function () {
         customs.forEach((item, itemIdx) => {
             const count = parseInt(item.count || 0);
             for (let i = 0; i < count; i++) {
-                const key = `custom_${itemIdx}_${i}`;
+                const key = item.uid ? `${item.uid}_${i}` : `custom_${itemIdx}_${i}`;
                 if (visualPlan[key]) {
                     const meta = {
                         universe: item.universe || '1',
@@ -586,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const name = item.manufacturer && item.model ? `${item.manufacturer} ${item.model}` : `${prefix.toUpperCase()}`;
                 const unplaced = [];
                 for (let i = 0; i < count; i++) {
-                    const key = `${prefix}_${itemIdx}_${i}`;
+                    const key = item.uid ? `${item.uid}_${i}` : `${prefix}_${itemIdx}_${i}`;
                     if (!visualPlan[key]) {
                         unplaced.push({
                             key,
@@ -611,7 +631,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = item.name || "Custom";
             const unplaced = [];
             for (let i = 0; i < count; i++) {
-                const key = `custom_${itemIdx}_${i}`;
+                const key = item.uid ? `${item.uid}_${i}` : `custom_${itemIdx}_${i}`;
                 if (!visualPlan[key]) {
                     unplaced.push({
                         key,

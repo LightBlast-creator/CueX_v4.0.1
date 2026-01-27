@@ -1,3 +1,4 @@
+import uuid
 from flask import Blueprint, render_template, request, redirect, url_for, abort, session, current_app, jsonify, make_response
 from core.show_logic import find_show, save_data, sync_entire_show_to_db, MANUFACTURERS, create_song, create_check_item, toggle_check_item, remove_show, delete_check_item
 from core.models import db, Show as ShowModel, ContactPersonModel
@@ -121,30 +122,33 @@ def update_rig(show_id: int):
         addresses = request.form.getlist(f"rig_{prefix}__address[]")
         watts = request.form.getlist(f"rig_{prefix}__watt[]")
         phases = request.form.getlist(f"rig_{prefix}__phase[]")
+        uids = request.form.getlist(f"rig_{prefix}__uid[]")
 
         items = []
         for i, c in enumerate(counts):
+            # Check if this row is essentially empty
+            curr_count = c.strip() if c else ""
+            curr_manu = manufacturers[i].strip() if i < len(manufacturers) else ""
+            curr_model = models[i].strip() if i < len(models) else ""
+            
+            if not curr_count and not curr_manu and not curr_model:
+                continue
+                
             item = {
-                "count": c.strip() if c else "",
-                "manufacturer": (manufacturers[i].strip() if i < len(manufacturers) else ""),
-                "model": (models[i].strip() if i < len(models) else ""),
+                "count": curr_count,
+                "manufacturer": curr_manu,
+                "model": curr_model,
                 "mode": (modes[i].strip() if i < len(modes) else ""),
                 "universe": (universes[i].strip() if i < len(universes) else ""),
                 "address": (addresses[i].strip() if i < len(addresses) else ""),
                 "watt": (watts[i].strip() if i < len(watts) else ""),
                 "phase": (phases[i].strip() if i < len(phases) else ""),
+                "uid": (uids[i].strip() if i < len(uids) and uids[i].strip() else str(uuid.uuid4())[:8]),
             }
             items.append(item)
-        if items:
-            rig[f"{prefix}_items"] = items
-        else:
-            # Only update basic fields, don't wipe everything
-            rig[f"{prefix}"] = request.form.get(f"rig_{prefix}", "").strip()
-            rig[f"manufacturer_{prefix}"] = request.form.get(f"rig_manufacturer_{prefix}", "").strip()
-            rig[f"universe_{prefix}"] = request.form.get(f"rig_universe_{prefix}", "").strip()
-            rig[f"address_{prefix}"] = request.form.get(f"rig_address_{prefix}", "").strip()
-            rig[f"watt_{prefix}"] = request.form.get(f"rig_watt_{prefix}", "").strip()
-            rig[f"phase_{prefix}"] = request.form.get(f"rig_phase_{prefix}", "").strip()
+        # Always update the dict key, even if items list is empty
+        # Always update the dict key, even if items list is empty
+        rig[f"{prefix}_items"] = items
 
     rig["positions"] = request.form.get("rig_positions", "").strip()
     rig["notes"] = request.form.get("rig_notes", "").strip()
@@ -164,6 +168,7 @@ def update_rig(show_id: int):
     custom_addresses = request.form.getlist("custom_devices__address[]")
     custom_watts = request.form.getlist("custom_devices__watt[]")
     custom_phases = request.form.getlist("custom_devices__phase[]")
+    custom_uids = request.form.getlist("custom_devices__uid[]")
 
     custom_devices = []
     for i in range(len(custom_counts)):
@@ -182,8 +187,26 @@ def update_rig(show_id: int):
                 "address": custom_addresses[i].strip() if i < len(custom_addresses) else "",
                 "watt": custom_watts[i].strip() if i < len(custom_watts) else "",
                 "phase": custom_phases[i].strip() if i < len(custom_phases) else "",
+                "uid": (custom_uids[i].strip() if i < len(custom_uids) and custom_uids[i].strip() else str(uuid.uuid4())[:8]),
             })
     rig["custom_devices"] = custom_devices
+
+    # Visual Plan Cleanup
+    visual_plan = rig.get("visual_plan", {})
+    if visual_plan:
+        valid_uids = set()
+        for prefix in ("spots", "washes", "beams", "blinders", "strobes"):
+            valid_uids.update(item.get("uid") for item in rig.get(f"{prefix}_items", []))
+        valid_uids.update(item.get("uid") for item in rig.get("custom_devices", []))
+        
+        # Keys in visual_plan are currently {uid}_{instance_index}
+        # We need to extract the UID part
+        new_plan = {}
+        for key, pos in visual_plan.items():
+            uid_part = key.split('_')[0] if '_' in key else key
+            if uid_part in valid_uids:
+                new_plan[key] = pos
+        rig["visual_plan"] = new_plan
 
     save_data()
     sync_entire_show_to_db(show)
