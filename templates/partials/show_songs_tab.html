@@ -30,8 +30,9 @@
       <form method="post" action="{{ url_for('show_details.add_song_route', show_id=show.id) }}" class="mb-4">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="song_name" value="Neue Szene">
-        <button type="submit" class="btn btn-outline-success w-100 py-3 border-dashed">
-          <i class="bi bi-plus-lg fs-4 me-2"></i><span class="fs-5 fw-bold">Neue Szene erstellen (Click & Edit)</span>
+        <button type="submit" class="btn btn-outline-success w-100 py-3 border-dashed"
+          style="border: 2px dashed rgba(25, 135, 84, 0.4); background: rgba(25, 135, 84, 0.02);">
+          <i class="bi bi-plus-lg fs-5 me-2"></i><span class="fw-bold">Neue Szene hinzufügen</span>
         </button>
       </form>
 
@@ -41,57 +42,81 @@
 
       <!-- Suchleiste (Sticky) -->
       <div class="sticky-top bg-dark pb-3 pt-2" style="top: 0; z-index: 10;">
-        <div class="input-group border border-secondary rounded overflow-hidden d-flex flex-nowrap align-items-center">
-          <span class="input-group-text bg-transparent border-0 text-secondary pe-2 ps-3" style="min-width: 40px;">
-            <i class="bi bi-search"></i>
-          </span>
-          <input type="text" id="cueSearchInput"
-            class="form-control bg-transparent text-light border-0 shadow-none ps-0"
-            placeholder="Suche nach Name, Cue-Nummer, Notizen..." autocomplete="off">
-          <button class="btn btn-outline-secondary border-0 text-secondary pe-3" type="button" id="clearSearchBtn"
-            title="Suche löschen">
-            <i class="bi bi-x-lg"></i>
+        <div class="cue-search-box">
+          <i class="bi bi-search search-icon"></i>
+          <input type="text" id="cueSearchInput" placeholder="Szene suchen (Name, Nummer, Notizen...)"
+            autocomplete="off">
+          <button type="button" id="clearSearchBtn" title="Suche löschen">
+            <i class="bi bi-x-circle-fill"></i>
           </button>
         </div>
         <style>
-          /* Seamless Search Bar Style */
-          #cueSearchInput::placeholder {
-            color: #6c757d;
-            opacity: 1;
+          .cue-search-box {
+            display: flex;
+            align-items: center;
+            background: #0f1115;
+            border: 1px solid #262b33;
+            border-radius: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           }
 
-          .input-group {
-            transition: border-color 0.2s;
-            background-color: rgba(255, 255, 255, 0.02);
+          .cue-search-box:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
           }
 
-          .input-group:focus-within {
-            border-color: #adb5bd !important;
-            background-color: rgba(255, 255, 255, 0.05);
+          .cue-search-box .search-icon {
+            color: #4b5563;
+            margin-right: 0.75rem;
           }
 
-          .input-group:hover {
-            border-color: #adb5bd !important;
+          .cue-search-box input {
+            background: transparent;
+            border: none;
+            color: #f8f9fa;
+            flex-grow: 1;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            box-shadow: none;
+            outline: none;
           }
 
-          .input-group-text,
-          #cueSearchInput,
-          #clearSearchBtn {
-            background-color: transparent !important;
-            border-color: transparent !important;
-            border-radius: 0 !important;
+          .cue-search-box #clearSearchBtn {
+            background: transparent;
+            border: none;
+            color: #4b5563;
+            padding: 0 0.25rem;
+            display: none;
+            transition: color 0.2s;
           }
 
-          #clearSearchBtn:hover {
-            color: #f8f9fa !important;
+          .cue-search-box #clearSearchBtn:hover {
+            color: #9ca3af;
           }
 
-          /* Entferne Default-Browser-Input-Ränder */
-          #cueSearchInput:focus,
-          .input-group-text:focus,
-          .btn:focus {
-            box-shadow: none !important;
-            outline: none !important;
+          .song-card {
+            border: 1px solid #262b33 !important;
+            border-radius: 0.5rem !important;
+            overflow: hidden;
+            transition: all 0.2s;
+          }
+
+          .song-card:hover {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+          }
+
+          .song-card .card-header {
+            background: #14171d !important;
+            border-bottom: 1px solid #262b33 !important;
+          }
+
+          .song-card .badge.bg-primary {
+            background-color: #3b82f6 !important;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.6rem;
           }
         </style>
       </div>

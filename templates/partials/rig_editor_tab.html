@@ -18,6 +18,22 @@
                 </button>
             </div>
 
+            <h6 class="small text-muted text-uppercase mb-2">Einstellungen</h6>
+            <div class="mb-4 px-2">
+                <label for="fixtureScale" class="form-label small text-muted mb-1">Symbol-Skalierung</label>
+                <input type="range" class="form-range" id="fixtureScale" min="0.5" max="2.5" step="0.1" value="1.0">
+            </div>
+
+            <h6 class="small text-muted text-uppercase mb-2">Aktionen</h6>
+            <div class="d-grid gap-2 mb-4">
+                <button class="btn btn-outline-info btn-sm" id="btnGroup">
+                    <i class="bi bi-collection me-2"></i>Gruppieren
+                </button>
+                <button class="btn btn-outline-warning btn-sm" id="btnUngroup">
+                    <i class="bi bi-intersect me-2"></i>Gruppierung aufheben
+                </button>
+            </div>
+
             <h6 class="small text-muted text-uppercase mb-2">Objekte hinzufügen</h6>
             <div class="list-group mb-3" id="libraryContainer">
                 <!-- Wird per JS gefüllt: Liste verfügbarer Fixture-Typen aus dem Setup -->
@@ -40,6 +56,11 @@
                 Bühne (Draufsicht)
             </div>
             <canvas id="rigCanvas" width="800" height="600"></canvas>
+
+            <div class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark bg-opacity-50 text-white-50 border border-secondary border-opacity-25 rounded small d-flex align-items-center"
+                style="z-index: 10; font-size: 0.65rem; pointer-events: none; letter-spacing: 0.02em;">
+                <i class="bi bi-grid-3x3 me-2 opacity-50"></i> <span class="opacity-75">Gitter: 1.0m x 1.0m</span>
+            </div>
         </div>
     </div>
 </div>

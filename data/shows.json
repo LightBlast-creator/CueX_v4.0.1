@@ -873,7 +873,7 @@
         "modes_spots": [],
         "spots_items": [
           {
-            "count": "1",
+            "count": "20",
             "manufacturer": "High End Systems",
             "model": "1",
             "mode": "1",
@@ -933,18 +933,113 @@
         "power_other": "",
         "visual_plan": {
           "spots_0_0": {
-            "x": 440,
-            "y": 80,
+            "x": 1441,
+            "y": 253,
             "rotation": 0
           },
-          "strobes_0_0": {
-            "x": 140,
-            "y": 180,
+          "spots_0_1": {
+            "x": 561,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_2": {
+            "x": 601,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_3": {
+            "x": 641,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_4": {
+            "x": 681,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_5": {
+            "x": 721,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_6": {
+            "x": 761,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_7": {
+            "x": 801,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_8": {
+            "x": 841,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_9": {
+            "x": 881,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_10": {
+            "x": 921,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_11": {
+            "x": 961,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_12": {
+            "x": 1001,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_13": {
+            "x": 1041,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_14": {
+            "x": 1081,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_15": {
+            "x": 1121,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_16": {
+            "x": 1161,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_17": {
+            "x": 1201,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_18": {
+            "x": 1241,
+            "y": 233,
+            "rotation": 0
+          },
+          "spots_0_19": {
+            "x": 1281,
+            "y": 233,
             "rotation": 0
           },
           "washes_0_0": {
-            "x": 540,
-            "y": 120,
+            "x": 1721,
+            "y": 253,
+            "rotation": 0
+          },
+          "strobes_0_0": {
+            "x": -580,
+            "y": -1080,
             "rotation": 0
           }
         },

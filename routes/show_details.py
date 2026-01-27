@@ -109,6 +109,7 @@ def update_rig(show_id: int):
         abort(404)
 
     rig = show.setdefault("rig_setup", {})
+    # Use update() or manual assignment to preserve existing keys like 'visual_plan'
     rig["main_brand"] = request.form.get("rig_main_brand", "").strip()
 
     for prefix in ("spots", "washes", "beams", "blinders", "strobes"):
@@ -137,6 +138,7 @@ def update_rig(show_id: int):
         if items:
             rig[f"{prefix}_items"] = items
         else:
+            # Only update basic fields, don't wipe everything
             rig[f"{prefix}"] = request.form.get(f"rig_{prefix}", "").strip()
             rig[f"manufacturer_{prefix}"] = request.form.get(f"rig_manufacturer_{prefix}", "").strip()
             rig[f"universe_{prefix}"] = request.form.get(f"rig_universe_{prefix}", "").strip()

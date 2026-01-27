@@ -5,21 +5,49 @@
     letter-spacing: 1px;
     font-weight: bold;
     padding: 0.5rem 0.75rem;
+    color: #9ca3af !important;
   }
 
   .checklist-sidebar .list-group-item {
-    padding: 0.4rem 0.75rem;
+    padding: 0.35rem 0.6rem;
     background: transparent !important;
+    transition: background 0.2s;
+  }
+
+  .checklist-sidebar .list-group-item:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
   }
 
   .checklist-sidebar h6 {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5) !important;
-    margin-top: 1rem !important;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4) !important;
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.25rem !important;
+    font-weight: 600;
   }
 
   .checklist-sidebar .form-control-sm {
     font-size: 0.85rem;
+  }
+
+  .strike-through {
+    text-decoration: line-through;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+  }
+
+  .checklist-sidebar .form-check-input {
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    background-color: transparent;
+    border-color: #4b5563;
+  }
+
+  .checklist-sidebar .form-check-input:checked {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
   }
 </style>
 
@@ -71,7 +99,7 @@
             <input type="hidden" name="tab" value="{{ active_tab }}">
 
             <input type="text" name="text" value="{{ item.text }}"
-              class="form-control form-control-sm border-0 bg-transparent text-light p-0 {% if item.done %}text-decoration-line-through text-muted{% endif %}"
+              class="form-control form-control-sm border-0 bg-transparent text-light p-0 {% if item.done %}strike-through text-muted{% endif %}"
               style="box-shadow: none;" placeholder="...">
             <span id="saveStatus_checkUpdate_{{ item.id }}" class="d-none"></span>
           </form>

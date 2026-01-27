@@ -46,114 +46,187 @@
   .actions-bar {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-    background: linear-gradient(135deg, #1a1d23 0%, #14171d 100%);
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    background: #0f1115;
     border: 1px solid #262b33;
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   .actions-bar .action-group {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.35rem;
     align-items: center;
   }
 
   .actions-bar .action-group-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin-right: 0.5rem;
+    font-weight: 600;
+    margin-right: 0.25rem;
   }
 
   .actions-bar .divider {
     width: 1px;
-    height: 24px;
-    background: #30363d;
+    height: 20px;
+    background: #262b33;
     margin: 0 0.5rem;
   }
 
   .actions-bar .btn {
-    font-size: 0.85rem;
-    padding: 0.45rem 0.85rem;
-    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.35rem;
+    font-weight: 500;
+    transition: all 0.2s;
   }
 
   .actions-bar .btn-export {
-    background: #1e3a5f;
-    border: 1px solid #2563eb;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
     color: #60a5fa;
   }
 
   .actions-bar .btn-export:hover {
-    background: #1e40af;
+    background: #2563eb;
     color: #fff;
+    border-color: #2563eb;
   }
 
   .actions-bar .btn-delete {
     background: transparent;
-    border: 1px solid #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.3);
     color: #f87171;
   }
 
   .actions-bar .btn-delete:hover {
     background: #dc2626;
     color: #fff;
+    border-color: #dc2626;
   }
 
   .actions-bar .btn-regie {
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-    border: none;
+    background: #3b82f6;
+    border: 1px solid #3b82f6;
     color: #fff;
-    font-weight: 600;
   }
 
   .actions-bar .btn-regie:hover {
-    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+    background: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
   }
 
   /* Modern Tabs */
   .modern-tabs {
     display: flex;
     gap: 0.25rem;
-    background: #14171d;
-    padding: 0.35rem;
-    border-radius: 0.75rem;
+    background: #0f1115;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
     border: 1px solid #262b33;
     margin-bottom: 1.5rem;
     overflow-x: auto;
   }
 
   .modern-tabs .tab-link {
-    padding: 0.65rem 1.25rem;
-    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.35rem;
     color: #9ca3af;
     text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.85rem;
+    font-weight: 600;
     white-space: nowrap;
     transition: all 0.2s;
   }
 
   .modern-tabs .tab-link:hover {
     color: #f8f9fa;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
   }
 
   .modern-tabs .tab-link.active {
-    background: #3b82f6;
-    color: #fff;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.3);
   }
 
   /* Autosave Indicator */
   .autosave-indicator {
-    font-size: 0.85rem;
-    color: #6b7280;
+    font-size: 0.8rem;
+    color: #4b5563;
     text-align: right;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Global Form Styling in Tabs */
+  .tab-pane .form-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+  }
+
+  .tab-pane .form-control {
+    background: #0f1115;
+    border: 1px solid #262b33;
+    color: #f8f9fa;
+    border-radius: 0.35rem;
+    transition: all 0.2s;
+  }
+
+  .tab-pane .form-control:focus {
+    background: #14171d;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    color: #fff;
+  }
+
+  .tab-pane .form-control-sm {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .tab-pane h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f8f9fa;
+  }
+
+  /* Sidebar Toggle Styles */
+  .sidebar-collapsed #main-content-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .sidebar-collapsed #sidebar-col {
+    display: none;
+  }
+
+  #sidebar-toggle-btn {
+    transition: all 0.2s;
+    background: transparent;
+    border: 1px solid #262b33;
+    color: #9ca3af;
+  }
+
+  #sidebar-toggle-btn:hover {
+    color: #f8f9fa;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sidebar-collapsed #sidebar-toggle-btn {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.5);
   }
 </style>
 
@@ -181,6 +254,10 @@
     <a href="{{ url_for('show_details.show_regie_view', show_id=show.id) }}" class="btn btn-regie">
       Regie-Ansicht öffnen
     </a>
+
+    <button id="sidebar-toggle-btn" class="btn btn-outline-secondary ms-2" title="Checkliste ein/ausblenden">
+      <i class="bi bi-layout-sidebar-reverse"></i>
+    </button>
 
     <div class="divider"></div>
 
@@ -222,8 +299,8 @@
     </form>
   </div>
 
-  <div class="row">
-    <div class="col-lg-9">
+  <div id="show-layout-row" class="row">
+    <div id="main-content-col" class="col-lg-9">
       <!-- Modern Tabs (Dynamisch basierend auf Modulen) -->
       {% set modules = (show.modules or 'stammdaten,cuelist,patch,kontakte,requisiten,video').split(',') %}
       <nav class="modern-tabs">
@@ -297,7 +374,7 @@
     </div>
 
     <!-- Sidebar: Checklisten (Fresszettel) -->
-    <div class="col-lg-3 mt-3 mt-lg-0">
+    <div id="sidebar-col" class="col-lg-3 mt-3 mt-lg-0">
       <div class="sticky-top" style="top: 20px; z-index: 100;">
         {% include "partials/checklists_block.html" ignore missing %}
       </div>
@@ -357,6 +434,33 @@
           }
         } catch (e) { }
       });
+    })();
+
+    // Sidebar Toggle Logic
+    (function () {
+      const toggleBtn = document.getElementById('sidebar-toggle-btn');
+      const container = document.querySelector('.container');
+      const STORAGE_KEY = 'cuex_sidebar_collapsed';
+
+      function updateSidebarUI(collapsed) {
+        if (collapsed) {
+          container.classList.add('sidebar-collapsed');
+        } else {
+          container.classList.remove('sidebar-collapsed');
+        }
+      }
+
+      // Load initial state
+      if (toggleBtn) {
+        const isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
+        updateSidebarUI(isCollapsed);
+
+        toggleBtn.addEventListener('click', () => {
+          const nowCollapsed = !container.classList.contains('sidebar-collapsed');
+          updateSidebarUI(nowCollapsed);
+          localStorage.setItem(STORAGE_KEY, String(nowCollapsed));
+        });
+      }
     })();
   </script>
 </div>
