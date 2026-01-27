@@ -1,8 +1,33 @@
-<div class="card mb-3">
-  <div class="card-header">
-    Checklisten
+<style>
+  .checklist-sidebar .card-header {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .checklist-sidebar .list-group-item {
+    padding: 0.4rem 0.75rem;
+    background: transparent !important;
+  }
+
+  .checklist-sidebar h6 {
+    font-size: 0.8rem;
+    color: #fff-50 !important;
+    margin-top: 1rem !important;
+  }
+
+  .checklist-sidebar .form-control-sm {
+    font-size: 0.85rem;
+  }
+</style>
+
+<div class="card mb-3 checklist-sidebar bg-dark border-secondary">
+  <div class="card-header border-secondary bg-transparent text-secondary">
+    <i class="bi bi-journal-check me-2"></i>Fresszettel / Checkliste
   </div>
-  <div class="card-body">
+  <div class="card-body p-2">
 
     {% set checklists = show.checklists or {} %}
     {% set categories = [
@@ -12,76 +37,79 @@
     ] %}
 
     {% for key, label in categories %}
-    <h6 class="mt-2 mb-1 text-light">{{ label }}</h6>
+    <h6 class="px-2 mb-1 text-white-50 small text-uppercase" style="letter-spacing: 0.5px;">{{ label }}</h6>
 
     {% set items = checklists.get(key, []) %}
     {% if items %}
     <ul class="list-group list-group-flush mb-2">
       {% for item in items %}
-      <li class="list-group-item d-flex justify-content-between align-items-start">
+      <li class="list-group-item d-flex justify-content-between align-items-center border-0">
         <!-- Checkbox (done/undone) -->
-        <div class="me-2" style="flex: 1;">
-          <form method="post" action="{{ url_for('show_details.toggle_check_item_route', show_id=show.id) }}">
+        <div class="me-2">
+          <!-- Toggle Form -->
+          <form method="post" action="{{ url_for('show_details.toggle_check_item_route', show_id=show.id) }}"
+            class="autosave-form" id="checkToggle_{{ item.id }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="category" value="{{ key }}">
             <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="tab" value="{{ active_tab }}">
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" onclick="this.form.submit()" {% if item.done %}checked{%
-                endif %}>
-              <label class="form-check-label {% if item.done %}text-decoration-line-through text-muted{% endif %}">
-                {{ item.text }}
-              </label>
+            <div class="form-check m-0">
+              <input class="form-check-input" type="checkbox" name="done" {% if item.done %}checked{% endif %}
+                onchange="this.form.dispatchEvent(new Event('submit', {cancelable: true, bubbles: true}))">
             </div>
           </form>
         </div>
 
-        <!-- Edit + Delete -->
-        <div class="d-flex" style="flex: 1; gap: 0.25rem;">
-          <!-- Edit -->
+        <!-- Text Edit -->
+        <div class="d-flex align-items-center flex-grow-1" style="gap: 0.5rem;">
           <form method="post" action="{{ url_for('show_details.update_check_item_route', show_id=show.id) }}"
-            class="d-flex flex-grow-1 me-1">
+            class="d-flex flex-grow-1 autosave-form" id="checkUpdate_{{ item.id }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="category" value="{{ key }}">
             <input type="hidden" name="item_id" value="{{ item.id }}">
+            <input type="hidden" name="tab" value="{{ active_tab }}">
 
-            <input type="text" name="text" value="{{ item.text }}" class="form-control form-control-sm me-2">
-            <button type="submit" class="btn btn-outline-light btn-sm">
-              Speichern
-            </button>
+            <input type="text" name="text" value="{{ item.text }}"
+              class="form-control form-control-sm border-0 bg-transparent text-light p-0 {% if item.done %}text-decoration-line-through text-muted{% endif %}"
+              style="box-shadow: none;" placeholder="...">
+            <span id="saveStatus_checkUpdate_{{ item.id }}" class="d-none"></span>
           </form>
+
 
           <!-- Delete -->
           <form method="post" action="{{ url_for('show_details.delete_check_item_route', show_id=show.id) }}"
-            onsubmit="return confirm('Diesen Punkt wirklich löschen?');">
+            onsubmit="return confirm('Löschen?');">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="category" value="{{ key }}">
             <input type="hidden" name="item_id" value="{{ item.id }}">
-            <button type="submit" class="btn btn-outline-danger btn-sm" title="Punkt löschen">
-              ✕
+            <input type="hidden" name="tab" value="{{ active_tab }}">
+            <button type="submit" class="btn btn-link btn-sm text-danger p-0 border-0" title="Punkt löschen">
+              <i class="bi bi-x-circle"></i>
             </button>
           </form>
         </div>
       </li>
       {% endfor %}
     </ul>
-    {% else %}
-    <p class="text-muted mb-1 small">Keine Einträge.</p>
     {% endif %}
 
     <!-- Neuen Eintrag für diese Kategorie hinzufügen -->
-    <form method="post" action="{{ url_for('show_details.add_check_item_route', show_id=show.id) }}" class="mb-2">
-      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-      <input type="hidden" name="category" value="{{ key }}">
+    <div class="px-2 pb-2">
+      <form method="post" action="{{ url_for('show_details.add_check_item_route', show_id=show.id) }}" class="mb-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="category" value="{{ key }}">
+        <input type="hidden" name="tab" value="{{ active_tab }}">
 
-      <div class="input-group input-group-sm">
-        <input type="text" name="text" class="form-control" placeholder="Neuer Punkt für {{ label }}">
-        <button class="btn btn-outline-light" type="submit">+</button>
-      </div>
-    </form>
+        <div class="input-group input-group-sm">
+          <input type="text" name="text" class="form-control bg-dark border-secondary" placeholder="+ {{ label }}...">
+          <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-plus"></i></button>
+        </div>
+      </form>
+    </div>
 
     {% if not loop.last %}
-    <hr class="my-2">
+    <hr class="my-1 border-secondary opacity-25">
     {% endif %}
     {% endfor %}
 

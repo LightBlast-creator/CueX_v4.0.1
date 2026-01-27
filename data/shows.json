@@ -159,30 +159,32 @@
     },
     {
       "id": 90,
-      "name": "test",
-      "artist": "",
+      "name": "testasd",
+      "artist": "asdasd",
       "date": "",
-      "venue_type": "",
-      "genre": "",
+      "venue_type": "asd",
+      "genre": "asd",
       "rig_type": "",
       "modules": "stammdaten,cuelist,patch,kontakte,requisiten,video",
-      "regie": "",
-      "veranstalter": "",
-      "vt_firma": "",
-      "technischer_leiter": "",
-      "notes": "",
+      "regie": "das",
+      "veranstalter": "as",
+      "vt_firma": "das",
+      "technischer_leiter": "da",
+      "notes": "da",
       "songs": [
         {
           "id": 1000001,
           "order_index": 1,
           "name": "Szene 1 – „Die Nerven liegen blank“",
-          "mood": "",
-          "colors": "",
-          "movement_style": "",
-          "eye_candy": "",
+          "mood": "asd",
+          "colors": "asd",
+          "movement_style": "asd",
+          "eye_candy": "asd",
           "special_notes": "und tippt. NINA wärmt sich. LEO läuft unruhig. MARA steht mit Script und Stift.",
           "general_notes": "",
-          "prop_images": []
+          "prop_images": [
+            "90_1b04aa1f.png"
+          ]
         },
         {
           "id": 1000002,
@@ -1010,7 +1012,9 @@
           "eye_candy": "",
           "special_notes": "Du warst nie wirklich weg… Licht: sauberer Übergang. Die Probe geht weiter. Das Stück hat wieder Boden unter den Füßen. BLACKOUT. Seite 4",
           "general_notes": "",
-          "prop_images": []
+          "prop_images": [
+            "90_ac5b8f73.png"
+          ]
         }
       ],
       "rig_setup": {
@@ -1086,18 +1090,18 @@
         "power_other": "",
         "visual_plan": {
           "spots_0_0": {
-            "x": 120,
-            "y": 420,
+            "x": 440,
+            "y": 80,
             "rotation": 0
           },
           "strobes_0_0": {
-            "x": 520,
-            "y": 320,
+            "x": 140,
+            "y": 180,
             "rotation": 0
           },
           "washes_0_0": {
-            "x": 660,
-            "y": 160,
+            "x": 540,
+            "y": 120,
             "rotation": 0
           }
         },
@@ -1163,5 +1167,5 @@
   ],
   "next_show_id": 91,
   "next_song_id": 87,
-  "next_check_item_id": 46
+  "next_check_item_id": 53
 }

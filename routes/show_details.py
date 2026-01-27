@@ -223,7 +223,11 @@ def add_check_item_route(show_id: int):
         create_check_item(show, category, text)
         save_data()
         sync_entire_show_to_db(show)
-    return redirect(url_for("show_details.show_detail", show_id=show_id, tab="meta") + "#checklists")
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Item added"})
+        
+    return_tab = request.form.get("tab") or request.args.get("tab") or "meta"
+    return redirect(url_for("show_details.show_detail", show_id=show_id, tab=return_tab) + "#checklists")
 
 
 @show_details_bp.route("/show/<int:show_id>/checklists/toggle", methods=["POST"])
@@ -242,7 +246,12 @@ def toggle_check_item_route(show_id: int):
         toggle_check_item(show, category, item_id)
         save_data()
         sync_entire_show_to_db(show)
-    return redirect(url_for("show_details.show_detail", show_id=show_id, tab="meta") + "#checklists")
+        
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Item toggled"})
+        
+    return_tab = request.form.get("tab") or request.args.get("tab") or "meta"
+    return redirect(url_for("show_details.show_detail", show_id=show_id, tab=return_tab) + "#checklists")
 
 
 @show_details_bp.route("/show/<int:show_id>/checklists/update", methods=["POST"])
@@ -271,7 +280,12 @@ def update_check_item_route(show_id: int):
                 break
         save_data()
         sync_entire_show_to_db(show)
-    return redirect(url_for("show_details.show_detail", show_id=show_id, tab="meta") + "#checklists")
+        
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Item updated"})
+        
+    return_tab = request.form.get("tab") or request.args.get("tab") or "meta"
+    return redirect(url_for("show_details.show_detail", show_id=show_id, tab=return_tab) + "#checklists")
 
 
 
@@ -291,7 +305,11 @@ def delete_check_item_route(show_id: int):
         save_data()
         sync_entire_show_to_db(show)
         
-    return redirect(url_for("show_details.show_detail", show_id=show.id, tab="meta") + "#checklists")
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": "success", "message": "Item deleted"})
+        
+    return_tab = request.form.get("tab") or request.args.get("tab") or "meta"
+    return redirect(url_for("show_details.show_detail", show_id=show_id, tab=return_tab) + "#checklists")
 
 
 @show_details_bp.route("/show/<int:show_id>/regie", methods=["GET"])

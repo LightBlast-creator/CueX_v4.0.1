@@ -6,7 +6,7 @@
     }
   </style>
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-12">
       <div class="card mb-3">
         <div class="card-header">Rider / Kontakte</div>
         <div class="card-body">
@@ -27,10 +27,10 @@
 
                   <!-- Delete Button -->
                   <form method="post"
-                    action="{{ url_for('show_details.delete_contact', show_id=show.id, contact_id=c.id) }}">
+                    action="{{ url_for('show_details.delete_contact', show_id=show.id, contact_id=c.id) }}"
+                    onsubmit="return confirm('Kontakt löschen?');">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button class="btn btn-sm text-danger border-0 p-0 ms-2" type="button"
-                      onclick="if(confirm('Kontakt löschen?')) this.form.submit();" title="Löschen">
+                    <button class="btn btn-sm text-danger border-0 p-1 ms-2 lh-1" type="submit" title="Löschen">
                       <i class="bi bi-trash fs-5"></i>
                     </button>
                   </form>
@@ -44,45 +44,46 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="row g-2">
                   <div class="col-md-4">
-                    <div class="form-floating">
-                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
-                        name="role" id="role_{{c.id}}" value="{{ c.role }}" placeholder="Rolle">
-                      <label for="role_{{c.id}}" class="text-muted">Rolle / Position</label>
-                    </div>
+                    <label class="small text-muted mb-1">Rolle / Position</label>
+                    <input type="text" class="form-control bg-dark text-light border-secondary" name="role"
+                      value="{{ c.role }}" placeholder="Rolle">
                   </div>
                   <div class="col-md-4">
-                    <div class="form-floating">
-                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
-                        name="name" id="name_{{c.id}}" value="{{ c.name or '' }}" placeholder="Name">
-                      <label for="name_{{c.id}}" class="text-muted">Ansprechpartner</label>
-                    </div>
+                    <label class="small text-muted mb-1">Ansprechpartner</label>
+                    <input type="text" class="form-control bg-dark text-light border-secondary" name="name"
+                      value="{{ c.name or '' }}" placeholder="Name">
                   </div>
                   <div class="col-md-4">
-                    <div class="form-floating">
-                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
-                        name="company" id="company_{{c.id}}" value="{{ c.company or '' }}" placeholder="Firma">
-                      <label for="company_{{c.id}}" class="text-muted">Firma / Unternehmen</label>
-                    </div>
+                    <label class="small text-muted mb-1">Firma / Unternehmen</label>
+                    <input type="text" class="form-control bg-dark text-light border-secondary" name="company"
+                      value="{{ c.company or '' }}" placeholder="Firma">
                   </div>
                   <div class="col-md-6 mt-2">
-                    <div class="input-group input-group-sm">
+                    <label class="small text-muted mb-1">Telefon</label>
+                    <div class="input-group">
                       <span class="input-group-text bg-dark border-secondary text-secondary"><i
                           class="bi bi-telephone"></i></span>
-                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
-                        name="phone" value="{{ c.phone or '' }}" placeholder="Telefon">
+                      <input type="text" class="form-control bg-dark text-light border-secondary" name="phone"
+                        value="{{ c.phone or '' }}" placeholder="Telefon">
                     </div>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <div class="input-group input-group-sm">
+                    <label class="small text-muted mb-1">Email</label>
+                    <div class="input-group">
                       <span class="input-group-text bg-dark border-secondary text-secondary"><i
                           class="bi bi-envelope"></i></span>
-                      <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
-                        name="email" value="{{ c.email or '' }}" placeholder="Email">
+                      <input type="text" class="form-control bg-dark text-light border-secondary" name="email"
+                        value="{{ c.email or '' }}" placeholder="Email">
                     </div>
                   </div>
                   <div class="col-12 mt-2">
-                    <input type="text" class="form-control form-control-sm bg-dark text-light border-secondary"
-                      name="notes" value="{{ c.notes or '' }}" placeholder="Notizen / Sonstiges / Absprachen...">
+                    <label class="small text-muted mb-1">Notizen / Absprachen</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-dark border-secondary text-secondary"><i
+                          class="bi bi-chat-left-text"></i></span>
+                      <input type="text" class="form-control bg-dark text-light border-secondary" name="notes"
+                        value="{{ c.notes or '' }}" placeholder="Notizen / Sonstiges / Absprachen...">
+                    </div>
                   </div>
                 </div>
               </form>
@@ -103,9 +104,6 @@
           </form>
         </div>
       </div>
-    </div>
-    <div class="col-md-4" id="checklists">
-      {% include "partials/checklists_block.html" ignore missing %}
     </div>
   </div>
 </div>
