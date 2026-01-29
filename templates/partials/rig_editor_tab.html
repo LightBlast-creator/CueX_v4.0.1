@@ -32,6 +32,10 @@
                 <button class="btn btn-outline-warning btn-sm" id="btnUngroup">
                     <i class="bi bi-intersect me-2"></i>Gruppierung aufheben
                 </button>
+                <button class="btn btn-outline-success btn-sm" id="btnArrayTool" data-bs-toggle="modal"
+                    data-bs-target="#arrayToolModal">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>Array-Anordnung
+                </button>
             </div>
 
             <h6 class="small text-muted text-uppercase mb-2">Objekte hinzufügen</h6>
@@ -60,6 +64,95 @@
             <div class="position-absolute bottom-0 end-0 m-2 px-2 py-1 bg-dark bg-opacity-50 text-white-50 border border-secondary border-opacity-25 rounded small d-flex align-items-center"
                 style="z-index: 10; font-size: 0.65rem; pointer-events: none; letter-spacing: 0.02em;">
                 <i class="bi bi-grid-3x3 me-2 opacity-50"></i> <span class="opacity-75">Gitter: 1.0m x 1.0m</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Array-Tool Modal -->
+<div class="modal fade" id="arrayToolModal" tabindex="-1" aria-labelledby="arrayToolModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-light border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="arrayToolModalLabel">
+                    <i class="bi bi-grid-3x3-gap me-2"></i>Array-Anordnung
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Schließen"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small mb-3">Ordne ausgewählte Fixtures in einem Muster an:</p>
+
+                <div class="mb-3">
+                    <label class="form-label small">Anordnungstyp</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="arrayType" id="arrayLine" value="line" checked>
+                        <label class="btn btn-outline-primary" for="arrayLine">
+                            <i class="bi bi-arrows-expand me-1"></i>Linie
+                        </label>
+                        <input type="radio" class="btn-check" name="arrayType" id="arrayCircle" value="circle">
+                        <label class="btn btn-outline-primary" for="arrayCircle">
+                            <i class="bi bi-circle me-1"></i>Kreis
+                        </label>
+                        <input type="radio" class="btn-check" name="arrayType" id="arrayGrid" value="grid">
+                        <label class="btn btn-outline-primary" for="arrayGrid">
+                            <i class="bi bi-grid me-1"></i>Grid
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Linie-Optionen -->
+                <div id="lineOptions" class="array-options">
+                    <div class="mb-3">
+                        <label class="form-label small">Richtung</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="lineDirection" id="lineHorizontal"
+                                value="horizontal" checked>
+                            <label class="btn btn-outline-secondary btn-sm" for="lineHorizontal">Horizontal</label>
+                            <input type="radio" class="btn-check" name="lineDirection" id="lineVertical"
+                                value="vertical">
+                            <label class="btn btn-outline-secondary btn-sm" for="lineVertical">Vertikal</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lineSpacing" class="form-label small">Abstand (m)</label>
+                        <input type="number" class="form-control form-control-sm bg-dark text-light border-secondary"
+                            id="lineSpacing" value="1.0" step="0.1" min="0.1">
+                    </div>
+                </div>
+
+                <!-- Kreis-Optionen -->
+                <div id="circleOptions" class="array-options" style="display: none;">
+                    <div class="mb-3">
+                        <label for="circleRadius" class="form-label small">Radius (m)</label>
+                        <input type="number" class="form-control form-control-sm bg-dark text-light border-secondary"
+                            id="circleRadius" value="3.0" step="0.5" min="0.5">
+                    </div>
+                </div>
+
+                <!-- Grid-Optionen -->
+                <div id="gridOptions" class="array-options" style="display: none;">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <label for="gridCols" class="form-label small">Spalten</label>
+                            <input type="number"
+                                class="form-control form-control-sm bg-dark text-light border-secondary" id="gridCols"
+                                value="4" min="1">
+                        </div>
+                        <div class="col-6 mb-3">
+                            <label for="gridSpacing" class="form-label small">Abstand (m)</label>
+                            <input type="number"
+                                class="form-control form-control-sm bg-dark text-light border-secondary"
+                                id="gridSpacing" value="1.0" step="0.1" min="0.1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Abbrechen</button>
+                <button type="button" class="btn btn-success btn-sm" id="btnApplyArray">
+                    <i class="bi bi-check-lg me-1"></i>Anwenden
+                </button>
             </div>
         </div>
     </div>

@@ -547,6 +547,85 @@ document.addEventListener('DOMContentLoaded', function () {
         triggerAutosave();
     });
 
+    // ------------- Array-Tool Logik -------------
+
+    // Optionen ein-/ausblenden je nach Typ
+    document.querySelectorAll('input[name="arrayType"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            document.querySelectorAll('.array-options').forEach(opt => opt.style.display = 'none');
+            const type = e.target.value;
+            if (type === 'line') document.getElementById('lineOptions').style.display = 'block';
+            if (type === 'circle') document.getElementById('circleOptions').style.display = 'block';
+            if (type === 'grid') document.getElementById('gridOptions').style.display = 'block';
+        });
+    });
+
+    // Anwenden-Button
+    document.getElementById('btnApplyArray').addEventListener('click', () => {
+        const activeObjects = canvas.getActiveObjects();
+        if (activeObjects.length < 2) {
+            alert('Bitte mindestens 2 Objekte auswählen für Array-Anordnung.');
+            return;
+        }
+
+        const arrayType = document.querySelector('input[name="arrayType"]:checked').value;
+        const PIXELS_PER_METER = GRID_SIZE;
+
+        // Startposition (Mittelpunkt der Auswahl)
+        const bounds = canvas.getActiveObject().getBoundingRect();
+        const startX = bounds.left + bounds.width / 2;
+        const startY = bounds.top + bounds.height / 2;
+
+        if (arrayType === 'line') {
+            const direction = document.querySelector('input[name="lineDirection"]:checked').value;
+            const spacing = parseFloat(document.getElementById('lineSpacing').value) * PIXELS_PER_METER;
+
+            activeObjects.forEach((obj, i) => {
+                if (direction === 'horizontal') {
+                    obj.set({ left: startX + (i - activeObjects.length / 2) * spacing });
+                    obj.set({ top: startY });
+                } else {
+                    obj.set({ left: startX });
+                    obj.set({ top: startY + (i - activeObjects.length / 2) * spacing });
+                }
+                obj.setCoords();
+            });
+        } else if (arrayType === 'circle') {
+            const radius = parseFloat(document.getElementById('circleRadius').value) * PIXELS_PER_METER;
+            const angleStep = (2 * Math.PI) / activeObjects.length;
+
+            activeObjects.forEach((obj, i) => {
+                const angle = i * angleStep - Math.PI / 2; // Start oben
+                obj.set({
+                    left: startX + Math.cos(angle) * radius,
+                    top: startY + Math.sin(angle) * radius
+                });
+                obj.setCoords();
+            });
+        } else if (arrayType === 'grid') {
+            const cols = parseInt(document.getElementById('gridCols').value) || 4;
+            const spacing = parseFloat(document.getElementById('gridSpacing').value) * PIXELS_PER_METER;
+
+            activeObjects.forEach((obj, i) => {
+                const col = i % cols;
+                const row = Math.floor(i / cols);
+                obj.set({
+                    left: startX + (col - cols / 2) * spacing,
+                    top: startY + row * spacing
+                });
+                obj.setCoords();
+            });
+        }
+
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+        triggerAutosave();
+
+        // Modal schließen
+        const modal = bootstrap.Modal.getInstance(document.getElementById('arrayToolModal'));
+        if (modal) modal.hide();
+    });
+
     // Init Logic
     loadRigData();
 
