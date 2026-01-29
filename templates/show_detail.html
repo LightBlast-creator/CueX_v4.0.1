@@ -275,6 +275,9 @@
       <button onclick="exportEOS()" class="btn btn-export">
         ETC EOS
       </button>
+      <a href="{{ url_for('show_io.export_mvr', show_id=show.id) }}" class="btn btn-export">
+        MVR Export
+      </a>
 
       <script>
         function exportEOS() {

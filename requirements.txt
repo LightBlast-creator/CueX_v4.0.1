@@ -11,3 +11,5 @@ waitress
 requests
 openpyxl
 pandas
+qrcode
+pyartnet
