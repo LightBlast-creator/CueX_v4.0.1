@@ -266,18 +266,22 @@
       <a href="{{ url_for('show_io.export_show_pdf', show_id=show.id) }}" class="btn btn-export">
         Show-Report
       </a>
+      {% if not lite_mode %}
       <a href="{{ url_for('show_io.export_techrider_pdf', show_id=show.id) }}" class="btn btn-export">
         Tech-Rider
       </a>
+      {% endif %}
       <a href="{{ url_for('show_io.export_ma3', show_id=show.id) }}" class="btn btn-export">
         GrandMA3 Plugin (.zip)
       </a>
       <button onclick="exportEOS()" class="btn btn-export">
         ETC EOS
       </button>
+      {% if not lite_mode %}
       <a href="{{ url_for('show_io.export_mvr', show_id=show.id) }}" class="btn btn-export">
         MVR Export
       </a>
+      {% endif %}
 
       <script>
         function exportEOS() {
@@ -313,36 +317,38 @@
           Stammdaten
         </a>
         {% endif %}
-        {% if 'patch' in modules %}
+        {% if not lite_mode and 'patch' in modules %}
         <a class="tab-link {% if active_tab == 'rig' %}active{% endif %}"
           href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig') }}">
           Rig &amp; Strom
         </a>
         {% endif %}
-        <!-- Rig Editor Tab -->
+        <!-- Rig Editor Tab (Hidden in Lite) -->
+        {% if not lite_mode %}
         <a class="tab-link {% if active_tab == 'rig_plan' %}active{% endif %}"
           href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig_plan') }}">
           <i class="bi bi-grip-horizontal me-1"></i>Rig Plan
         </a>
+        {% endif %}
         {% if 'cuelist' in modules %}
         <a class="tab-link {% if active_tab == 'songs' %}active{% endif %}"
           href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}">
           Songs / Cue-Liste
         </a>
         {% endif %}
-        {% if 'kontakte' in modules %}
+        {% if not lite_mode and 'kontakte' in modules %}
         <a class="tab-link {% if active_tab == 'contacts' %}active{% endif %}"
           href="{{ url_for('show_details.show_detail', show_id=show.id, tab='contacts') }}">
           Kontakte
         </a>
         {% endif %}
-        {% if 'requisiten' in modules %}
+        {% if not lite_mode and 'requisiten' in modules %}
         <a class="tab-link {% if active_tab == 'props' %}active{% endif %}"
           href="{{ url_for('show_details.show_detail', show_id=show.id, tab='props') }}">
           Requisiten
         </a>
         {% endif %}
-        {% if 'video' in modules %}
+        {% if not lite_mode and 'video' in modules %}
         <a class="tab-link {% if active_tab == 'videos' %}active{% endif %}"
           href="{{ url_for('show_details.show_detail', show_id=show.id, tab='videos') }}">
           Video

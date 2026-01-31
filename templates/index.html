@@ -291,10 +291,12 @@
         <div class="stat-value">{{ total_songs }}</div>
         <div class="stat-label">Songs</div>
     </div>
+    {% if not lite_mode %}
     <div class="stat-card">
         <div class="stat-value">{{ total_lamps }}</div>
         <div class="stat-label">Lampen</div>
     </div>
+    {% endif %}
 </div>
 
 <div class="row g-4">
@@ -343,7 +345,11 @@
 
                     <input type="hidden" name="rig_type" value="">
 
-                    <!-- Modul-Auswahl -->
+                    <!-- Modul-Auswahl (Versteckt in Lite-Mode) -->
+                    {% if lite_mode %}
+                    <input type="hidden" name="modules" value="stammdaten">
+                    <input type="hidden" name="modules" value="cuelist">
+                    {% else %}
                     <div class="mb-3">
                         <label class="form-label">Was möchtest du verwalten?</label>
                         <div class="module-grid">
@@ -352,7 +358,7 @@
                                 <span>📋 Stammdaten</span>
                             </label>
                             <label class="module-option">
-                                <input type="checkbox" name="modules" value="cuelist">
+                                <input type="checkbox" name="modules" value="cuelist" checked>
                                 <span>🎵 Cue-Liste</span>
                             </label>
                             <label class="module-option">
@@ -373,6 +379,7 @@
                             </label>
                         </div>
                     </div>
+                    {% endif %}
 
                     <button type="submit" class="btn btn-primary">
                         Show erstellen

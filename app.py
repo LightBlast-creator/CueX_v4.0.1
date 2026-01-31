@@ -23,8 +23,11 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///shows.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True  # Force template reloading
 app.jinja_env.auto_reload = True
+app.config['LITE_MODE'] = os.environ.get('CUE_LITE_MODE', 'False').lower() == 'true'
 
-# Database init
+@app.context_processor
+def inject_lite_mode():
+    return dict(lite_mode=app.config['LITE_MODE'])
 db.init_app(app)
 
 # Error Handler

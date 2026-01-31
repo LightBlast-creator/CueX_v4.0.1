@@ -188,7 +188,7 @@
     <div class="container-fluid px-4">
       <a class="navbar-brand" href="{{ url_for('main.show_overview') }}">
         <img src="{{ url_for('static', filename='staticimg/LightBlast_Logo_W.svg') }}" alt="LichtBlast Logo">
-        <span>CueX</span>
+        <span>CueX{% if lite_mode %} <span class="badge rounded-pill bg-info text-dark" style="font-size: 0.6em; vertical-align: middle;">LITE</span>{% endif %}</span>
       </a>
       <div class="ms-auto d-flex align-items-center">
         <a href="{{ url_for('main.settings') }}" class="btn btn-outline-info btn-sm ms-2" title="Einstellungen">

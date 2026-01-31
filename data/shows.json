@@ -1,8 +1,8 @@
 {
   "shows": [
     {
-      "id": 93,
-      "name": "Cue List to PDF",
+      "id": 94,
+      "name": "PDF to Cuelist ETC EOS",
       "artist": "",
       "date": "",
       "venue_type": "",
@@ -863,12 +863,12 @@
         "aufbau": [],
         "show": []
       },
-      "ma3_sequence_id": 1,
-      "eos_macro_id": 101,
+      "ma3_sequence_id": 101,
+      "eos_macro_id": 1,
       "eos_cuelist_id": 1
     }
   ],
-  "next_show_id": 94,
+  "next_show_id": 95,
   "next_song_id": 87,
   "next_check_item_id": 53
 }
