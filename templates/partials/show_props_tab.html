@@ -1,0 +1,122 @@
+<div class="tab-pane fade {% if active_tab == 'props' %}show active{% endif %}" id="tab-props">
+  <div class="row">
+    <div class="col-12">
+      <!-- Compact Upload Section -->
+      <div class="card mb-4 border-secondary bg-dark bg-opacity-50">
+        <div class="card-body py-2 px-3">
+          {% set selected_song_id = request.args.get('song_id', '') or (show.songs[0].id if show.songs|length > 0 else
+          '') %}
+          <form method="post"
+            action="{{ url_for('show_assets.upload_prop_image', show_id=show.id) }}?song_id={{ selected_song_id }}"
+            enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="row g-2 align-items-center">
+              <div class="col-auto">
+                <span class="small text-muted fw-bold text-uppercase">Bild hochladen:</span>
+              </div>
+              <div class="col">
+                <input type="file" name="prop_image" accept="image/*"
+                  class="form-control form-control-sm bg-dark border-secondary" required>
+              </div>
+              <div class="col-md-4">
+                <select name="song_id" id="prop-song-select" class="form-select form-select-sm bg-dark border-secondary"
+                  required onchange="filterPropImagesBySong()">
+                  {% for song in show.songs %}
+                  <option value="{{ song.id }}" {% if selected_song_id==song.id|string %}selected{% endif %}>
+                    Cue {{ song.order_index }}: {{ song.name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-sm px-3">
+                  <i class="bi bi-upload me-1"></i>Hochladen
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Gallery Area -->
+      <div id="prop-images-gallery">
+        {% if show.songs %}
+        {% for song in show.songs %}
+        <div class="prop-song-gallery mb-4" data-song-id="{{ song.id }}" style="display:none;">
+          <div class="d-flex align-items-center gap-2 mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+            <span class="badge bg-primary">Cue {{ song.order_index }}</span>
+            <h6 class="mb-0">{{ song.name }}</h6>
+          </div>
+
+          {% if song.prop_images and song.prop_images|length > 0 %}
+          <div class="row g-2">
+            {% for img in song.prop_images %}
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="card h-100 bg-dark border-secondary position-relative group-hover-action">
+                <img src="{{ url_for('static', filename='props/' ~ img) }}" class="card-img-top" alt="Requisitenbild"
+                  style="height: 150px; object-fit: cover;">
+                <div class="overlay-delete position-absolute top-0 end-0 p-1"
+                  style="opacity: 0; transition: opacity 0.2s;">
+                  <form method="post"
+                    action="{{ url_for('show_assets.delete_prop_image', show_id=show.id, filename=img) }}"
+                    onsubmit="return confirm('Bild wirklich löschen?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="song_id" value="{{ song.id }}">
+                    <button type="submit" class="btn btn-danger btn-sm p-1 rounded-circle" title="Löschen">
+                      <i class="bi bi-x"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="text-center py-4 border border-secondary border-dashed rounded bg-dark bg-opacity-10">
+            <p class="text-muted mb-0 small"><i class="bi bi-info-circle me-1"></i>Keine Bilder für diesen Cue
+              hinterlegt.</p>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center py-5 text-muted">
+          <i class="bi bi-music-note-list display-4 mb-3 d-block opacity-25"></i>
+          <p>Noch keine Cues vorhanden. Lege zuerst Cues an, um Requisiten zuzuweisen.</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <style>
+        .group-hover-action:hover .overlay-delete {
+          opacity: 1 !important;
+        }
+
+        .border-dashed {
+          border-style: dashed !important;
+        }
+      </style>
+
+      <script>
+        function filterPropImagesBySong() {
+          var select = document.getElementById('prop-song-select');
+          if (!select) return;
+          var selectedId = select.value;
+          var galleries = document.querySelectorAll('.prop-song-gallery');
+          galleries.forEach(function (gal) {
+            gal.style.display = gal.getAttribute('data-song-id') === selectedId ? '' : 'none';
+          });
+          if (history.replaceState) {
+            var url = new URL(window.location.href);
+            url.searchParams.set('song_id', selectedId);
+            history.replaceState(null, '', url);
+          }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+          var propsTab = document.getElementById('tab-props');
+          if (propsTab) filterPropImagesBySong();
+        });
+      </script>
+    </div>
+  </div>
+</div>

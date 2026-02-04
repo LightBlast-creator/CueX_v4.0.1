@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CueX Lite - Anleitung</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            color: #f0f6fc;
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #58a6ff, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        h2 {
+            color: #58a6ff;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #30363d;
+        }
+
+        h3 {
+            color: #f0f6fc;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #c9d1d9;
+        }
+
+        .step {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #238636, #2ea043);
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        code {
+            background: #0d1117;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            color: #79c0ff;
+            border: 1px solid #30363d;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            color: #ffa657;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #0d2137 0%, #0a1929 100%);
+            border: 1px solid #1e3a5f;
+            border-left: 4px solid #58a6ff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .tip-title {
+            color: #58a6ff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        ul {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+            color: #c9d1d9;
+        }
+
+        .emoji {
+            font-size: 1.3rem;
+            margin-right: 0.5rem;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #30363d;
+            text-align: center;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🎭 CueX Lite</h1>
+        <p class="subtitle">PDF to Cue List – Schnell & Einfach für GrandMA3 & ETC EOS</p>
+
+        <h2>📋 Was ist CueX Lite?</h2>
+        <p>CueX Lite ist ein Tool, das <strong>Regiebücher/Theaterskripte als PDF</strong> einliest und automatisch eine
+            <strong>Cue-Liste</strong> für dein Lichtpult erstellt.</p>
+        <ul>
+            <li><span class="emoji">📄</span> PDF hochladen (Regiebuch, Ablaufplan, Skript)</li>
+            <li><span class="emoji">🤖</span> KI erkennt automatisch Szenen/Cues</li>
+            <li><span class="emoji">📦</span> Export als GrandMA3 Plugin oder ETC EOS Macro</li>
+        </ul>
+
+        <h2>🚀 Schnellstart</h2>
+
+        <div class="step">
+            <div class="step-title"><span class="step-number">1</span> Anwendung starten</div>
+            <p>Doppelklick auf <code>start_cuex.bat</code> im CueX_MVP Ordner.</p>
+            <p>Der Browser öffnet sich automatisch unter <code>http://127.0.0.1:5000</code></p>
+        </div>
+
+        <div class="step">
+            <div class="step-title"><span class="step-number">2</span> Show erstellen oder öffnen</div>
+            <p>Auf dem Dashboard siehst du deine Shows. Klicke auf eine bestehende Show oder erstelle eine neue.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-title"><span class="step-number">3</span> PDF hochladen</div>
+            <p>Klicke auf <strong>"PDF importieren"</strong> und wähle dein Regiebuch/Skript aus.</p>
+            <p>CueX analysiert den Text und zeigt dir eine Vorschau der erkannten Cues.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-title"><span class="step-number">4</span> Cues prüfen & exportieren</div>
+            <p>Du hast drei Optionen:</p>
+            <ul>
+                <li><strong>Cues übernehmen</strong> – Speichert die Cues in der Show</li>
+                <li><strong>Übernehmen + MA3 Export</strong> – Speichert UND erstellt GrandMA3 Plugin</li>
+                <li><strong>Übernehmen + EOS Export</strong> – Speichert UND erstellt ETC EOS Macro</li>
+            </ul>
+        </div>
+
+        <h2>💡 Tipps</h2>
+
+        <div class="tip">
+            <div class="tip-title">🔢 Sequence Pool (MA3)</div>
+            <p>Beim MA3-Export wirst du gefragt, auf welchen <strong>Sequence Pool</strong> exportiert werden soll.
+                Standard ist 901.</p>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">📁 Direkt in MA3 Ordner exportieren</div>
+            <p>Unter <strong>Einstellungen</strong> kannst du deinen MA3 Plugin-Ordner angeben. Dann wird das Plugin
+                direkt dorthin kopiert – kein Download nötig!</p>
+            <div class="code-block">C:\ProgramData\MALightingTechnology\gma3_library\datapools\plugins</div>
+        </div>
+
+        <div class="tip">
+            <div class="tip-title">🔍 Cues durchsuchen</div>
+            <p>In der Vorschau gibt es eine Suchleiste – damit findest du schnell bestimmte Rollen oder Textstellen.</p>
+        </div>
+
+        <h2>⌨️ Server beenden</h2>
+        <p>Im Terminal-Fenster <code>Ctrl+C</code> drücken (evtl. 2-3x).</p>
+
+        <h2>❓ Bei Problemen</h2>
+        <ul>
+            <li>Stelle sicher, dass Python installiert ist</li>
+            <li>Prüfe ob Port 5000 frei ist</li>
+            <li>Bei PDF-Fehlern: Versuche das PDF neu zu exportieren (Text muss selektierbar sein)</li>
+        </ul>
+
+        <div class="footer">
+            <p>CueX Lite – Made with ❤️ for Theatre & Live Events</p>
+            <p style="margin-top: 0.5rem;">Version 0.1 Beta | 2026</p>
+        </div>
+    </div>
+</body>
+
+</html>

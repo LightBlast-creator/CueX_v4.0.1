@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+  <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary mb-3">← Zurück zur Übersicht</a>
+  <h2 class="mb-4">Einstellungen</h2>
+  <form method="post" action="{{ url_for('main.settings') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <!-- GDTF Share Credentials -->
+    <div class="card bg-dark text-light border-secondary mb-4{% if lite_mode %} opacity-50{% endif %}" {% if lite_mode
+      %}style="pointer-events: none;" {% endif %}>
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="bi bi-lightbulb-fill me-2"></i>GDTF Share Login</h5>
+        {% if lite_mode %}
+        <span class="badge bg-secondary">Vollversion</span>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        {% if lite_mode %}
+        <div class="alert alert-secondary py-2 mb-3">
+          <i class="bi bi-lock-fill me-1"></i> Diese Funktion ist nur in der Vollversion verfügbar.
+        </div>
+        {% endif %}
+        <div class="mb-3">
+          <label for="gdtf_user" class="form-label">GDTF Username</label>
+          <input type="text" class="form-control" id="gdtf_user" name="gdtf_user" value="{{ gdtf_user or '' }}"
+            placeholder="Dein GDTF Share Username" {% if lite_mode %}disabled{% endif %}>
+        </div>
+        <div class="mb-3">
+          <label for="gdtf_password" class="form-label">GDTF Password</label>
+          <input type="password" class="form-control" id="gdtf_password" name="gdtf_password"
+            value="{{ gdtf_password or '' }}" placeholder="Dein GDTF Share Passwort" {% if lite_mode %}disabled{% endif
+            %}>
+        </div>
+        <div class="form-text text-muted">
+          Dein GDTF Share Account. Registriere dich auf
+          <a href="https://gdtf-share.com/" target="_blank" class="text-info">gdtf-share.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MA3 Plugin-Ordner -->
+    <div class="card bg-dark text-light border-secondary mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">GrandMA3 Export</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="ma3_plugin_path" class="form-label">MA3 Plugin-Ordner (optional)</label>
+          <input type="text" class="form-control" id="ma3_plugin_path" name="ma3_plugin_path"
+            value="{{ ma3_plugin_path or '' }}"
+            placeholder="C:\ProgramData\MALightingTechnology\gma3_library\datapools\plugins">
+        </div>
+        <div class="form-text text-muted">
+          Wenn gesetzt, werden Plugins direkt in diesen Ordner exportiert (kein Download nötig).
+          Leer lassen für normalen Download.
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Speichern</button>
+  </form>
+
+  {% if saved %}
+  <div class="alert alert-success mt-3">Einstellungen gespeichert!</div>
+  {% endif %}
+
+  {% if gdtf_error %}
+  <div class="alert alert-danger mt-3">{{ gdtf_error }}</div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Video Background -->
+<div class="video-background">
+  <video autoplay muted loop playsinline>
+    <source src="{{ url_for('static', filename='videos/background.mp4') }}" type="video/mp4">
+  </video>
+  <div class="video-overlay"></div>
+</div>
+
+<!-- Login Card -->
+<div class="d-flex flex-column justify-content-center align-items-center"
+  style="min-height: 100vh; position: relative; z-index: 1;">
+  <div class="card p-4 shadow-lg login-card-glow"
+    style="min-width: 320px; max-width: 400px; background: rgba(20,20,20,0.65); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+    <div class="w-100 d-flex justify-content-center align-items-center mb-3">
+      <object type="image/svg+xml" data="{{ url_for('static', filename='staticimg/LightBlast_Logo_W.svg') }}"
+        style="width: 70%; min-width: 120px; max-width: 220px; height: auto; display: block;">
+        <img src="{{ url_for('static', filename='staticimg/logo.png') }}" alt="Logo"
+          style="width: 70%; min-width: 120px; max-width: 220px; height: auto; display: block;"
+          onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div style=\'color:white;font-size:1.2rem;text-align:center;\'>CueX</div>')">
+      </object>
+    </div>
+    <h2 class="mb-4 text-center" style="color:#fff; font-weight:700; letter-spacing:0.02em;">Login</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    <form method="post" action="{{ url_for('main.login') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="username" class="form-label" style="color: #fff;">Benutzername</label>
+        <input type="text" class="form-control" id="username" name="username" required autofocus
+          style="color: #fff; background-color: #232323;">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label" style="color: #fff;">Passwort</label>
+        <input type="password" class="form-control" id="password" name="password" required
+          autocomplete="current-password" style="color: #fff; background-color: #232323;">
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  /* Blue Glow Effect for Login Card */
+  .login-card-glow {
+    box-shadow: 0 0 20px rgba(0, 123, 255, 0.5),
+      0 0 40px rgba(0, 123, 255, 0.3),
+      0 0 60px rgba(0, 123, 255, 0.2);
+    border: 1px solid rgba(0, 123, 255, 0.3);
+    animation: glow-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes glow-pulse {
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(0, 123, 255, 0.5),
+        0 0 40px rgba(0, 123, 255, 0.3),
+        0 0 60px rgba(0, 123, 255, 0.2);
+    }
+
+    50% {
+      box-shadow: 0 0 30px rgba(0, 123, 255, 0.7),
+        0 0 50px rgba(0, 123, 255, 0.5),
+        0 0 70px rgba(0, 123, 255, 0.3);
+    }
+  }
+
+  /* Video Background Styling */
+  .video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .video-background video {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+  }
+
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    /* Light overlay for video visibility */
+    backdrop-filter: blur(1px);
+    /* Subtle blur for depth */
+  }
+
+  /* Hide video on mobile to save bandwidth and performance */
+  @media (max-width: 768px) {
+    .video-background video {
+      display: none;
+    }
+
+    .video-overlay {
+      background: rgba(0, 0, 0, 0.8);
+      /* Darker fallback on mobile */
+    }
+  }
+</style>
+
+{% endblock %}

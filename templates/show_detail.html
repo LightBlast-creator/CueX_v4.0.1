@@ -1,0 +1,474 @@
+{% extends "base.html" %}
+{% set active_tab = request.args.get("tab", "songs") %}
+{% if autosave_interval is defined %}
+<script>var AUTOSAVE_INTERVAL_FROM_SERVER = Number('{{ autosave_interval }}' || 0);</script>
+{% endif %}
+
+{% block content %}
+<style>
+  /* Show Detail Styles */
+  .show-header {
+    margin-bottom: 2rem;
+  }
+
+  .show-header .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    transition: color 0.2s;
+  }
+
+  .show-header .back-link:hover {
+    color: #f8f9fa;
+  }
+
+  .show-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+    color: #f8f9fa;
+  }
+
+  .show-header .show-meta {
+    color: #9ca3af;
+    font-size: 0.95rem;
+  }
+
+  .show-header .show-meta span {
+    margin-right: 1rem;
+  }
+
+  /* Actions Bar */
+  .actions-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1rem;
+    background: #0f1115;
+    border: 1px solid #262b33;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .actions-bar .action-group {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+  }
+
+  .actions-bar .action-group-label {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-right: 0.25rem;
+  }
+
+  .actions-bar .divider {
+    width: 1px;
+    height: 20px;
+    background: #262b33;
+    margin: 0 0.5rem;
+  }
+
+  .actions-bar .btn {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.35rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .actions-bar .btn-export {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+  }
+
+  .actions-bar .btn-export:hover {
+    background: #2563eb;
+    color: #fff;
+    border-color: #2563eb;
+  }
+
+  .actions-bar .btn-delete {
+    background: transparent;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    color: #f87171;
+  }
+
+  .actions-bar .btn-delete:hover {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+  }
+
+  .actions-bar .btn-regie {
+    background: #3b82f6;
+    border: 1px solid #3b82f6;
+    color: #fff;
+  }
+
+  .actions-bar .btn-regie:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Modern Tabs */
+  .modern-tabs {
+    display: flex;
+    gap: 0.25rem;
+    background: #0f1115;
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+    border: 1px solid #262b33;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+  }
+
+  .modern-tabs .tab-link {
+    padding: 0.5rem 1rem;
+    border-radius: 0.35rem;
+    color: #9ca3af;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .modern-tabs .tab-link:hover {
+    color: #f8f9fa;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .modern-tabs .tab-link.active {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Autosave Indicator */
+  .autosave-indicator {
+    font-size: 0.8rem;
+    color: #4b5563;
+    text-align: right;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Global Form Styling in Tabs */
+  .tab-pane .form-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 0.25rem;
+  }
+
+  .tab-pane .form-control {
+    background: #0f1115;
+    border: 1px solid #262b33;
+    color: #f8f9fa;
+    border-radius: 0.35rem;
+    transition: all 0.2s;
+  }
+
+  .tab-pane .form-control:focus {
+    background: #14171d;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    color: #fff;
+  }
+
+  .tab-pane .form-control-sm {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .tab-pane h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f8f9fa;
+  }
+
+  /* Sidebar Toggle Styles */
+  .sidebar-collapsed #main-content-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .sidebar-collapsed #sidebar-col {
+    display: none;
+  }
+
+  #sidebar-toggle-btn {
+    transition: all 0.2s;
+    background: transparent;
+    border: 1px solid #262b33;
+    color: #9ca3af;
+  }
+
+  #sidebar-toggle-btn:hover {
+    color: #f8f9fa;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .sidebar-collapsed #sidebar-toggle-btn {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.5);
+  }
+</style>
+
+<div class="container mt-4">
+  <!-- Autosave-Countdown -->
+  <div class="autosave-indicator">
+    <span id="autosave-countdown"></span>
+  </div>
+
+  <!-- Header -->
+  <div class="show-header">
+    <a href="{{ url_for('main.show_overview') }}" class="back-link">
+      ← Zurück zum Dashboard
+    </a>
+    <h1>{{ show.name or "Unbenannte Show" }}</h1>
+    <div class="show-meta">
+      {% if show.artist %}<span>{{ show.artist }}</span>{% endif %}
+      {% if show.date %}<span>{{ show.date }}</span>{% endif %}
+      {% if show.venue_type %}<span>{{ show.venue_type }}</span>{% endif %}
+    </div>
+  </div>
+
+  <!-- Actions Bar -->
+  <div class="actions-bar">
+    <a href="{{ url_for('show_details.show_regie_view', show_id=show.id) }}" class="btn btn-regie">
+      Regie-Ansicht öffnen
+    </a>
+
+    {% if not lite_mode %}
+    <button id="sidebar-toggle-btn" class="btn btn-outline-secondary ms-2" title="Checkliste ein/ausblenden">
+      <i class="bi bi-layout-sidebar-reverse"></i>
+    </button>
+    {% endif %}
+
+    <div class="divider"></div>
+
+    <div class="action-group">
+      <span class="action-group-label">Export</span>
+      {% if not lite_mode %}
+      <a href="{{ url_for('show_io.export_show_pdf', show_id=show.id) }}" class="btn btn-export">
+        Show-Report
+      </a>
+      {% endif %}
+      {% if not lite_mode %}
+      <a href="{{ url_for('show_io.export_techrider_pdf', show_id=show.id) }}" class="btn btn-export">
+        Tech-Rider
+      </a>
+      {% endif %}
+      <a href="{{ url_for('show_io.export_ma3', show_id=show.id) }}" class="btn btn-export">
+        GrandMA3 Plugin (.zip)
+      </a>
+      <button onclick="exportEOS()" class="btn btn-export">
+        ETC EOS
+      </button>
+      {% if not lite_mode %}
+      <a href="{{ url_for('show_io.export_mvr', show_id=show.id) }}" class="btn btn-export">
+        MVR Export
+      </a>
+      {% endif %}
+
+      <script>
+        function exportEOS() {
+          // Aktuellen Show-Namen als Vorschlag nehmen (aus dem DOM oder fest)
+          // Hier einfach leer lassen oder Standardvorschlag
+          let filename = prompt("Bitte Dateinamen eingeben (ohne .asc):", "{{ show.title }}");
+          if (filename) {
+            // Leerzeichen sind ok, Backend kümmert sich
+            window.location.href = "{{ url_for('show_io.export_asc', show_id=show.id) }}" + "?filename=" + encodeURIComponent(filename);
+          }
+        }
+      </script>
+    </div>
+
+    <div class="divider"></div>
+
+    <form method="post" action="{{ url_for('show_details.delete_show', show_id=show.id) }}" style="margin: 0;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-delete">
+        Löschen
+      </button>
+    </form>
+  </div>
+
+  <div id="show-layout-row" class="row">
+    <div id="main-content-col" class="{% if lite_mode %}col-12{% else %}col-lg-9{% endif %}">
+      <!-- Modern Tabs (Dynamisch basierend auf Modulen) - Hidden in Lite Mode -->
+      {% set modules = (show.modules or 'cuelist,patch,kontakte,requisiten,video').split(',') %}
+      {% if not lite_mode %}
+      <nav class="modern-tabs">
+        {% if 'patch' in modules %}
+        <a class="tab-link {% if active_tab == 'rig' %}active{% endif %}"
+          href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig') }}">
+          Rig &amp; Strom
+        </a>
+        {% endif %}
+        <!-- Rig Editor Tab -->
+        <a class="tab-link {% if active_tab == 'rig_plan' %}active{% endif %}"
+          href="{{ url_for('show_details.show_detail', show_id=show.id, tab='rig_plan') }}">
+          <i class="bi bi-grip-horizontal me-1"></i>Rig Plan
+        </a>
+        {% if 'cuelist' in modules %}
+        <a class="tab-link {% if active_tab == 'songs' %}active{% endif %}"
+          href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}">
+          Songs / Cue-Liste
+        </a>
+        {% endif %}
+        {% if 'kontakte' in modules %}
+        <a class="tab-link {% if active_tab == 'contacts' %}active{% endif %}"
+          href="{{ url_for('show_details.show_detail', show_id=show.id, tab='contacts') }}">
+          Kontakte
+        </a>
+        {% endif %}
+        {% if 'requisiten' in modules %}
+        <a class="tab-link {% if active_tab == 'props' %}active{% endif %}"
+          href="{{ url_for('show_details.show_detail', show_id=show.id, tab='props') }}">
+          Requisiten
+        </a>
+        {% endif %}
+        {% if 'video' in modules %}
+        <a class="tab-link {% if active_tab == 'videos' %}active{% endif %}"
+          href="{{ url_for('show_details.show_detail', show_id=show.id, tab='videos') }}">
+          Video
+        </a>
+        {% endif %}
+      </nav>
+      {% endif %}
+
+      <!-- Tab Content (Nur aktivierte Module laden) -->
+      <div class="tab-content pt-3">
+
+        {% if 'patch' in modules %}
+        {% include "partials/show_rig_tab.html" %}
+        {% endif %}
+        <!-- Rig Editor Content -->
+        {% include "partials/rig_editor_tab.html" %}
+        {% if 'cuelist' in modules %}
+        {% include "partials/show_songs_tab.html" %}
+        {% endif %}
+        {% if 'kontakte' in modules %}
+        {% include "partials/show_contacts_tab.html" %}
+        {% endif %}
+        {% include "partials/show_regie_tab.html" %}
+        {% if 'requisiten' in modules %}
+        {% include "partials/show_props_tab.html" %}
+        {% endif %}
+        {% if 'video' in modules %}
+        {% include "partials/show_videos_tab.html" %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Sidebar: Checklisten (Fresszettel) - Hidden in Lite Mode -->
+    {% if not lite_mode %}
+    <div id="sidebar-col" class="col-lg-3 mt-3 mt-lg-0">
+      <div class="sticky-top" style="top: 20px; z-index: 100;">
+        {% include "partials/checklists_block.html" ignore missing %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    // Auto-Fill: Main Brand -> Hersteller-Felder
+    const mainBrandSelect = document.querySelector('select[name="rig_main_brand"]');
+    if (mainBrandSelect) {
+      const manufacturerSelects = Array.from(document.querySelectorAll('select')).filter(function (sel) {
+        return sel.name && sel.name.indexOf('manufacturer') !== -1;
+      });
+
+      mainBrandSelect.addEventListener('change', function () {
+        const brand = this.value;
+        if (!brand) return;
+        manufacturerSelects.forEach(function (sel) {
+          if (!sel) return;
+          if (sel.value === '') sel.value = brand;
+        });
+      });
+    }
+  </script>
+
+  <script>
+    // Preserve scroll position across form submits
+    (function () {
+      try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) { }
+      const keyScroll = 'show_scroll_{{ show.id }}';
+      const keyTab = 'show_active_tab_{{ show.id }}';
+
+      document.querySelectorAll('form').forEach(function (frm) {
+        frm.addEventListener('submit', function () {
+          try {
+            sessionStorage.setItem(keyScroll, String(window.scrollY || window.pageYOffset || 0));
+            const active = document.querySelector('.modern-tabs .tab-link.active');
+            if (active) {
+              const href = active.getAttribute('href') || '';
+              const m = href.match(/[?&]tab=([^&#]+)/);
+              if (m) sessionStorage.setItem(keyTab, m[1]);
+            }
+          } catch (e) { }
+        }, { capture: true });
+      });
+
+      window.addEventListener('DOMContentLoaded', function () {
+        try {
+          const s = sessionStorage.getItem(keyScroll);
+          if (s) {
+            const y = parseInt(s) || 0;
+            setTimeout(function () {
+              window.scrollTo(0, y);
+              sessionStorage.removeItem(keyScroll);
+              sessionStorage.removeItem(keyTab);
+            }, 80);
+          }
+        } catch (e) { }
+      });
+    })();
+
+    // Sidebar Toggle Logic
+    (function () {
+      const toggleBtn = document.getElementById('sidebar-toggle-btn');
+      const container = document.querySelector('.container');
+      const STORAGE_KEY = 'cuex_sidebar_collapsed';
+
+      function updateSidebarUI(collapsed) {
+        if (collapsed) {
+          container.classList.add('sidebar-collapsed');
+        } else {
+          container.classList.remove('sidebar-collapsed');
+        }
+      }
+
+      // Load initial state
+      if (toggleBtn) {
+        const isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
+        updateSidebarUI(isCollapsed);
+
+        toggleBtn.addEventListener('click', () => {
+          const nowCollapsed = !container.classList.contains('sidebar-collapsed');
+          updateSidebarUI(nowCollapsed);
+          localStorage.setItem(STORAGE_KEY, String(nowCollapsed));
+        });
+      }
+    })();
+  </script>
+</div>
+{% endblock %}

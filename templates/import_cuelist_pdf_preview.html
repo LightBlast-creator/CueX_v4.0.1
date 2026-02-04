@@ -1,0 +1,451 @@
+{% extends "layout.html" %}
+{% block title %}PDF-Import Vorschau{% endblock %}
+{% block content %}
+<style>
+  /* PDF-Import Vorschau Styles */
+  .pdf-preview-container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .preview-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: #f8f9fa;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 992px) {
+    .preview-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .preview-card {
+    background: linear-gradient(135deg, #1a1d23 0%, #14171d 100%);
+    border: 1px solid #30363d;
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+  }
+
+  .preview-card h5 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pdf-text-box {
+    background: #0d1117;
+    border: 1px solid #21262d;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    max-height: 50vh;
+    overflow: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #c9d1d9;
+    white-space: pre-wrap;
+  }
+
+  /* Rollen als Chips */
+  .roles-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .role-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    background: linear-gradient(135deg, #1e3a5f 0%, #0d2137 100%);
+    border: 1px solid #3b82f6;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    color: #f8f9fa;
+    transition: all 0.2s;
+  }
+
+  .role-chip:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: translateY(-1px);
+  }
+
+  .role-chip .role-icon {
+    font-size: 1rem;
+  }
+
+  .empty-roles {
+    color: #6b7280;
+    font-style: italic;
+  }
+
+  /* Cues Tabelle */
+  .cues-table-container {
+    max-height: 45vh;
+    overflow: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #21262d;
+  }
+
+  .cues-table {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  .cues-table th {
+    background: #161b22;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .cues-table input.form-control {
+    background: #0d1117;
+    border-color: #30363d;
+    font-size: 0.85rem;
+  }
+
+  .cues-table input.form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+
+  .uncertain-row {
+    background-color: rgba(234, 179, 8, 0.1) !important;
+    border-left: 3px solid #eab308;
+  }
+
+  .action-bar {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #30363d;
+  }
+
+  .info-banner {
+    background: linear-gradient(135deg, #0d2137 0%, #0a1929 100%);
+    border: 1px solid #1e3a5f;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #93c5fd;
+    margin-top: 1rem;
+  }
+
+  .info-banner strong {
+    color: #60a5fa;
+  }
+
+  /* Collapsible Text Box */
+  .collapsible-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 0.5rem 0;
+  }
+
+  .collapsible-header:hover h5 {
+    color: #60a5fa;
+  }
+
+  .collapsible-toggle {
+    transition: transform 0.2s;
+    color: #6b7280;
+  }
+
+  .collapsible-toggle.open {
+    transform: rotate(180deg);
+  }
+
+  .collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .collapsible-content.open {
+    max-height: 50vh;
+  }
+
+  /* Cue Search */
+  .cue-search-container {
+    margin-bottom: 1rem;
+  }
+
+  .cue-search-input {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: #f8f9fa;
+    width: 100%;
+    font-size: 0.875rem;
+  }
+
+  .cue-search-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  }
+
+  .cue-search-input::placeholder {
+    color: #4b5563;
+  }
+
+  .cue-count-badge {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+</style>
+
+<div class="pdf-preview-container">
+  <div class="preview-header">
+    <h2>📄 PDF-Import: Vorschau</h2>
+    <a href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}"
+      class="btn btn-outline-light btn-sm">← Zurück zur Show</a>
+  </div>
+
+  <div class="preview-grid">
+    <!-- Linke Spalte: Extrahierter Text (Collapsible) -->
+    <div class="preview-card">
+      <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <h5 class="mb-0">📝 Extrahierter Text</h5>
+        <span class="collapsible-toggle">▼</span>
+      </div>
+      <div class="collapsible-content">
+        <div class="pdf-text-box">{{ pdf_text }}</div>
+      </div>
+      <small class="text-muted d-block mt-2">Klicken zum Ein-/Ausklappen</small>
+    </div>
+
+    <!-- Rechte Spalte: Erkannte Rollen -->
+    <div class="preview-card">
+      <h5>🎭 Erkannte Rollen ({{ roles|length }})</h5>
+      {% if roles %}
+      <div class="roles-container">
+        {% for role in roles %}
+        <span class="role-chip">
+          <span class="role-icon">👤</span>
+          {{ role }}
+        </span>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="empty-roles">Keine Rollen erkannt. Der Text enthält möglicherweise kein Standard-Theaterskript-Format.
+      </p>
+      {% endif %}
+
+      <div class="info-banner">
+        <strong>💡 Tipp:</strong> Rollen werden automatisch erkannt, wenn sie im Format "• NAME: Beschreibung" oder
+        "NAME:"
+        (Großbuchstaben) im Text erscheinen.
+      </div>
+    </div>
+  </div>
+
+  <!-- Erkannte Cues -->
+  <div class="preview-card mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">🎬 Erkannte Cues</h5>
+      <span class="cue-count-badge" id="cueCountBadge">{{ cues|length }} Cues</span>
+    </div>
+
+    <!-- Suchleiste -->
+    <div class="cue-search-container">
+      <input type="text" id="cueSearchInput" class="cue-search-input" placeholder="🔍 Cues durchsuchen (Rolle, Text...)"
+        autocomplete="off">
+    </div>
+
+    <form id="cuesForm" method="post" action="{{ url_for('show_io.import_cuelist_pdf_commit', show_id=show.id) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="cues-table-container">
+        <table class="table table-dark cues-table">
+          <thead>
+            <tr>
+              <th style="width: 15%;">#</th>
+              <th style="width: 20%;">Rolle</th>
+              <th>Text / Inhalt</th>
+              <th style="width: 60px;">Aktion</th>
+            </tr>
+          </thead>
+          <tbody id="cuesTableBody">
+            {% for cue in cues %}
+            <tr class="{{ 'uncertain-row' if cue.uncertain else '' }}" {% if cue.uncertain
+              %}title="⚠️ Unsicher erkannt - bitte prüfen" {% endif %}>
+              <td>
+                <span class="badge bg-primary">Cue {{ loop.index }}</span>
+                <input type="hidden" name="scene" value="Cue {{ loop.index }}">
+              </td>
+              <td><input type="text" name="role" value="{{ cue.role or '' }}" class="form-control form-control-sm"
+                  placeholder="Rolle..."></td>
+              <td><input type="text" name="text" value="{{ cue.text or '' }}" class="form-control form-control-sm"
+                  placeholder="Text/Inhalt..."></td>
+              <td>
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeCueRow(this)"
+                  title="Entfernen">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <textarea id="cues_json" name="cues_json" style="display:none;"></textarea>
+      <input type="hidden" id="export_target" name="export_target" value="">
+
+      <div class="action-bar">
+        <button type="submit" class="btn btn-success">
+          Cues übernehmen
+        </button>
+        <button type="button" class="btn btn-primary" onclick="submitAndExport('ma3')">
+          Übernehmen + MA3 Export
+        </button>
+        <button type="button" class="btn btn-info" onclick="submitAndExport('eos')">
+          Übernehmen + EOS Export
+        </button>
+        <a href="{{ url_for('show_details.show_detail', show_id=show.id, tab='songs') }}"
+          class="btn btn-outline-secondary">
+          Abbrechen
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Toggle Collapsible
+  function toggleCollapsible(header) {
+    const content = header.nextElementSibling;
+    const toggle = header.querySelector('.collapsible-toggle');
+    content.classList.toggle('open');
+    toggle.classList.toggle('open');
+  }
+
+  // Remove Cue Row and update count
+  function removeCueRow(btn) {
+    btn.closest('tr').remove();
+    updateCueCount();
+  }
+
+  // Update Cue Count Badge
+  function updateCueCount() {
+    const visibleRows = document.querySelectorAll('#cuesTableBody tr:not(.d-none)');
+    document.getElementById('cueCountBadge').textContent = visibleRows.length + ' Cues';
+  }
+
+  // Cue Search
+  document.getElementById('cueSearchInput').addEventListener('input', function () {
+    const query = this.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#cuesTableBody tr');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+      const text = row.innerText.toLowerCase();
+      const inputs = Array.from(row.querySelectorAll('input')).map(i => i.value.toLowerCase()).join(' ');
+      const matches = text.includes(query) || inputs.includes(query);
+
+      if (matches || query === '') {
+        row.classList.remove('d-none');
+        visibleCount++;
+      } else {
+        row.classList.add('d-none');
+      }
+    });
+
+    document.getElementById('cueCountBadge').textContent = visibleCount + ' Cues';
+  });
+
+  // Cues als JSON sammeln
+  function collectCues() {
+    const rows = document.querySelectorAll('#cuesTableBody tr:not(.d-none)');
+    const cues = [];
+    rows.forEach((row, index) => {
+      const role = row.querySelector('input[name="role"]').value;
+      const text = row.querySelector('input[name="text"]').value;
+      if (role || text) {
+        cues.push({ scene: 'Cue ' + (index + 1), role, text });
+      }
+    });
+    return cues;
+  }
+
+  // Form-Submit: Cues als JSON sammeln
+  document.getElementById('cuesForm').addEventListener('submit', function (e) {
+    document.getElementById('cues_json').value = JSON.stringify(collectCues());
+  });
+
+  // Übernehmen + Export: Speichern, Download triggern, dann zur Show navigieren
+  async function submitAndExport(target) {
+    let sequenceId = null;
+
+    // Bei MA3: Nach Sequence Pool ID fragen
+    if (target === 'ma3') {
+      const input = prompt('Auf welchen Sequence Pool soll exportiert werden?', '901');
+      if (input === null) return; // Abgebrochen
+      sequenceId = parseInt(input) || 901;
+    }
+
+    const cues = collectCues();
+    const formData = new FormData();
+    formData.append('cues_json', JSON.stringify(cues));
+    formData.append('csrf_token', '{{ csrf_token() }}');
+
+    // Erst Cues speichern (ohne Export-Target = nur speichern)
+    await fetch('{{ url_for("show_io.import_cuelist_pdf_commit", show_id=show.id) }}', {
+      method: 'POST',
+      body: formData
+    });
+
+    // Download triggern
+    let exportUrl = target === 'ma3'
+      ? '{{ url_for("show_io.export_ma3", show_id=show.id) }}'
+      : '{{ url_for("show_io.export_asc", show_id=show.id) }}';
+
+    // Sequence ID als Parameter anhängen bei MA3
+    if (target === 'ma3' && sequenceId) {
+      exportUrl += '?sequence_id=' + sequenceId;
+    }
+
+    // Invisible iframe für Download (damit wir gleichzeitig navigieren können)
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = exportUrl;
+    document.body.appendChild(iframe);
+
+    // Nach kurzem Delay zur Cue-Liste navigieren
+    setTimeout(() => {
+      window.location.href = '{{ url_for("show_details.show_detail", show_id=show.id, tab="songs") }}';
+    }, 500);
+  }
+</script>
+{% endblock %}
