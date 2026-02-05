@@ -13,6 +13,7 @@ DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data
 
 
 shows: List[Show] = []
+LITE_MODE: bool = False
 next_show_id: int = 1
 next_song_id: int = 1
 next_check_item_id: int = 1
@@ -154,6 +155,9 @@ def load_data() -> None:
     """Lädt Shows + IDs aus shows.json, falls vorhanden, und sorgt für Defaults."""
     global shows, next_show_id, next_song_id, next_check_item_id
 
+    if LITE_MODE:
+        return
+
     if not os.path.exists(DATA_FILE):
         return
 
@@ -239,6 +243,8 @@ def load_data() -> None:
 
 def save_data() -> None:
     """Speichert Shows + IDs nach shows.json."""
+    if LITE_MODE:
+        return
     data = {
         "shows": shows,
         "next_show_id": next_show_id,

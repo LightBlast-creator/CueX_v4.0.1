@@ -25,11 +25,18 @@ if getattr(sys, 'frozen', False):
 # WARNUNG: Dieser Key ist nur für die Entwicklung! In Produktion muss er via Environment Variable gesetzt werden.
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'dev-secret-change-me')
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100 MB
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///shows.db"
+app.config['LITE_MODE'] = True  # Hardcoded for Lite MVP
+
+if app.config.get('LITE_MODE'):
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    print("[INFO] LITE_MODE aktiv: Verwende In-Memory Datenbank (Daten werden NICHT gespeichert)")
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///shows.db"
+    print(f"[INFO] LITE_MODE inaktiv: Verwende Dateibasierte Datenbank: {app.config['SQLALCHEMY_DATABASE_URI']}")
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True  # Force template reloading
 app.jinja_env.auto_reload = True
-app.config['LITE_MODE'] = True  # Hardcoded for Lite MVP
 
 @app.context_processor
 def inject_lite_mode():
@@ -55,6 +62,10 @@ else:
 
 # Domain Logic Import (ensure it loads)
 from core import show_logic
+if app.config.get('LITE_MODE'):
+    show_logic.LITE_MODE = True
+    show_logic.shows.clear()  # Ensure it starts empty
+    print("[INFO] show_logic: LITE_MODE aktiv - JSON-Speicherung deaktiviert.")
 
 
 # Register Blueprints
@@ -108,8 +119,10 @@ if __name__ == "__main__":
     def open_browser():
         webbrowser.open_new("http://127.0.0.1:5000")
 
-    # Timer starten (wartet kurz, bis Server läuft)
-    if os.environ.get("WERKZEUG_RUN_MAIN") or getattr(sys, 'frozen', False):
+    # Timer starten (nur im Hauptprozess, verhindert doppelte Tabs bei Reload oder Frozen)
+    if not os.environ.get("WERKZEUG_RUN_MAIN"):
         threading.Timer(1.5, open_browser).start()
 
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    # Debug-Modus nur in der Entwicklung, nicht in der .exe (verhindert doppelte Logs)
+    is_frozen = getattr(sys, 'frozen', False)
+    app.run(host="127.0.0.1", port=5000, debug=not is_frozen)
