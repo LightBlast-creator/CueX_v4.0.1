@@ -40,7 +40,11 @@ app.jinja_env.auto_reload = True
 
 @app.context_processor
 def inject_lite_mode():
-    return dict(lite_mode=app.config['LITE_MODE'])
+    from core import show_logic
+    return dict(
+        lite_mode=app.config['LITE_MODE'],
+        max_lite_shows=show_logic.MAX_LITE_SHOWS
+    )
 db.init_app(app)
 
 # Error Handler
@@ -80,30 +84,42 @@ app.register_blueprint(show_assets_bp)
 app.register_blueprint(show_io_bp)
 
 
-# Database Migration (Simple)
-with app.app_context():
-    engine = db.engine
-    inspector = inspect(engine)
-    if "shows" in inspector.get_table_names():
-        existing_columns = [col["name"] for col in inspector.get_columns("shows")]
-        if "ma3_sequence_id" not in existing_columns:
-            with engine.connect() as conn:
-                conn.execute(text("ALTER TABLE shows ADD COLUMN ma3_sequence_id INTEGER DEFAULT 101"))
-                conn.commit()
-        # Migration: modules Spalte hinzufügen (für modulares MVP)
-        if "modules" not in existing_columns:
-            with engine.connect() as conn:
-                conn.execute(text("ALTER TABLE shows ADD COLUMN modules VARCHAR(200) DEFAULT 'stammdaten,cuelist,patch,kontakte,requisiten,video'"))
-                conn.commit()
-        if "eos_macro_id" not in existing_columns:
-            with engine.connect() as conn:
-                conn.execute(text("ALTER TABLE shows ADD COLUMN eos_macro_id INTEGER DEFAULT 101"))
-                conn.commit()
-        if "eos_cuelist_id" not in existing_columns:
-            with engine.connect() as conn:
-                conn.execute(text("ALTER TABLE shows ADD COLUMN eos_cuelist_id INTEGER DEFAULT 1"))
-                conn.commit()
-    db.create_all()
+def run_migrations():
+    """Führt einfache Datenbank-Migrationen durch."""
+    with app.app_context():
+        engine = db.engine
+        inspector = inspect(engine)
+        if "shows" in inspector.get_table_names():
+            existing_columns = [col["name"] for col in inspector.get_columns("shows")]
+            
+            # Migration: ma3_sequence_id
+            if "ma3_sequence_id" not in existing_columns:
+                with engine.connect() as conn:
+                    conn.execute(text("ALTER TABLE shows ADD COLUMN ma3_sequence_id INTEGER DEFAULT 101"))
+                    conn.commit()
+            
+            # Migration: modules
+            if "modules" not in existing_columns:
+                with engine.connect() as conn:
+                    conn.execute(text("ALTER TABLE shows ADD COLUMN modules VARCHAR(200) DEFAULT 'stammdaten,cuelist,patch,kontakte,requisiten,video'"))
+                    conn.commit()
+            
+            # Migration: eos_macro_id
+            if "eos_macro_id" not in existing_columns:
+                with engine.connect() as conn:
+                    conn.execute(text("ALTER TABLE shows ADD COLUMN eos_macro_id INTEGER DEFAULT 101"))
+                    conn.commit()
+            
+            # Migration: eos_cuelist_id
+            if "eos_cuelist_id" not in existing_columns:
+                with engine.connect() as conn:
+                    conn.execute(text("ALTER TABLE shows ADD COLUMN eos_cuelist_id INTEGER DEFAULT 1"))
+                    conn.commit()
+        
+        db.create_all()
+
+# Initialisiere DB & Migrationen
+run_migrations()
 
 if __name__ == "__main__":
     # Verwende Flask Debug-Server für automatisches Template-Reloading

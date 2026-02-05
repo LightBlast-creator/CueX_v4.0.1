@@ -14,6 +14,7 @@ DATA_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data
 
 shows: List[Show] = []
 LITE_MODE: bool = False
+MAX_LITE_SHOWS: int = 5
 next_show_id: int = 1
 next_song_id: int = 1
 next_check_item_id: int = 1
@@ -140,7 +141,10 @@ def _empty_checklists() -> Dict:
 import uuid
 
 def _ensure_rig_uids(rig: Dict):
-    """Stellt sicher, dass jedes Item im Rig eine eindeutige ID (UID) hat."""
+    """
+    Stellt sicher, dass jedes Item im Rig eine eindeutige ID (UID) hat.
+    Wichtig für das Frontend (Stage Plan / Synchronisierung).
+    """
     prefixes = ["spots", "washes", "beams", "blinders", "strobes", "custom_devices"]
     for prefix in prefixes:
         items_key = f"{prefix}_items" if prefix != "custom_devices" else "custom_devices"
@@ -156,6 +160,7 @@ def load_data() -> None:
     global shows, next_show_id, next_song_id, next_check_item_id
 
     if LITE_MODE:
+        # Im Lite-Modus laden wir keine Daten von der Festplatte
         return
 
     if not os.path.exists(DATA_FILE):
@@ -164,7 +169,8 @@ def load_data() -> None:
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-    except Exception:
+    except Exception as e:
+        print(f"[ERROR] Fehler beim Laden von {DATA_FILE}: {e}")
         return
 
     shows_data = data.get("shows", [])
@@ -244,15 +250,23 @@ def load_data() -> None:
 def save_data() -> None:
     """Speichert Shows + IDs nach shows.json."""
     if LITE_MODE:
+        # Im Lite-Modus speichern wir keine Daten auf die Festplatte
         return
-    data = {
-        "shows": shows,
-        "next_show_id": next_show_id,
-        "next_song_id": next_song_id,
-        "next_check_item_id": next_check_item_id,
-    }
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        
+    try:
+        data = {
+            "shows": shows,
+            "next_show_id": next_show_id,
+            "next_song_id": next_song_id,
+            "next_check_item_id": next_check_item_id,
+        }
+        # Sicherstellen, dass das Verzeichnis existiert
+        os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
+        
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"[ERROR] Fehler beim Speichern nach {DATA_FILE}: {e}")
 
 
 def find_show(show_id: int) -> Optional[Show]:

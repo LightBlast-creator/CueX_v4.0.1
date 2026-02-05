@@ -277,7 +277,15 @@
 </style>
 
 <div class="dashboard-header">
-    <h1>Dashboard</h1>
+    <div class="d-flex align-items-center gap-2">
+        <h1>Dashboard</h1>
+        {% if lite_mode %}
+        <span class="badge rounded-pill bg-info text-dark"
+            style="font-size: 0.75rem; font-weight: 600; vertical-align: middle;">
+            LITE VERSION
+        </span>
+        {% endif %}
+    </div>
     <p class="subtitle">Willkommen zurück. Hier sind deine Shows.</p>
 </div>
 
@@ -381,9 +389,33 @@
                     </div>
                     {% endif %}
 
-                    <button type="submit" class="btn btn-primary">
+                    {% if lite_mode %}
+                    <div class="mb-3">
+                        <div class="text-center p-2 rounded"
+                            style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);">
+                            <small class="text-info">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Trial Limit: {{ shows|length }}/{{ max_lite_shows }} Shows
+                            </small>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary" {% if lite_mode and shows|length>= max_lite_shows
+                        %}disabled{% endif %}>
+                        {% if lite_mode and shows|length >= max_lite_shows %}
+                        Limit erreicht
+                        {% else %}
                         Show erstellen
+                        {% endif %}
                     </button>
+
+                    {% if lite_mode and shows|length >= max_lite_shows %}
+                    <div class="mt-3 text-center">
+                        <small class="text-light">Kontaktiere uns für die Vollversion, um unbegrenzt Shows zu
+                            speichern.</small>
+                    </div>
+                    {% endif %}
                 </form>
             </div>
         </div>

@@ -198,6 +198,11 @@ def dashboard():
         modules_str = ','.join(modules_list) if modules_list else 'stammdaten'
         
         if name:
+            # Trial Limit Check für Lite Mode
+            if current_app.config.get('LITE_MODE') and len(show_logic.shows) >= show_logic.MAX_LITE_SHOWS:
+                flash("Trial-Limit erreicht: Im Lite-Modus können maximal 5 Shows gleichzeitig angelegt werden. Kontaktiere uns für die Vollversion!", "warning")
+                return redirect(url_for('main.dashboard'))
+
             new_show = show_logic.create_default_show(
                 name=name,
                 artist=artist,
